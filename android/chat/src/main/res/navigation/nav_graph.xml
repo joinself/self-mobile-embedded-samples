@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.joinself.sdk.sample.MainFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_mainFragment_to_conversationFragment"
+            app:destination="@id/conversationFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_livenessCheckFragment"
+            app:destination="@id/livenessCheckFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/conversationFragment"
+        android:name="com.joinself.sdk.sample.ConversationFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_conversation">
+
+    </fragment>
+    <fragment
+        android:id="@+id/livenessCheckFragment"
+        android:name="com.joinself.sdk.sample.LivenessCheckFragment"
+        android:label="LivenessCheckFragment"
+        tools:layout="@layout/fragment_liveness_check">
+    </fragment>
+</navigation>

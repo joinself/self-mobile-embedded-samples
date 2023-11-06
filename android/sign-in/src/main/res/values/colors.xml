@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="colorTextWhite">#FFFFFF</color>
+    <color name="colorTextWhiteAlpha">#99FFFFFF</color>
+    <color name="colorTextGray">#89969F</color>
+    <color name="colorTextGrayInactive">#979797</color>
+    <color name="colorBackgroundGray">#979797</color>
+    <color name="colorBackgroundGray_1">#E5E5E5</color>
+    <color name="colorTextGrayLighter">#D0D0D0</color>
+    <color name="colorTextPrimary">#0E1C42</color>
+    <color name="colorTextDarkBlue">@color/colorPrimary</color>
+    <color name="colorTextSecondary">@color/colorSecondaryLightBlue</color>
+    <color name="colorTextSecondary1">@color/colorAccent</color>
+
+    <color name="colorPrimary">#0E1C42</color>
+    <color name="colorPrimaryDark">#0E3F78</color>
+    <color name="colorAccent">@color/colorSecondary</color>
+    <color name="colorPrimaryLight">#90CAF9</color>
+    <color name="colorSecondaryLight">#A5D6A7</color>
+    <color name="colorSecondary">#00C887</color>
+    <color name="colorSecondaryPressed">#388E3C</color>
+    <color name="colorSecondaryLightBlue">#71B4FF</color>
+    <color name="colorSecondaryYellow">#FFC048</color>
+    <color name="colorSecondaryPink">#FB2191</color>
+    <color name="colorSecondaryPink07">#80FB2191</color>
+    <color name="colorSecondaryDark">#1B5E20</color>
+    <color name="colorError">#CF1133</color>
+    <color name="colorPending">#FBB777</color>
+    <color name="colorErrorOpacity15">#26D66775</color>
+    <color name="colorPrimaryOpacity15">#261E88E5</color>
+    <color name="colorSuccessful">@color/colorAccent</color>
+    <color name="colorOrange">#FFA75D</color>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyDialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowMinWidthMajor">75%</item>
+        <item name="android:windowMinWidthMinor">75%</item>
+    </style>
+
+    <style name="EnableBackButton" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:elevation">@null</item>
+        <item name="navigationIcon">@drawable/ic_keyboard_arrow_left_gray_24dp</item>
+        <item name="navigationIconTint">@android:color/darker_gray</item>
+        <item name="titleMarginStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">8dp</item>
+    </style>
+
+    <style name="DialogStyle" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="android:textAppearance">@style/windowTitleStyleStyle</item>
+        <!--        <item name="cornerRadius">@dimen/corner_radius_large</item>-->
+        <item name="cornerSize">32dp</item>
+    </style>
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/colorTextGray</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+    </style>
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+    <style name="windowTitleStyleStyle" parent="Base.DialogWindowTitle.AppCompat">
+        <item name="android:textColor">@color/colorError</item>
+    </style>
+</resources>

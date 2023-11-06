@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="8dp">
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/subtitleTextView"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            tools:visibility="gone"
+            tools:text="@tools:sample/cities"
+            tools:maxLines="1"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/subtitleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleTextView"
+            app:layout_constraintBottom_toTopOf="@id/photoImageView"
+            android:textColor="@color/black"
+            tools:maxLines="3"
+            tools:text="@tools:sample/lorem/random" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/photoImageView"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintLeft_toLeftOf="@id/titleTextView"
+            app:layout_constraintRight_toRightOf="@id/titleTextView"
+            app:layout_constraintTop_toBottomOf="@id/subtitleTextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="@tools:sample/avatars"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

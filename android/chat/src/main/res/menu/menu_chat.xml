@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/item_verify_doc"
+        android:title="Verify testing document"
+        app:showAsAction="never" />
+    <item android:id="@+id/item_all_attestations"
+        android:title="Get all attestations"
+        app:showAsAction="never" />
+    <item android:id="@+id/item_fact_response"
+        android:title="Response last fact request"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item_request_fact"
+        android:title="@string/lbl_request_fact"
+        app:showAsAction="never">
+        <menu>
+
+        </menu>
+    </item>
+</menu>
