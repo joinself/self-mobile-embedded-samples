@@ -7,8 +7,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
-import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
+import com.joinself.sdk.sample.chat.R
 
 object DialogUtils {
     fun showProgressBar(context: Context, cancelable: Boolean = false): Dialog {

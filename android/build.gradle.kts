@@ -25,13 +25,6 @@ buildscript {
         classpath("gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.16.1")
         classpath("com.squareup.wire:wire-gradle-plugin:4.9.1")
     }
-
-    configurations.all {
-        resolutionStrategy {
-            cacheDynamicVersionsFor(5, TimeUnit.MINUTES)
-            cacheChangingModulesFor(0, TimeUnit.SECONDS)
-        }
-    }
 }
 
 plugins {
@@ -46,7 +39,14 @@ plugins {
 }
 
 allprojects {
+    configurations.all {
+        resolutionStrategy {
+            cacheDynamicVersionsFor(5, TimeUnit.MINUTES)
+            cacheChangingModulesFor(0, TimeUnit.SECONDS)
+        }
+    }
 }
+
 subprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         kotlinOptions {

@@ -17,7 +17,8 @@ import com.joinself.sdk.liveness.LivenessCheck.Status
 import com.joinself.sdk.liveness.LivenessCheck.Error
 import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
-import com.joinself.sdk.sample.databinding.FragmentLivenessCheckBinding
+import com.joinself.sdk.sample.chat.R
+import com.joinself.sdk.sample.chat.databinding.FragmentLivenessCheckBinding
 import timber.log.Timber
 
 class LivenessCheckFragment: Fragment() {

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.joinself.sdk.sample2"
+    namespace = "com.joinself.sdk.sample.signin"
     compileSdk = Config.Android.compileSdkVersion
 
     defaultConfig {
-        applicationId = "com.joinself.sdk.sample2"
+        applicationId = "com.joinself.sdk.sample.signin"
         minSdk = Config.Android.minSdkVersion
         targetSdk = Config.Android.targetSdkVersion
         versionCode = 1
@@ -60,6 +60,7 @@ android {
 
 dependencies {
     implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
+//    implementation(project(":self-android-sdk"))
 
     implementation("com.jakewharton.timber:timber:${Config.Version.timberVersion}")
     implementation("androidx.core:core-ktx:${Config.Version.androidxCore}")

@@ -10,7 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.joinself.sdk.Environment
 import com.joinself.sdk.models.Account
-import com.joinself.sdk.sample.databinding.FragmentFirstBinding
+import com.joinself.sdk.sample.chat.R
+import com.joinself.sdk.sample.chat.databinding.FragmentFirstBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -63,6 +64,7 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
         }
 
+        binding.buttonSignIn.visibility = View.GONE
         binding.buttonSignIn.setOnClickListener {
             account.signIn()
         }

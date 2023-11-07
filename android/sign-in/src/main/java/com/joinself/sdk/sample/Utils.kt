@@ -1,7 +1,7 @@
 package com.joinself.sdk.sample
 
 import android.content.Context
-import com.joinself.sdk.sample2.R
+import com.joinself.sdk.sample.signin.R
 import java.util.Locale
 
 class Utils {

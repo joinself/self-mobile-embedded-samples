@@ -5,8 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
-import android.widget.ProgressBar
-import com.joinself.sdk.sample2.R
+import com.joinself.sdk.sample.signin.R
 
 object DialogUtils {
     fun showProgressBar(context: Context, cancelable: Boolean = false): Dialog {

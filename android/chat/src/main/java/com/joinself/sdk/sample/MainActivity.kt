@@ -1,14 +1,10 @@
 package com.joinself.sdk.sample
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.joinself.sdk.sample.databinding.ActivityMainBinding
-import kotlinx.coroutines.launch
-import timber.log.Timber
+import com.joinself.sdk.sample.chat.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

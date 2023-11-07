@@ -24,12 +24,11 @@ import com.joinself.sdk.models.AttestationResponse
 import com.joinself.sdk.models.ChatMessage
 import com.joinself.sdk.models.DataObject
 import com.joinself.sdk.models.Fact
-import com.joinself.sdk.models.Message
 import com.joinself.sdk.models.ResponseStatus
 import com.joinself.sdk.models.VerificationRequest
 import com.joinself.sdk.models.VerificationResponse
-import com.joinself.sdk.sample2.R
-import com.joinself.sdk.sample2.databinding.FragmentConversationBinding
+import com.joinself.sdk.sample.signin.databinding.FragmentConversationBinding
+import com.joinself.sdk.sample.signin.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber

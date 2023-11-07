@@ -29,7 +29,8 @@ import com.joinself.sdk.models.Fact
 import com.joinself.sdk.models.ResponseStatus
 import com.joinself.sdk.models.VerificationRequest
 import com.joinself.sdk.models.VerificationResponse
-import com.joinself.sdk.sample.databinding.FragmentConversationBinding
+import com.joinself.sdk.sample.chat.R
+import com.joinself.sdk.sample.chat.databinding.FragmentConversationBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -196,7 +197,7 @@ class ConversationFragment: Fragment() {
                                 DocumentDataType.DOCUMENT_IMAGE_BACK to back,
                                 DocumentDataType.MRZ to mrz)
                             val verificationRequest = VerificationRequest.Builder()
-                                .setType(DocumentType.DRIVING_LICENSE)
+                                .setType(DocumentType.PASSPORT)
                                 .setProofs(proofs)
                                 .build()
                             account.send(verificationRequest) {
@@ -262,6 +263,95 @@ class ConversationFragment: Fragment() {
         if (attestation != null) {
             val verified =  account.verify(attestation)
             Timber.d("verified $verified")
+        }
+    }
+
+    private fun uploadDownload() {
+        val dataObject = DataObject.Builder()
+            .setData("hello".toByteArray())
+            .setContentType("text/plain")
+            .build()
+        lifecycleScope.launch {
+            val dataLink = account.upload(dataObject)
+            if (dataLink != null) {
+                val data = account.download(dataLink)
+            }
+        }
+    }
+
+    private fun verifyDrivingLicense() {
+        lifecycleScope.launch(Dispatchers.Default) {
+            val front = DataObject.Builder()
+                .setData("front".toByteArray())
+                .setContentType("image/jpeg")
+                .build()
+            val back = DataObject.Builder()
+                .setData("back".toByteArray())
+                .setContentType("image/jpeg")
+                .build()
+            val proofs = mapOf(DocumentDataType.DOCUMENT_IMAGE_FRONT to front,
+                DocumentDataType.DOCUMENT_IMAGE_BACK to back)
+            val verificationRequest = VerificationRequest.Builder()
+                .setType(DocumentType.DRIVING_LICENSE)
+                .setProofs(proofs)
+                .build()
+            account.send(verificationRequest) {
+
+            }
+        }
+    }
+
+    private fun verifyIdCard() {
+        lifecycleScope.launch(Dispatchers.Default) {
+            val front = DataObject.Builder()
+                .setData("front".toByteArray())
+                .setContentType("image/jpeg")
+                .build()
+            val back = DataObject.Builder()
+                .setData("back".toByteArray())
+                .setContentType("image/jpeg")
+                .build()
+            val mrz = DataObject.Builder()
+                .setData("IDGBR1234567897<<<<<<<<<<<<<<<7704145F1907313GBR<<<<<<<<K<<8HENDERSON<<ELIZABETH<<<<<<<<<<".toByteArray())
+                .setContentType("text/plain")
+                .build()
+            val proofs = mapOf(DocumentDataType.DOCUMENT_IMAGE_FRONT to front,
+                DocumentDataType.DOCUMENT_IMAGE_BACK to back,
+                DocumentDataType.MRZ to mrz)
+            val verificationRequest = VerificationRequest.Builder()
+                .setType(DocumentType.IDCARD)
+                .setProofs(proofs)
+                .build()
+            account.send(verificationRequest) {
+
+            }
+        }
+    }
+
+    private fun verifyPassport() {
+        lifecycleScope.launch(Dispatchers.Default) {
+            val dg1 = DataObject.Builder()
+                .setData("dg1".toByteArray())
+                .setContentType("application/x-binary")
+                .build()
+            val dg2 = DataObject.Builder()
+                .setData("dg2".toByteArray())
+                .setContentType("application/x-binary")
+                .build()
+            val sod = DataObject.Builder()
+                .setData("sod".toByteArray())
+                .setContentType("application/x-binary")
+                .build()
+            val proofs = mapOf(DocumentDataType.DG1 to dg1,
+                DocumentDataType.DG2 to dg2,
+                DocumentDataType.SOD to sod)
+            val verificationRequest = VerificationRequest.Builder()
+                .setType(DocumentType.PASSPORT)
+                .setProofs(proofs)
+                .build()
+            account.send(verificationRequest) {
+
+            }
         }
     }
 }
