@@ -1,0 +1,26 @@
+/* 
+  Localizable.strings
+  self-ios-sample
+
+  Created by DO HAI VU on 06/09/2023.
+  
+*/
+
+"liveness_smile" = "Please Smile";
+"liveness_blink" = "Please Blink";
+"liveness_turn_left" = "Please Turn Left";
+"liveness_turn_right" = "Please Turn Right";
+"liveness_thank_you" = "Thank you!";
+"liveness_direction_message" = "Place your face inside the oval and follow the instructions.";
+"liveness_out_of_preview" = "Please keep your face inside the oval and follow the instructions";
+"thank_you" = "Thank You";
+"liveness_share_message" = "You have been reverified. Would you like to share the result with";
+
+
+"permission_audio_message" = "Self needs record audio permission in order to make secure calls.";
+"permission_camera_message" = "Self needs access to your camera in order to connect with friends, share images, scan QR codes, and verify documents.";
+"permission_camera_capture_selfie_message" = "Self needs access to your camera in order to capture your liveness images.";
+
+
+"button_not_now" = "Not Now";
+"button_cancel" = "Cancel";
