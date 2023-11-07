@@ -3,7 +3,7 @@ package com.joinself.sdk.sample
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.joinself.sdk.sample2.databinding.ActivityMainBinding
+import com.joinself.sdk.sample.signin.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

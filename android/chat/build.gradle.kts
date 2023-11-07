@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.joinself.sdk.sample"
+    namespace = "com.joinself.sdk.sample.chat"
     compileSdk = Config.Android.compileSdkVersion
 
     defaultConfig {
-        applicationId = "com.joinself.sdk.sample"
+        applicationId = "com.joinself.sdk.sample.chat"
         minSdk = Config.Android.minSdkVersion
         targetSdk = Config.Android.targetSdkVersion
         versionCode = 1

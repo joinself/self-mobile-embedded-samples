@@ -1,6 +1,6 @@
 object Config {
     object Version {
-        const val kotlinVersion = "1.9.10"
+        const val kotlinVersion = "1.9.20"
         const val androidGradlePluginVersion = "8.1.2"
         const val realmVersion = "1.11.1"
 

@@ -1,6 +1,7 @@
 package com.joinself.sdk.sample
 
 import android.content.Context
+import com.joinself.sdk.sample.chat.R
 import java.util.Locale
 
 class Utils {

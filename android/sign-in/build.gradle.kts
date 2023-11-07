@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.joinself.sdk.sample2"
+    namespace = "com.joinself.sdk.sample.signin"
     compileSdk = Config.Android.compileSdkVersion
 
     defaultConfig {
-        applicationId = "com.joinself.sdk.sample2"
+        applicationId = "com.joinself.sdk.sample.signin"
         minSdk = Config.Android.minSdkVersion
         targetSdk = Config.Android.targetSdkVersion
         versionCode = 1

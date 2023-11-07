@@ -12,7 +12,7 @@ import com.joinself.sdk.models.AttestationResponse
 import com.joinself.sdk.models.ChatMessage
 import com.joinself.sdk.models.Message
 import com.joinself.sdk.models.VerificationResponse
-import com.joinself.sdk.sample.databinding.ConversationItemBinding
+import com.joinself.sdk.sample.chat.databinding.ConversationItemBinding
 import kotlin.text.StringBuilder
 
 class ConversationAdapter(val mySelfId: String): ListAdapter<Any, ConversationAdapter.ItemViewholder>(DiffCallback()) {
