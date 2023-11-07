@@ -28,6 +28,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        lblInfo.textColor = .black
+        lblInfo.font = UIFont.boldSystemFont(ofSize: 17)
+        
         btnLiveness.addTarget(self, action: #selector(onLivenessPressed(_:)), for: .touchUpInside)
         btnCreate.addTarget(self, action: #selector(onCreatePressed(_:)), for: .touchUpInside)
         btnSendMessage.addTarget(self, action: #selector(onSendMessagePressed(_:)), for: .touchUpInside)
