@@ -61,6 +61,15 @@ class ViewController: UIViewController {
             .build()
         
         updateUI()
+        
+        let bundleIdentifier = Bundle.main.bundleIdentifier
+        if bundleIdentifier == "com.joinself.sdk.sample1" {
+            view.backgroundColor = .yellow
+        } else if bundleIdentifier == "com.joinself.sdk.sample2" {
+            view.backgroundColor = .purple
+        } else {
+            view.backgroundColor = .white
+        }
     }
     
     @objc func onLivenessPressed(_ sender: Any) {
@@ -164,7 +173,29 @@ class ViewController: UIViewController {
     }
     
     @objc func signInWithExistingSelfId(_ sender: Any) {
+        guard let app1URL = URL(string: "exampleappa://") else {
+            return
+        }
         
+        guard let app2URL = URL(string: "exampleappb://") else {
+            return
+        }
+        
+        guard let selfAppURL = URL(string: "selfappurl://") else {
+            return
+        }
+        
+        let selfAppStatus = UIApplication.shared.canOpenURL(selfAppURL)
+        let app1Status = UIApplication.shared.canOpenURL(app1URL)
+        let app2Status = UIApplication.shared.canOpenURL(app2URL)
+        
+        log.debug("Apps status: selfApp:  \(selfAppStatus) \n Host app A: \(app1Status) \nHost app B: \(app2Status)")
+        // open app B to link account
+        if app2Status {
+            UIApplication.shared.open(app2URL) { success in
+                log.debug("Open app B: \(success)")
+            }
+        }
     }
     
     private func updateUI() {

@@ -16,6 +16,7 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>exampleappa</string>
+		<string>selfappurl</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
