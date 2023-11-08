@@ -77,6 +77,7 @@
                         <outlet property="btnCreate" destination="d7T-4t-Hdu" id="9yj-Dx-zJw"/>
                         <outlet property="btnLiveness" destination="ctY-qW-o5s" id="niZ-S2-LvZ"/>
                         <outlet property="btnSendMessage" destination="2he-BI-iam" id="GMZ-KB-MOL"/>
+                        <outlet property="btnSignIn" destination="dJs-zC-1P2" id="kg2-Dm-Wm0"/>
                         <outlet property="lblInfo" destination="ylv-pT-A2z" id="Nd5-tC-CtV"/>
                     </connections>
                 </viewController>

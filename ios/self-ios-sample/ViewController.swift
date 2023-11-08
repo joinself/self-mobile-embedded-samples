@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var btnLiveness: UIButton!
     @IBOutlet weak var btnCreate: UIButton!
     @IBOutlet weak var btnSendMessage: UIButton!
+    @IBOutlet weak var btnSignIn: UIButton!
     
     private var account: Account!
     private var message: Message? = nil
@@ -34,6 +35,8 @@ class ViewController: UIViewController {
         btnLiveness.addTarget(self, action: #selector(onLivenessPressed(_:)), for: .touchUpInside)
         btnCreate.addTarget(self, action: #selector(onCreatePressed(_:)), for: .touchUpInside)
         btnSendMessage.addTarget(self, action: #selector(onSendMessagePressed(_:)), for: .touchUpInside)
+        
+        btnSignIn.addTarget(self, action: #selector(signInWithExistingSelfId(_:)), for: .touchUpInside)
         
         onMessage = { msg in
             if let chatMsg = msg as? ChatMessage {
@@ -158,6 +161,10 @@ class ViewController: UIViewController {
         } catch {
             
         }
+    }
+    
+    @objc func signInWithExistingSelfId(_ sender: Any) {
+        
     }
     
     private func updateUI() {

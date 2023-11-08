@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "714C43512AA85D7300F1BAEF"
-               BuildableName = "self-ios-sample.app"
-               BlueprintName = "self-ios-sample"
+               BlueprintIdentifier = "63679EA22AFB341900903190"
+               BuildableName = "ExampleB.app"
+               BlueprintName = "ExampleB"
                ReferencedContainer = "container:self-ios-sample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,9 +43,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "714C43512AA85D7300F1BAEF"
-            BuildableName = "self-ios-sample.app"
-            BlueprintName = "self-ios-sample"
+            BlueprintIdentifier = "63679EA22AFB341900903190"
+            BuildableName = "ExampleB.app"
+            BlueprintName = "ExampleB"
             ReferencedContainer = "container:self-ios-sample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -60,9 +60,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "714C43512AA85D7300F1BAEF"
-            BuildableName = "self-ios-sample.app"
-            BlueprintName = "self-ios-sample"
+            BlueprintIdentifier = "63679EA22AFB341900903190"
+            BuildableName = "ExampleB.app"
+            BlueprintName = "ExampleB"
             ReferencedContainer = "container:self-ios-sample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
