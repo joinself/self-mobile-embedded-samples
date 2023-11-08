@@ -7,6 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6325D7C82AFB3AF60044CAA0 /* AppStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C43952AA897F400F1BAEF /* AppStoryboard.swift */; };
+		6325D7C92AFB3AF60044CAA0 /* EZSwiftFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C438B2AA8872000F1BAEF /* EZSwiftFunctions.swift */; };
+		6325D7CA2AFB3AF60044CAA0 /* PermissionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7144143F2AA97127002EF2CA /* PermissionHelper.swift */; };
+		6325D7CB2AFB3AF60044CAA0 /* DialogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714414432AA971F7002EF2CA /* DialogHelper.swift */; };
+		6325D7CC2AFB3AF60044CAA0 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BB8322ACC1C1800A304A1 /* ChatView.swift */; };
+		6325D7CD2AFB3AF60044CAA0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C43892AA8869300F1BAEF /* Extensions.swift */; };
+		6325D7CE2AFB3AF60044CAA0 /* SelfError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714414412AA971B0002EF2CA /* SelfError.swift */; };
+		6325D7CF2AFB3AF60044CAA0 /* MessageModelSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BB8372ACC293800A304A1 /* MessageModelSample.swift */; };
+		6325D7D02AFB3AF60044CAA0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C43592AA85D7300F1BAEF /* ViewController.swift */; };
+		6325D7D12AFB3AF60044CAA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C43552AA85D7300F1BAEF /* AppDelegate.swift */; };
+		6325D7D22AFB3AF60044CAA0 /* ChatRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BB8342ACC290400A304A1 /* ChatRow.swift */; };
+		6325D7D32AFB3AF60044CAA0 /* LivenessCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C43742AA8667600F1BAEF /* LivenessCheckViewController.swift */; };
+		6325D7D42AFB3AF60044CAA0 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C43932AA88DDD00F1BAEF /* UIUtilities.swift */; };
+		6325D7D52AFB3AF60044CAA0 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BB8392ACC295800A304A1 /* ChatViewModel.swift */; };
+		6325D7D62AFB3AF60044CAA0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C43572AA85D7300F1BAEF /* SceneDelegate.swift */; };
+		6325D7D82AFB3AF60044CAA0 /* Pods_self_ios_sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC68F3537A2FDEE6A2A06BD1 /* Pods_self_ios_sample.framework */; };
+		6325D7DA2AFB3AF60044CAA0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 714C43602AA85D7400F1BAEF /* LaunchScreen.storyboard */; };
+		6325D7DB2AFB3AF60044CAA0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 714C43882AA8855700F1BAEF /* Localizable.strings */; };
+		6325D7DC2AFB3AF60044CAA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 714C435E2AA85D7400F1BAEF /* Assets.xcassets */; };
+		6325D7DD2AFB3AF60044CAA0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 714C435B2AA85D7300F1BAEF /* Main.storyboard */; };
 		63679EA52AFB341900903190 /* AppStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C43952AA897F400F1BAEF /* AppStoryboard.swift */; };
 		63679EA62AFB341900903190 /* EZSwiftFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C438B2AA8872000F1BAEF /* EZSwiftFunctions.swift */; };
 		63679EA72AFB341900903190 /* PermissionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7144143F2AA97127002EF2CA /* PermissionHelper.swift */; };
@@ -50,6 +70,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		6325D7DE2AFB3AF60044CAA0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63679EBB2AFB341900903190 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -74,6 +104,8 @@
 
 /* Begin PBXFileReference section */
 		3C4055DCBAC4B1365BDEF067 /* Pods-self-ios-sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-self-ios-sample.debug.xcconfig"; path = "../ios/Pods/Target Support Files/Pods-self-ios-sample/Pods-self-ios-sample.debug.xcconfig"; sourceTree = "<group>"; };
+		6325D7E42AFB3AF60044CAA0 /* SelfAppDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SelfAppDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6325D7E52AFB3AF60044CAA0 /* ExampleA copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ExampleA copy-Info.plist"; path = "/Users/longpham/aldgate-ventures/projects/self-mobile-embedded-samples/ios/ExampleA copy-Info.plist"; sourceTree = "<absolute>"; };
 		63679EC12AFB341900903190 /* ExampleB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExampleB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63679EC22AFB341900903190 /* self-ios-sample copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "self-ios-sample copy-Info.plist"; path = "/Users/longpham/aldgate-ventures/projects/self-mobile-embedded-samples/ios/self-ios-sample copy-Info.plist"; sourceTree = "<absolute>"; };
 		637BB8322ACC1C1800A304A1 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
@@ -103,6 +135,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		6325D7D72AFB3AF60044CAA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6325D7D82AFB3AF60044CAA0 /* Pods_self_ios_sample.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63679EB42AFB341900903190 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -151,6 +191,7 @@
 				714C436F2AA8609700F1BAEF /* Frameworks */,
 				68CAFBC6CEB417365198A3A2 /* Pods */,
 				63679EC22AFB341900903190 /* self-ios-sample copy-Info.plist */,
+				6325D7E52AFB3AF60044CAA0 /* ExampleA copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -159,6 +200,7 @@
 			children = (
 				714C43522AA85D7300F1BAEF /* ExampleA.app */,
 				63679EC12AFB341900903190 /* ExampleB.app */,
+				6325D7E42AFB3AF60044CAA0 /* SelfAppDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -199,6 +241,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		6325D7C52AFB3AF60044CAA0 /* SelfAppDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6325D7E12AFB3AF60044CAA0 /* Build configuration list for PBXNativeTarget "SelfAppDemo" */;
+			buildPhases = (
+				6325D7C62AFB3AF60044CAA0 /* [CP] Check Pods Manifest.lock */,
+				6325D7C72AFB3AF60044CAA0 /* Sources */,
+				6325D7D72AFB3AF60044CAA0 /* Frameworks */,
+				6325D7D92AFB3AF60044CAA0 /* Resources */,
+				6325D7DE2AFB3AF60044CAA0 /* Embed Frameworks */,
+				6325D7DF2AFB3AF60044CAA0 /* [CP] Embed Pods Frameworks */,
+				6325D7E02AFB3AF60044CAA0 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SelfAppDemo;
+			productName = "self-ios-sample";
+			productReference = 6325D7E42AFB3AF60044CAA0 /* SelfAppDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
 		63679EA22AFB341900903190 /* ExampleB */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 63679EBE2AFB341900903190 /* Build configuration list for PBXNativeTarget "ExampleB" */;
@@ -269,6 +332,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				6325D7C52AFB3AF60044CAA0 /* SelfAppDemo */,
 				714C43512AA85D7300F1BAEF /* ExampleA */,
 				63679EA22AFB341900903190 /* ExampleB */,
 			);
@@ -276,6 +340,17 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		6325D7D92AFB3AF60044CAA0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6325D7DA2AFB3AF60044CAA0 /* LaunchScreen.storyboard in Resources */,
+				6325D7DB2AFB3AF60044CAA0 /* Localizable.strings in Resources */,
+				6325D7DC2AFB3AF60044CAA0 /* Assets.xcassets in Resources */,
+				6325D7DD2AFB3AF60044CAA0 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63679EB62AFB341900903190 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -301,6 +376,62 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		6325D7C62AFB3AF60044CAA0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-self-ios-sample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6325D7DF2AFB3AF60044CAA0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-self-ios-sample/Pods-self-ios-sample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-self-ios-sample/Pods-self-ios-sample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-self-ios-sample/Pods-self-ios-sample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6325D7E02AFB3AF60044CAA0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-self-ios-sample/Pods-self-ios-sample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-self-ios-sample/Pods-self-ios-sample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-self-ios-sample/Pods-self-ios-sample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		63679EA32AFB341900903190 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -416,6 +547,28 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6325D7C72AFB3AF60044CAA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6325D7C82AFB3AF60044CAA0 /* AppStoryboard.swift in Sources */,
+				6325D7C92AFB3AF60044CAA0 /* EZSwiftFunctions.swift in Sources */,
+				6325D7CA2AFB3AF60044CAA0 /* PermissionHelper.swift in Sources */,
+				6325D7CB2AFB3AF60044CAA0 /* DialogHelper.swift in Sources */,
+				6325D7CC2AFB3AF60044CAA0 /* ChatView.swift in Sources */,
+				6325D7CD2AFB3AF60044CAA0 /* Extensions.swift in Sources */,
+				6325D7CE2AFB3AF60044CAA0 /* SelfError.swift in Sources */,
+				6325D7CF2AFB3AF60044CAA0 /* MessageModelSample.swift in Sources */,
+				6325D7D02AFB3AF60044CAA0 /* ViewController.swift in Sources */,
+				6325D7D12AFB3AF60044CAA0 /* AppDelegate.swift in Sources */,
+				6325D7D22AFB3AF60044CAA0 /* ChatRow.swift in Sources */,
+				6325D7D32AFB3AF60044CAA0 /* LivenessCheckViewController.swift in Sources */,
+				6325D7D42AFB3AF60044CAA0 /* UIUtilities.swift in Sources */,
+				6325D7D52AFB3AF60044CAA0 /* ChatViewModel.swift in Sources */,
+				6325D7D62AFB3AF60044CAA0 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63679EA42AFB341900903190 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -490,6 +643,76 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		6325D7E22AFB3AF60044CAA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C4055DCBAC4B1365BDEF067 /* Pods-self-ios-sample.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B233VZ3W3Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ExampleA copy-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SelfAppDemo;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Turning on the camera allows us to ensure it's only you using Self";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joinself.sdk.sample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		6325D7E32AFB3AF60044CAA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C4B7F1F571B9B8C405F67C8 /* Pods-self-ios-sample.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B233VZ3W3Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ExampleA copy-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SelfAppDemo;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Turning on the camera allows us to ensure it's only you using Self";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joinself.sdk.sample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		63679EBF2AFB341900903190 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3C4055DCBAC4B1365BDEF067 /* Pods-self-ios-sample.debug.xcconfig */;
@@ -501,7 +724,7 @@
 				DEVELOPMENT_TEAM = B233VZ3W3Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "self-ios-sample copy-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Self SDK Sample 2";
+				INFOPLIST_KEY_CFBundleDisplayName = SelfHostAppB;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Turning on the camera allows us to ensure it's only you using Self";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -536,7 +759,7 @@
 				DEVELOPMENT_TEAM = B233VZ3W3Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "self-ios-sample copy-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Self SDK Sample 2";
+				INFOPLIST_KEY_CFBundleDisplayName = SelfHostAppB;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Turning on the camera allows us to ensure it's only you using Self";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -549,7 +772,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.joinself.sdk.sample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joinself.sdk.sample2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -685,7 +908,7 @@
 				DEVELOPMENT_TEAM = B233VZ3W3Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "self-ios-sample/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Self SDK Sample 1";
+				INFOPLIST_KEY_CFBundleDisplayName = SelfHostAppA;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Turning on the camera allows us to ensure it's only you using Self";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -720,7 +943,7 @@
 				DEVELOPMENT_TEAM = B233VZ3W3Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "self-ios-sample/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Self SDK Sample 1";
+				INFOPLIST_KEY_CFBundleDisplayName = SelfHostAppA;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Turning on the camera allows us to ensure it's only you using Self";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -733,7 +956,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.joinself.sdk.sample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joinself.sdk.sample1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -747,6 +970,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6325D7E12AFB3AF60044CAA0 /* Build configuration list for PBXNativeTarget "SelfAppDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6325D7E22AFB3AF60044CAA0 /* Debug */,
+				6325D7E32AFB3AF60044CAA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		63679EBE2AFB341900903190 /* Build configuration list for PBXNativeTarget "ExampleB" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

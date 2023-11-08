@@ -9,13 +9,14 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>exampleappa</string>
+				<string>selfappurl</string>
 			</array>
 		</dict>
 	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>exampleappb</string>
+		<string>exampleappa</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
