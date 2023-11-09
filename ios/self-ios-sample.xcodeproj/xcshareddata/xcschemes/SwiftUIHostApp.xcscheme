@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6325D7E92AFB982E0044CAA0"
-               BuildableName = "SwiftUI Host App.app"
-               BlueprintName = "SwiftUI Host App"
+               BuildableName = "SwiftUIHostApp.app"
+               BlueprintName = "SwiftUIHostApp"
                ReferencedContainer = "container:self-ios-sample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,8 +44,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6325D7E92AFB982E0044CAA0"
-            BuildableName = "SwiftUI Host App.app"
-            BlueprintName = "SwiftUI Host App"
+            BuildableName = "SwiftUIHostApp.app"
+            BlueprintName = "SwiftUIHostApp"
             ReferencedContainer = "container:self-ios-sample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,8 +61,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6325D7E92AFB982E0044CAA0"
-            BuildableName = "SwiftUI Host App.app"
-            BlueprintName = "SwiftUI Host App"
+            BuildableName = "SwiftUIHostApp.app"
+            BlueprintName = "SwiftUIHostApp"
             ReferencedContainer = "container:self-ios-sample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

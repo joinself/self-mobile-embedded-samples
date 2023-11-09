@@ -6,9 +6,15 @@
 //
 
 import SwiftUI
+import self_ios_sdk
 
 @main
 struct SwiftUI_Host_AppApp: App {
+    
+    init() {
+        SelfSDK.initialize()
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
