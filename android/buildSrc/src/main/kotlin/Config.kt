@@ -1,7 +1,7 @@
 object Config {
     object Version {
         const val kotlinVersion = "1.9.20"
-        const val androidGradlePluginVersion = "8.1.2"
+        const val androidGradlePluginVersion = "8.1.3"
         const val realmVersion = "1.11.1"
 
         const val jacocoVersion = "0.8.10"
@@ -17,7 +17,7 @@ object Config {
         const val androidxCore = "1.12.0"
         const val androidxAppcompatVersion = "1.6.1"
         const val androidxTestVersion = "1.4.0"
-        const val navigationVersion = "2.7.4"
+        const val navigationVersion = "2.7.5"
         const val lifecycleVersion = "2.6.2"
         const val pagingVersion = "3.1.1"
         const val workVersion = "2.8.1"
