@@ -40,13 +40,27 @@ android {
         kotlinCompilerExtensionVersion = "1.5.4"
     }
     packaging {
+        jniLibs {
+            pickFirsts.addAll(listOf("lib/x86/libc++_shared.so", "lib/x86_64/libc++_shared.so", "lib/armeabi-v7a/libc++_shared.so", "lib/arm64-v8a/libc++_shared.so",
+                "lib/x86/libsodium.so", "lib/x86_64/libsodium.so", "lib/arm64-v8a/libsodium.so",
+                "lib/x86/libself_omemo.so", "lib/x86_64/libself_omemo.so", "lib/arm64-v8a/libself_omemo.so"))
+            useLegacyPackaging = true
+        }
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes.addAll(listOf("META-INF/DEPENDENCIES.txt", "META-INF/LICENSE.txt", "META-INF/NOTICE.txt",
+                "META-INF/NOTICE", "META-INF/LICENSE", "META-INF/DEPENDENCIES",
+                "META-INF/notice.txt", "META-INF/license.txt", "META-INF/dependencies.txt",
+                "META-INF/LGPL2.1", "META-INF/*.kotlin_module", "META-INF/versions/9/previous-compilation-data.bin"))
+        }
+        dex {
+            useLegacyPackaging = true
         }
     }
 }
 
 dependencies {
+    implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.0")
@@ -55,6 +69,13 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    modules {
+        module("com.google.guava:listenablefuture") {
+            replacedBy("com.google.guava:guava", "listenablefuture is part of guava")
+        }
+    }
 }
