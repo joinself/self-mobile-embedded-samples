@@ -19,16 +19,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.compose.NavHost
@@ -40,11 +43,13 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.joinself.sdk.Environment
 import com.joinself.sdk.liveness.LivenessCheck
 import com.joinself.sdk.models.Account
+import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
-    val livenessCheck = LivenessCheck()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +60,7 @@ class MainActivity : ComponentActivity() {
             .build()
 
         setContent {
+            val coroutineScope = rememberCoroutineScope()
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "main") {
                 composable("main") {
@@ -65,6 +71,9 @@ class MainActivity : ComponentActivity() {
                             color = MaterialTheme.colorScheme.background
                         ) {
                             MainView(account = account,
+                                onCreateAccount = {
+                                    navController.navigate("livenessCheck")
+                                },
                                 onNavigateToLivenessCheck = {
                                     navController.navigate("livenessCheck")
                                 }, onNavigateToMessaging = {
@@ -80,7 +89,14 @@ class MainActivity : ComponentActivity() {
                             .padding(start = 0.dp, top = 50.dp, end = 0.dp, bottom = 0.dp),
                             color = MaterialTheme.colorScheme.background
                         ) {
-                            LivenessCheckScreen(livenessCheck = livenessCheck, account = account, activity = this@MainActivity)
+                            LivenessCheckScreen(account = account, activity = this@MainActivity) { attestation ->
+                                if (account.identifier().isNullOrEmpty() && attestation != null) {
+                                    coroutineScope.launch(Dispatchers.Default) {
+                                        val selfId = account.register(selfieAttestation = attestation)
+                                        Timber.d("SelfId: $selfId")
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -103,12 +119,13 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
 
-        livenessCheck.stop()
+//        livenessCheck.stop()
     }
 }
 
 @Composable
 fun MainView(account: Account,
+             onCreateAccount: () -> Unit,
              onNavigateToLivenessCheck: () -> Unit,
              onNavigateToMessaging: () -> Unit) {
     val selfId = account.identifier()
@@ -121,13 +138,15 @@ fun MainView(account: Account,
             text = "SelfId: $selfId",
         )
 
-        Button(onClick = {  }, enabled = selfId.isNullOrEmpty()) {
+        Button(onClick = {
+            onCreateAccount.invoke()
+        }, enabled = selfId.isNullOrEmpty()) {
             Text(text = stringResource(id = R.string.button_create_account))
         }
 
         Button(onClick = {
             onNavigateToMessaging.invoke()
-        }, enabled = selfId.isNullOrEmpty()) {
+        }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Messaging")
         }
 
@@ -142,7 +161,7 @@ fun MainView(account: Account,
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun LivenessCheckScreen(livenessCheck: LivenessCheck, account: Account, activity: Activity) {
+fun LivenessCheckScreen(account: Account, activity: Activity, onResult: (attestation: Attestation?) -> Unit) {
     val context = LocalContext.current
     val cameraPermissionState =
         rememberPermissionState(permission = android.Manifest.permission.CAMERA)
@@ -160,17 +179,19 @@ fun LivenessCheckScreen(livenessCheck: LivenessCheck, account: Account, activity
             }
         },
         content = {
-            LivenessCheckView(livenessCheck = livenessCheck, account = account, activity = activity)
+            LivenessCheckView(account = account, activity = activity, onResult)
         }
     )
 }
 
 @Composable
-fun LivenessCheckView(livenessCheck: LivenessCheck, account: Account, activity: Activity) {
+fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestation: Attestation?) -> Unit) {
+    val livenessCheck = LivenessCheck()
+
     var cameraPreview: com.joinself.sdk.liveness.CameraSourcePreview? = null
     var graphicOverlay: com.joinself.sdk.liveness.GraphicOverlay? = null
 
-    var challenge: LivenessCheck.Challenge by remember { mutableStateOf(LivenessCheck.Challenge.None) }
+    var challenge: LivenessCheck.Challenge? by remember { mutableStateOf(LivenessCheck.Challenge.None) }
     var status: LivenessCheck.Status by remember { mutableStateOf(LivenessCheck.Status.Info) }
     var error: LivenessCheck.Error? by remember { mutableStateOf(null) }
 
@@ -179,8 +200,26 @@ fun LivenessCheckView(livenessCheck: LivenessCheck, account: Account, activity: 
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(top = 10.dp)
     ) {
+        var txt = when (challenge) {
+            LivenessCheck.Challenge.Smile -> stringResource(id = R.string.msg_liveness_smile)
+            LivenessCheck.Challenge.Blink -> stringResource(R.string.msg_liveness_blink)
+            LivenessCheck.Challenge.TurnLeft -> stringResource(R.string.msg_liveness_turn_left)
+            LivenessCheck.Challenge.TurnRight -> stringResource(R.string.msg_liveness_turn_right)
+            LivenessCheck.Challenge.Done -> stringResource(R.string.thank_you_2)
+            else -> ""
+        }
+
+        if (error != null) {
+            txt = when (error) {
+                LivenessCheck.Error.FaceChanged -> stringResource(R.string.error_liveness_out_of_preview)
+                LivenessCheck.Error.OutOfPreview -> stringResource(R.string.msg_liveness_desc)
+                else -> ""
+            }
+        }
+
         Text(
-            text = "Challenge: ${challenge.name}"
+            text = txt,
+            textAlign = TextAlign.Center
         )
         Text(
             text = "Status: ${error?.name ?: status.name}"
@@ -204,7 +243,7 @@ fun LivenessCheckView(livenessCheck: LivenessCheck, account: Account, activity: 
         }
     }
 
-    LaunchedEffect(Unit) {
+    DisposableEffect(Unit) {
         if (graphicOverlay != null && cameraPreview != null) {
             livenessCheck.initialize(account, activity, graphicOverlay!!, cameraPreview!!,
                 onStatusUpdated = { sts ->
@@ -214,6 +253,7 @@ fun LivenessCheckView(livenessCheck: LivenessCheck, account: Account, activity: 
                 onChallengeChanged = { chgn ->
                     Timber.d("challenge: $chgn")
                     challenge = chgn
+                    error = null
                 },
                 onError = { err ->
                     Timber.d("error: $err")
@@ -221,11 +261,13 @@ fun LivenessCheckView(livenessCheck: LivenessCheck, account: Account, activity: 
                 },
                 onResult = { attestation ->
                     Timber.d("attestation: $attestation")
-
-                    livenessCheck.stop()
+                    onResult.invoke(attestation)
                 })
 
             livenessCheck.start()
+        }
+        onDispose {
+            livenessCheck.stop()
         }
     }
 }
