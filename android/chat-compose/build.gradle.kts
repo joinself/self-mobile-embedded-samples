@@ -35,6 +35,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4"
@@ -61,6 +62,10 @@ android {
 dependencies {
     implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
 //    implementation(project(":self-android-sdk"))
+
+    implementation("com.jakewharton.timber:timber:${Config.Version.timberVersion}")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.23.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.19.0")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
