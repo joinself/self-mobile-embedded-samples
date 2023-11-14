@@ -53,11 +53,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val account = Account.Builder()
             .setContext(this)
             .setEnvironment(Environment.review)
             .setStoragePath("account1")
             .build()
+        var attestationCallBack: ((attesation: Attestation?) -> Unit)? = null
 
         setContent {
             val coroutineScope = rememberCoroutineScope()
@@ -72,6 +74,14 @@ class MainActivity : ComponentActivity() {
                         ) {
                             MainView(account = account,
                                 onCreateAccount = {
+                                    attestationCallBack = { attestation ->
+                                        if (account.identifier().isNullOrEmpty() && attestation != null) {
+                                            coroutineScope.launch(Dispatchers.Default) {
+                                                val selfId = account.register(selfieAttestation = attestation)
+                                                Timber.d("SelfId: $selfId")
+                                            }
+                                        }
+                                    }
                                     navController.navigate("livenessCheck")
                                 },
                                 onNavigateToLivenessCheck = {
@@ -90,11 +100,10 @@ class MainActivity : ComponentActivity() {
                             color = MaterialTheme.colorScheme.background
                         ) {
                             LivenessCheckScreen(account = account, activity = this@MainActivity) { attestation ->
-                                if (account.identifier().isNullOrEmpty() && attestation != null) {
-                                    coroutineScope.launch(Dispatchers.Default) {
-                                        val selfId = account.register(selfieAttestation = attestation)
-                                        Timber.d("SelfId: $selfId")
-                                    }
+                                if (attestationCallBack != null) {
+                                    attestationCallBack?.invoke(attestation)
+                                    attestationCallBack = null
+                                    navController.popBackStack()
                                 }
                             }
                         }
