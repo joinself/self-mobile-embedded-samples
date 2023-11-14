@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -44,6 +47,8 @@ import com.joinself.sdk.Environment
 import com.joinself.sdk.liveness.LivenessCheck
 import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
+import com.joinself.sdk.models.ChatMessage
+import com.joinself.sdk.models.Message
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -283,14 +288,26 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestati
 
 @Composable
 fun MessagingView(account: Account) {
-    var toSelfId by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+    var toSelfId by remember { mutableStateOf("20084590084") }
+    var msgText by remember { mutableStateOf("") }
+
+    val messages = remember { mutableStateListOf<Message>() }
+    account.setOnMessageListener {
+        messages.add(it)
+    }
+    account.setOnRequestListener {
+        messages.add(it)
+    }
+    account.setOnResponseListener {
+        messages.add(it)
+    }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(10.dp)
     ) {
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "To SelfId: "
             )
@@ -300,6 +317,46 @@ fun MessagingView(account: Account) {
                 maxLines = 1, singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
+        }
+        Column {
+            messages.forEach {msg ->
+                key(msg.id()) {
+                    if (msg is ChatMessage) {
+                        Text(
+                            text = msg.message()
+                        )
+                    }
+                }
+            }
+        }
+
+        Row {
+            TextField(
+                modifier  = Modifier.width(250.dp),
+                value = msgText,
+                onValueChange = { msgText = it },
+                maxLines = 5, singleLine = false,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            )
+
+            Button(modifier = Modifier.wrapContentWidth(),
+                enabled = msgText.isNotBlank(),
+                onClick = {
+                    coroutineScope.launch(Dispatchers.Default) {
+                        val chatMsg = ChatMessage.Builder()
+                            .setToIdentifier(toSelfId)
+                            .setMessage(msgText)
+                            .build()
+
+                        msgText = ""
+                        messages.add(chatMsg)
+
+                        account.send(message = chatMsg) { }
+                    }
+                }
+            ) {
+                Text(text = "Send")
+            }
         }
     }
 }
