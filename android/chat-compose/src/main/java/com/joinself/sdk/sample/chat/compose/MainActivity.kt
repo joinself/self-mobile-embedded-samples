@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,13 +48,19 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.joinself.sdk.Environment
 import com.joinself.sdk.liveness.LivenessCheck
 import com.joinself.sdk.models.Account
+import com.joinself.sdk.models.Attachment
 import com.joinself.sdk.models.Attestation
+import com.joinself.sdk.models.AttestationRequest
+import com.joinself.sdk.models.AttestationResponse
 import com.joinself.sdk.models.ChatMessage
 import com.joinself.sdk.models.Message
+import com.joinself.sdk.models.ResponseStatus
+import com.joinself.sdk.models.VerificationResponse
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.Date
 
 class MainActivity : ComponentActivity() {
 
@@ -70,6 +77,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             val coroutineScope = rememberCoroutineScope()
             val navController = rememberNavController()
+            var selfId: String? by remember { mutableStateOf(account.identifier()) }
+
             NavHost(navController = navController, startDestination = "main") {
                 composable("main") {
                     SelfSDKSamplesTheme {
@@ -78,12 +87,12 @@ class MainActivity : ComponentActivity() {
                             .padding(start = 0.dp, top = 50.dp, end = 0.dp, bottom = 0.dp),
                             color = MaterialTheme.colorScheme.background
                         ) {
-                            MainView(account = account,
+                            MainView(selfId = selfId,
                                 onCreateAccount = {
                                     attestationCallBack = { attestation ->
                                         if (account.identifier().isNullOrEmpty() && attestation != null) {
                                             coroutineScope.launch(Dispatchers.Default) {
-                                                val selfId = account.register(selfieAttestation = attestation)
+                                                selfId = account.register(selfieAttestation = attestation)
                                                 Timber.d("SelfId: $selfId")
                                             }
                                         }
@@ -106,10 +115,11 @@ class MainActivity : ComponentActivity() {
                             color = MaterialTheme.colorScheme.background
                         ) {
                             LivenessCheckScreen(account = account, activity = this@MainActivity) { attestation ->
+                                selfId = Date().toString()
                                 if (attestationCallBack != null) {
+                                    navController.popBackStack()
                                     attestationCallBack?.invoke(attestation)
                                     attestationCallBack = null
-                                    navController.popBackStack()
                                 }
                             }
                         }
@@ -130,20 +140,13 @@ class MainActivity : ComponentActivity() {
 
         }
     }
-
-    override fun onPause() {
-        super.onPause()
-
-//        livenessCheck.stop()
-    }
 }
 
 @Composable
-fun MainView(account: Account,
+fun MainView(selfId: String?,
              onCreateAccount: () -> Unit,
              onNavigateToLivenessCheck: () -> Unit,
              onNavigateToMessaging: () -> Unit) {
-    val selfId = account.identifier()
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -151,6 +154,7 @@ fun MainView(account: Account,
     ) {
         Text(
             text = "SelfId: $selfId",
+            textAlign = TextAlign.Center,
         )
 
         Button(onClick = {
@@ -296,9 +300,10 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestati
 fun MessagingView(account: Account) {
     val coroutineScope = rememberCoroutineScope()
     var toSelfId by remember { mutableStateOf("20084590084") }
+    val mySelfId = account.identifier()
     var msgText by remember { mutableStateOf("") }
+    val messages = remember { mutableStateListOf<Any>() }
 
-    val messages = remember { mutableStateListOf<Message>() }
     account.setOnMessageListener {
         messages.add(it)
     }
@@ -307,6 +312,23 @@ fun MessagingView(account: Account) {
     }
     account.setOnResponseListener {
         messages.add(it)
+    }
+
+    fun responseAttestationReqest() {
+        val request = messages.lastOrNull() as? AttestationRequest
+        if (request != null) {
+            val selfSignedAttestation = account.makeSelfSignedAttestation(source = "user_specified", "surname", "Test User")
+            val attestations = account.attestations()
+            val att = attestations.firstOrNull { it.fact().name() == request.facts().first().name() }
+            if (att != null) {
+                val response = request.makeAttestationResponse(ResponseStatus.accepted, attestations = listOf(att))
+                coroutineScope.launch {
+                    account.accept(response) {
+                    }
+                    messages.add(response)
+                }
+            }
+        }
     }
 
     Column(
@@ -325,13 +347,50 @@ fun MessagingView(account: Account) {
             )
         }
         Column {
-            messages.forEach {msg ->
-                key(msg.id()) {
-                    if (msg is ChatMessage) {
-                        Text(
-                            text = msg.message()
-                        )
+            messages.forEach { item ->
+                if (item is Message) {
+                    key(item.id()) {
+                        val title = if (item.fromIdentifier() == mySelfId) "You" else item.fromIdentifier()
+                        val msg = when (item) {
+                            is ChatMessage -> {
+                                val msgBuilder = StringBuilder()
+                                msgBuilder.append(item.message())
+                                if (item.attachments().isNotEmpty()) {
+                                    val attString = item.attachments().map { "${it.name()} size: ${it.content().size} bytes" }.joinToString(", ")
+                                    msgBuilder.appendLine()
+                                    msgBuilder.append(attString)
+                                }
+
+                                msgBuilder.toString()
+                            }
+                            is AttestationRequest -> {
+                                val factString = item.facts().map { it.name() }.joinToString(", ")
+                                "Fact Req: $factString"
+                            }
+                            is AttestationResponse -> {
+                                val factString = item.attestations().map { "${it.fact().name()}:${it.fact().value()}" }.joinToString("\n")
+                                "Fact Resp: ${item.status().name} \n$factString"
+                            }
+                            is VerificationResponse -> {
+                                val factString = item.attestations().map { "${it.fact().name()}:${it.fact().value()}" }.joinToString("\n")
+                                "Verification Resp: ${item.status().name} \n$factString"
+                            }
+                            else -> ""
+                        }
+                        Column {
+                            Text(
+                                text = title,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = msg
+                            )
+                        }
                     }
+                } else if (item is Attestation) {
+                    Text(
+                        text = "${item.fact().name()}:${item.fact().value()}"
+                    )
                 }
             }
         }
@@ -349,6 +408,11 @@ fun MessagingView(account: Account) {
                 enabled = msgText.isNotBlank(),
                 onClick = {
                     coroutineScope.launch(Dispatchers.Default) {
+                        val attachment = Attachment.Builder()
+                            .setData("hello".toByteArray())
+                            .setName("test.txt")
+                            .build()
+
                         val chatMsg = ChatMessage.Builder()
                             .setToIdentifier(toSelfId)
                             .setMessage(msgText)
