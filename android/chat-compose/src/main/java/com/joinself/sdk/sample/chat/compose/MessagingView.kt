@@ -30,19 +30,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.joinself.sdk.DocumentDataType
+import com.joinself.sdk.DocumentType
 import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attachment
 import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.models.AttestationRequest
 import com.joinself.sdk.models.AttestationResponse
 import com.joinself.sdk.models.ChatMessage
+import com.joinself.sdk.models.DataObject
+import com.joinself.sdk.models.Fact
 import com.joinself.sdk.models.Message
 import com.joinself.sdk.models.ResponseStatus
+import com.joinself.sdk.models.VerificationRequest
 import com.joinself.sdk.models.VerificationResponse
+import com.joinself.sdk.sample.common.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -67,7 +75,21 @@ fun MessagingView(account: Account) {
         messages.add(it)
     }
 
-    fun responseAttestationReqest() {
+    fun sendFactRequest(factKey: String) {
+        coroutineScope.launch {
+            val fact = Fact.Builder()
+                .setName(factKey)
+                .build()
+            val factRequest = AttestationRequest.Builder()
+                .setToIdentifier(toSelfId)
+                .setFacts(listOf(fact))
+                .build()
+            account.send(factRequest) {}
+            messages.add(factRequest)
+        }
+    }
+
+    fun respondAttestationRequest() {
         val request = messages.lastOrNull() as? AttestationRequest
         if (request != null) {
             val selfSignedAttestation = account.makeSelfSignedAttestation(source = "user_specified", "surname", "Test User")
@@ -83,6 +105,36 @@ fun MessagingView(account: Account) {
             }
         }
     }
+
+    fun verifyIdCard() {
+        coroutineScope.launch(Dispatchers.Default) {
+            val front = DataObject.Builder()
+                .setData("front".toByteArray())
+                .setContentType("image/jpeg")
+                .build()
+            val back = DataObject.Builder()
+                .setData("back".toByteArray())
+                .setContentType("image/jpeg")
+                .build()
+            val mrz = DataObject.Builder()
+                .setData("IDGBR1234567897<<<<<<<<<<<<<<<7704145F1907313GBR<<<<<<<<K<<8HENDERSON<<ELIZABETH<<<<<<<<<<".toByteArray())
+                .setContentType("text/plain")
+                .build()
+            val proofs = mapOf(
+                DocumentDataType.DOCUMENT_IMAGE_FRONT to front,
+                DocumentDataType.DOCUMENT_IMAGE_BACK to back,
+                DocumentDataType.MRZ to mrz)
+            val verificationRequest = VerificationRequest.Builder()
+                .setType(DocumentType.IDCARD)
+                .setProofs(proofs)
+                .build()
+            account.send(verificationRequest) {
+
+            }
+            messages.add(verificationRequest)
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.padding(4.dp)
@@ -94,7 +146,16 @@ fun MessagingView(account: Account) {
                 }
             },
             actions = {
-                OverflowMenu()
+                OverflowMenu(request = ::sendFactRequest,
+                    allAttestation = {
+                        messages.addAll(account.attestations())
+                    },
+                    respondFactRequest = {
+                        respondAttestationRequest()
+                    }, verifyDoc = {
+                        verifyIdCard()
+                    }
+                )
             }
         )
 
@@ -123,7 +184,6 @@ fun MessagingView(account: Account) {
                                     msgBuilder.appendLine()
                                     msgBuilder.append(attString)
                                 }
-
                                 msgBuilder.toString()
                             }
                             is AttestationRequest -> {
@@ -133,6 +193,9 @@ fun MessagingView(account: Account) {
                             is AttestationResponse -> {
                                 val factString = item.attestations().map { "${it.fact().name()}:${it.fact().value()}" }.joinToString("\n")
                                 "Fact Resp: ${item.status().name} \n$factString"
+                            }
+                            is VerificationRequest -> {
+                                "Verification Req: ${item.type()}"
                             }
                             is VerificationResponse -> {
                                 val factString = item.attestations().map { "${it.fact().name()}:${it.fact().value()}" }.joinToString("\n")
@@ -192,21 +255,59 @@ fun MessagingView(account: Account) {
             }
         }
     }
+
+
 }
 
 @Composable
-fun OverflowMenu() {
+fun OverflowMenu(request: (String)->Unit, allAttestation: ()->Unit, respondFactRequest:()->Unit, verifyDoc:()->Unit) {
     var showMenu by remember { mutableStateOf(false) }
+    var showFacts by remember { mutableStateOf(false) }
+
+    val factItems = Utils.fieldOrderList.map {
+        Utils.getFactTitleFromKey(LocalContext.current, it, source = null) to it
+    }.toMap()
 
     IconButton(onClick = { showMenu = !showMenu }) {
         Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More", tint = Color.Black)
     }
     DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false}) {
         DropdownMenuItem(text = {
-            Text(text = "Request Fact")
+            Text(text = "Request Attestation")
         }, onClick = {
-
+            showMenu = false
+            showFacts = true
         })
+        DropdownMenuItem(text = {
+            Text(text = "All Attestations")
+        }, onClick = {
+            showMenu = false
+            allAttestation.invoke()
+        })
+        DropdownMenuItem(text = {
+            Text(text = "Respond to Attestation Request")
+        }, onClick = {
+            showMenu = false
+            respondFactRequest.invoke()
+        })
+        DropdownMenuItem(text = {
+            Text(text = "Verify Document")
+        }, onClick = {
+            showMenu = false
+            verifyDoc.invoke()
+        })
+    }
+    DropdownMenu(expanded = showFacts, onDismissRequest = { showFacts = false}) {
+        factItems.keys.forEach {
+            DropdownMenuItem(text = {
+                Text(text = it)
+            }, onClick = {
+                showFacts = false
+                factItems.get(it)?.let {fact ->
+                    request.invoke(fact)
+                }
+            })
+        }
     }
 }
 

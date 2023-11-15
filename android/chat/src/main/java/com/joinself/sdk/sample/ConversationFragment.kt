@@ -181,30 +181,7 @@ class ConversationFragment: Fragment() {
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.item_verify_doc) {
-                        lifecycleScope.launch(Dispatchers.Default) {
-                            val front = DataObject.Builder()
-                                .setData("front".toByteArray())
-                                .setContentType("image/jpeg")
-                                .build()
-                            val back = DataObject.Builder()
-                                .setData("back".toByteArray())
-                                .setContentType("image/jpeg")
-                                .build()
-                            val mrz = DataObject.Builder()
-                                .setData("IDGBR1234567897<<<<<<<<<<<<<<<7704145F1907313GBR<<<<<<<<K<<8HENDERSON<<ELIZABETH<<<<<<<<<<".toByteArray())
-                                .setContentType("text/plain")
-                                .build()
-                            val proofs = mapOf(DocumentDataType.DOCUMENT_IMAGE_FRONT to front,
-                                DocumentDataType.DOCUMENT_IMAGE_BACK to back,
-                                DocumentDataType.MRZ to mrz)
-                            val verificationRequest = VerificationRequest.Builder()
-                                .setType(DocumentType.PASSPORT)
-                                .setProofs(proofs)
-                                .build()
-                            account.send(verificationRequest) {
-
-                            }
-                        }
+                        verifyDrivingLicense()
                     } else if (menuItem.itemId == R.id.item_all_attestations) {
                         addMessage(account.attestations())
                     } else if (menuItem.itemId == R.id.item_fact_response) {
