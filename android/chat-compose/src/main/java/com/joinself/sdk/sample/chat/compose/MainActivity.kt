@@ -7,34 +7,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,7 +36,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,14 +49,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.joinself.sdk.Environment
 import com.joinself.sdk.liveness.LivenessCheck
 import com.joinself.sdk.models.Account
-import com.joinself.sdk.models.Attachment
 import com.joinself.sdk.models.Attestation
-import com.joinself.sdk.models.AttestationRequest
-import com.joinself.sdk.models.AttestationResponse
-import com.joinself.sdk.models.ChatMessage
-import com.joinself.sdk.models.Message
-import com.joinself.sdk.models.ResponseStatus
-import com.joinself.sdk.models.VerificationResponse
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -95,8 +77,7 @@ class MainActivity : ComponentActivity() {
                 composable("main") {
                     SelfSDKSamplesTheme {
                         Surface(modifier = Modifier
-                            .fillMaxSize()
-                            .padding(start = 0.dp, top = 0.dp, end = 0.dp, bottom = 0.dp),
+                            .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
                             MainView(selfId = selfId,
@@ -122,34 +103,37 @@ class MainActivity : ComponentActivity() {
                 composable("livenessCheck") {
                     SelfSDKSamplesTheme {
                         Surface(modifier = Modifier
-                            .fillMaxSize()
-                            .padding(start = 0.dp, top = 30.dp, end = 0.dp, bottom = 0.dp),
+                            .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-                            LivenessCheckScreen(account = account, activity = this@MainActivity) { attestation ->
-                                selfId = Date().toString()
-                                if (attestationCallBack != null) {
+                            LivenessCheckScreen(account = account, activity = this@MainActivity,
+                                onResult = { attestation ->
+                                    if (attestationCallBack != null) {
+                                        navController.popBackStack()
+                                        attestationCallBack?.invoke(attestation)
+                                        attestationCallBack = null
+                                    }
+                                },
+                                onBack = {
                                     navController.popBackStack()
-                                    attestationCallBack?.invoke(attestation)
-                                    attestationCallBack = null
                                 }
-                            }
+                            )
                         }
                     }
                 }
                 composable("messaging") {
                     SelfSDKSamplesTheme {
                         Surface(modifier = Modifier
-                            .fillMaxSize()
-                            .padding(start = 0.dp, top = 0.dp, end = 0.dp, bottom = 0.dp),
+                            .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-                            MessagingView(account = account)
+                            MessagingView(account = account, onBack = {
+                                navController.popBackStack()
+                            })
                         }
                     }
                 }
             }
-
         }
     }
 }
@@ -195,7 +179,7 @@ fun MainView(selfId: String?,
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun LivenessCheckScreen(account: Account, activity: Activity, onResult: (attestation: Attestation?) -> Unit) {
+fun LivenessCheckScreen(account: Account, activity: Activity, onResult: (attestation: Attestation?) -> Unit, onBack:()->Unit) {
     val context = LocalContext.current
     val cameraPermissionState =
         rememberPermissionState(permission = android.Manifest.permission.CAMERA)
@@ -213,13 +197,14 @@ fun LivenessCheckScreen(account: Account, activity: Activity, onResult: (attesta
             }
         },
         content = {
-            LivenessCheckView(account = account, activity = activity, onResult)
+            LivenessCheckView(account = account, activity = activity, onResult, onBack)
         }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestation: Attestation?) -> Unit) {
+fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestation: Attestation?) -> Unit, onBack:()->Unit) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val livenessCheck = LivenessCheck()
@@ -232,9 +217,9 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestati
     var error: LivenessCheck.Error? by remember { mutableStateOf(null) }
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(0.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(top = 10.dp)
+        modifier = Modifier.padding(0.dp)
     ) {
         var txt = when (challenge) {
             LivenessCheck.Challenge.Smile -> stringResource(id = R.string.msg_liveness_smile)
@@ -253,18 +238,27 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestati
             }
         }
 
+        TopAppBar(
+            title = { Text(text = "" ) },
+            navigationIcon = {
+                IconButton(onClick = { onBack.invoke() }) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.Black)
+                }
+            }
+        )
         Text(
+            modifier = Modifier.padding(top = 8.dp),
             text = txt,
             textAlign = TextAlign.Center,
-            maxLines = 3, minLines = 2
+            maxLines = 3, minLines = 2,
+            fontWeight = FontWeight.Bold
         )
-        Text(
+        Text(modifier = Modifier.padding(top = 4.dp),
             text = "Status: ${error?.name ?: status.name}"
         )
-        Surface(modifier = Modifier
-            .width(300.dp)
-            .height(300.dp)) {
-
+        Surface(
+            modifier = Modifier.width(300.dp).height(300.dp)
+        ) {
             AndroidView(modifier = Modifier.fillMaxSize(),
                 factory = { ctx ->
                     cameraPreview = com.joinself.sdk.liveness.CameraSourcePreview(ctx, null)

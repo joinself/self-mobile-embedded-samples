@@ -1,6 +1,5 @@
 package com.joinself.sdk.sample.chat.compose
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +15,9 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
@@ -37,7 +39,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.compose.rememberNavController
 import com.joinself.sdk.DocumentDataType
 import com.joinself.sdk.DocumentType
 import com.joinself.sdk.models.Account
@@ -58,11 +59,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun MessagingView(account: Account) {
+fun MessagingView(account: Account, onBack: ()->Unit) {
     val coroutineScope = rememberCoroutineScope()
-    val navController = rememberNavController()
 
-    var toSelfId by remember { mutableStateOf("20084590084") }
+    var toSelfId by remember { mutableStateOf("") }
     val mySelfId = account.identifier()
     var msgText by remember { mutableStateOf("") }
     val messages = remember { mutableStateListOf<Any>() }
@@ -138,7 +138,9 @@ fun MessagingView(account: Account) {
     }
 
     ConstraintLayout(
-        modifier = Modifier.fillMaxSize().padding(4.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(4.dp)
     ) {
         val (topbar, toSelf, msgList, msgInput, sendBtn) = createRefs()
         TopAppBar(
@@ -149,18 +151,18 @@ fun MessagingView(account: Account) {
             },
             title = { Text(text = "Messaging" ) },
             navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
+                IconButton(onClick = { onBack.invoke() }) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.Black)
                 }
             },
             actions = {
-                OverflowMenu(request = ::sendFactRequest,
-                    allAttestation = {
+                OverflowMenu(onRequest = ::sendFactRequest,
+                    onAllAttestation = {
                         messages.addAll(account.attestations())
                     },
-                    respondFactRequest = {
+                    onRespondFactRequest = {
                         respondAttestationRequest()
-                    }, verifyDoc = {
+                    }, onVerifyDoc = {
                         verifyIdCard()
                     }
                 )
@@ -258,15 +260,21 @@ fun MessagingView(account: Account) {
         )
 
         Button(
-            modifier = Modifier.constrainAs(sendBtn){
-                bottom.linkTo(parent.bottom, margin = 8.dp)
-                start.linkTo(msgInput.end)
-                end.linkTo(parent.end)
-                width = Dimension.wrapContent
-            }.wrapContentWidth(),
+            modifier = Modifier
+                .constrainAs(sendBtn) {
+                    bottom.linkTo(parent.bottom, margin = 8.dp)
+                    start.linkTo(msgInput.end)
+                    end.linkTo(parent.end)
+                    width = Dimension.wrapContent
+                }
+                .wrapContentWidth(),
             enabled = msgText.isNotBlank(),
             onClick = {
                 coroutineScope.launch(Dispatchers.Default) {
+                    if (toSelfId.isBlank()) {
+                        return@launch
+                    }
+
                     val attachment = Attachment.Builder()
                         .setData("hello".toByteArray())
                         .setName("test.txt")
@@ -286,12 +294,11 @@ fun MessagingView(account: Account) {
         ) {
             Text(text = "Send")
         }
-
     }
 }
 
 @Composable
-fun OverflowMenu(request: (String)->Unit, allAttestation: ()->Unit, respondFactRequest:()->Unit, verifyDoc:()->Unit) {
+fun OverflowMenu(onRequest: (String)->Unit, onAllAttestation: ()->Unit, onRespondFactRequest:()->Unit, onVerifyDoc:()->Unit) {
     var showMenu by remember { mutableStateOf(false) }
     var showFacts by remember { mutableStateOf(false) }
 
@@ -313,19 +320,19 @@ fun OverflowMenu(request: (String)->Unit, allAttestation: ()->Unit, respondFactR
             Text(text = "All Attestations")
         }, onClick = {
             showMenu = false
-            allAttestation.invoke()
+            onAllAttestation.invoke()
         })
         DropdownMenuItem(text = {
             Text(text = "Respond to Attestation Request")
         }, onClick = {
             showMenu = false
-            respondFactRequest.invoke()
+            onRespondFactRequest.invoke()
         })
         DropdownMenuItem(text = {
             Text(text = "Verify Document")
         }, onClick = {
             showMenu = false
-            verifyDoc.invoke()
+            onVerifyDoc.invoke()
         })
     }
     DropdownMenu(expanded = showFacts, onDismissRequest = { showFacts = false}) {
@@ -335,7 +342,7 @@ fun OverflowMenu(request: (String)->Unit, allAttestation: ()->Unit, respondFactR
             }, onClick = {
                 showFacts = false
                 factItems.get(it)?.let {fact ->
-                    request.invoke(fact)
+                    onRequest.invoke(fact)
                 }
             })
         }
