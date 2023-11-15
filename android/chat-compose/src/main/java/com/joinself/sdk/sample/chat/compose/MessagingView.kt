@@ -1,10 +1,10 @@
 package com.joinself.sdk.sample.chat.compose
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -28,13 +28,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.compose.rememberNavController
 import com.joinself.sdk.DocumentDataType
 import com.joinself.sdk.DocumentType
@@ -54,7 +56,7 @@ import com.joinself.sdk.sample.common.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MessagingView(account: Account) {
     val coroutineScope = rememberCoroutineScope()
@@ -135,11 +137,17 @@ fun MessagingView(account: Account) {
         }
     }
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.padding(4.dp)
+    ConstraintLayout(
+        modifier = Modifier.fillMaxSize().padding(4.dp)
     ) {
-        TopAppBar(title = { Text(text = "Messaging" ) },
+        val (topbar, toSelf, msgList, msgInput, sendBtn) = createRefs()
+        TopAppBar(
+            modifier = Modifier.constrainAs(topbar){
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            },
+            title = { Text(text = "Messaging" ) },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.Black)
@@ -159,7 +167,13 @@ fun MessagingView(account: Account) {
             }
         )
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.constrainAs(toSelf){
+                top.linkTo(topbar.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            },
+            verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "To SelfId: "
             )
@@ -170,7 +184,16 @@ fun MessagingView(account: Account) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }
-        Column {
+        Column(
+            modifier = Modifier.constrainAs(msgList){
+                top.linkTo(toSelf.bottom)
+                bottom.linkTo(msgInput.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+            }
+        ) {
             messages.forEach { item ->
                 if (item is Message) {
                     key(item.id()) {
@@ -203,7 +226,7 @@ fun MessagingView(account: Account) {
                             }
                             else -> ""
                         }
-                        Column {
+                        Column() {
                             Text(
                                 text = title,
                                 fontWeight = FontWeight.Bold
@@ -221,42 +244,50 @@ fun MessagingView(account: Account) {
             }
         }
 
-        Row {
-            TextField(
-                modifier  = Modifier.width(250.dp),
-                value = msgText,
-                onValueChange = { msgText = it },
-                maxLines = 5, singleLine = false,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            )
+        TextField(
+            modifier = Modifier.constrainAs(msgInput){
+                bottom.linkTo(parent.bottom, margin = 8.dp)
+                start.linkTo(parent.start)
+                end.linkTo(sendBtn.start)
+                width = Dimension.fillToConstraints
+            },
+            value = msgText,
+            onValueChange = { msgText = it },
+            maxLines = 5, singleLine = false,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        )
 
-            Button(modifier = Modifier.wrapContentWidth(),
-                enabled = msgText.isNotBlank(),
-                onClick = {
-                    coroutineScope.launch(Dispatchers.Default) {
-                        val attachment = Attachment.Builder()
-                            .setData("hello".toByteArray())
-                            .setName("test.txt")
-                            .build()
+        Button(
+            modifier = Modifier.constrainAs(sendBtn){
+                bottom.linkTo(parent.bottom, margin = 8.dp)
+                start.linkTo(msgInput.end)
+                end.linkTo(parent.end)
+                width = Dimension.wrapContent
+            }.wrapContentWidth(),
+            enabled = msgText.isNotBlank(),
+            onClick = {
+                coroutineScope.launch(Dispatchers.Default) {
+                    val attachment = Attachment.Builder()
+                        .setData("hello".toByteArray())
+                        .setName("test.txt")
+                        .build()
 
-                        val chatMsg = ChatMessage.Builder()
-                            .setToIdentifier(toSelfId)
-                            .setMessage(msgText)
-                            .build()
+                    val chatMsg = ChatMessage.Builder()
+                        .setToIdentifier(toSelfId)
+                        .setMessage(msgText)
+                        .build()
 
-                        msgText = ""
-                        messages.add(chatMsg)
+                    msgText = ""
+                    messages.add(chatMsg)
 
-                        account.send(message = chatMsg) { }
-                    }
+                    account.send(message = chatMsg) { }
                 }
-            ) {
-                Text(text = "Send")
             }
+        ) {
+            Text(text = "Send")
         }
+
     }
-
-
 }
 
 @Composable
