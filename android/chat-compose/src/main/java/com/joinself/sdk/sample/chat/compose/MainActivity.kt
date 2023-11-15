@@ -14,11 +14,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +41,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -84,7 +95,7 @@ class MainActivity : ComponentActivity() {
                     SelfSDKSamplesTheme {
                         Surface(modifier = Modifier
                             .fillMaxSize()
-                            .padding(start = 0.dp, top = 50.dp, end = 0.dp, bottom = 0.dp),
+                            .padding(start = 0.dp, top = 0.dp, end = 0.dp, bottom = 0.dp),
                             color = MaterialTheme.colorScheme.background
                         ) {
                             MainView(selfId = selfId,
@@ -142,6 +153,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView(selfId: String?,
              onCreateAccount: () -> Unit,
@@ -150,8 +162,10 @@ fun MainView(selfId: String?,
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(10.dp)
+        modifier = Modifier.padding(start = 8.dp, end = 8.dp)
     ) {
+        TopAppBar(title = { Text(text = "Chat Compose Sample" ) },
+            modifier = Modifier.padding(bottom = 16.dp))
         Text(
             text = "SelfId: $selfId",
             textAlign = TextAlign.Center,
@@ -292,141 +306,6 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestati
     DisposableEffect(lifecycleOwner) {
         onDispose {
             livenessCheck.stop()
-        }
-    }
-}
-
-@Composable
-fun MessagingView(account: Account) {
-    val coroutineScope = rememberCoroutineScope()
-    var toSelfId by remember { mutableStateOf("20084590084") }
-    val mySelfId = account.identifier()
-    var msgText by remember { mutableStateOf("") }
-    val messages = remember { mutableStateListOf<Any>() }
-
-    account.setOnMessageListener {
-        messages.add(it)
-    }
-    account.setOnRequestListener {
-        messages.add(it)
-    }
-    account.setOnResponseListener {
-        messages.add(it)
-    }
-
-    fun responseAttestationReqest() {
-        val request = messages.lastOrNull() as? AttestationRequest
-        if (request != null) {
-            val selfSignedAttestation = account.makeSelfSignedAttestation(source = "user_specified", "surname", "Test User")
-            val attestations = account.attestations()
-            val att = attestations.firstOrNull { it.fact().name() == request.facts().first().name() }
-            if (att != null) {
-                val response = request.makeAttestationResponse(ResponseStatus.accepted, attestations = listOf(att))
-                coroutineScope.launch {
-                    account.accept(response) {
-                    }
-                    messages.add(response)
-                }
-            }
-        }
-    }
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.padding(4.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "To SelfId: "
-            )
-            TextField(
-                value = toSelfId,
-                onValueChange = { toSelfId = it },
-                maxLines = 1, singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-        }
-        Column {
-            messages.forEach { item ->
-                if (item is Message) {
-                    key(item.id()) {
-                        val title = if (item.fromIdentifier() == mySelfId) "You" else item.fromIdentifier()
-                        val msg = when (item) {
-                            is ChatMessage -> {
-                                val msgBuilder = StringBuilder()
-                                msgBuilder.append(item.message())
-                                if (item.attachments().isNotEmpty()) {
-                                    val attString = item.attachments().map { "${it.name()} size: ${it.content().size} bytes" }.joinToString(", ")
-                                    msgBuilder.appendLine()
-                                    msgBuilder.append(attString)
-                                }
-
-                                msgBuilder.toString()
-                            }
-                            is AttestationRequest -> {
-                                val factString = item.facts().map { it.name() }.joinToString(", ")
-                                "Fact Req: $factString"
-                            }
-                            is AttestationResponse -> {
-                                val factString = item.attestations().map { "${it.fact().name()}:${it.fact().value()}" }.joinToString("\n")
-                                "Fact Resp: ${item.status().name} \n$factString"
-                            }
-                            is VerificationResponse -> {
-                                val factString = item.attestations().map { "${it.fact().name()}:${it.fact().value()}" }.joinToString("\n")
-                                "Verification Resp: ${item.status().name} \n$factString"
-                            }
-                            else -> ""
-                        }
-                        Column {
-                            Text(
-                                text = title,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = msg
-                            )
-                        }
-                    }
-                } else if (item is Attestation) {
-                    Text(
-                        text = "${item.fact().name()}:${item.fact().value()}"
-                    )
-                }
-            }
-        }
-
-        Row {
-            TextField(
-                modifier  = Modifier.width(250.dp),
-                value = msgText,
-                onValueChange = { msgText = it },
-                maxLines = 5, singleLine = false,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            )
-
-            Button(modifier = Modifier.wrapContentWidth(),
-                enabled = msgText.isNotBlank(),
-                onClick = {
-                    coroutineScope.launch(Dispatchers.Default) {
-                        val attachment = Attachment.Builder()
-                            .setData("hello".toByteArray())
-                            .setName("test.txt")
-                            .build()
-
-                        val chatMsg = ChatMessage.Builder()
-                            .setToIdentifier(toSelfId)
-                            .setMessage(msgText)
-                            .build()
-
-                        msgText = ""
-                        messages.add(chatMsg)
-
-                        account.send(message = chatMsg) { }
-                    }
-                }
-            ) {
-                Text(text = "Send")
-            }
         }
     }
 }

@@ -48,6 +48,7 @@ dependencyResolutionManagement {
     }
 }
 
+include(":common")
 include(":chat")
 include(":sign-in")
 include(":chat-compose")

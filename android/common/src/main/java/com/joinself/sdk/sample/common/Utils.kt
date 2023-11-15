@@ -1,7 +1,6 @@
-package com.joinself.sdk.sample
+package com.joinself.sdk.sample.common
 
 import android.content.Context
-import com.joinself.sdk.sample.signin.R
 import java.util.Locale
 
 class Utils {
@@ -21,13 +20,7 @@ class Utils {
             Constants.CLAIM_KEY_COUNTRY_OF_ISSUANCE,
             Constants.CLAIM_KEY_DATE_OF_ISSUANCE,
             Constants.CLAIM_KEY_ISSUE_AUTHORITY,
-            Constants.CLAIM_KEY_DATE_OF_EXPIRATION,
-            Constants.CLAIM_KEY_CATEGORIES,
-            Constants.CLAIM_KEY_SORT_CODE,
-            Constants.CLAIM_KEY_VALID_FROM,
-            Constants.CLAIM_KEY_VALID_TO,
-            Constants.FIELD_ACCOUNT_ID,
-            Constants.FIELD_NICKNAME
+            Constants.CLAIM_KEY_DATE_OF_EXPIRATION
         )
 
         fun getFactTitleFromKey(context: Context, key: String, source: String?, displayName: String? = null): String {
@@ -52,14 +45,6 @@ class Utils {
                 }
                 Constants.CLAIM_KEY_GIVEN_NAME -> {
                     title = context.getString(R.string.title_fact_givenNames)
-                    /*if (source == DocumentType.DRIVING_LICENSE) {
-                        title = context.getString(R.string.title_fact_otherNames)
-                    } else if ((source == DocumentType.PASSPORT) or (source == DocumentType.IDCARD)){
-                        title = context.getString(R.string.title_fact_givenNames)
-                    } else{
-                        title = context.getString(R.string.title_fact_firstnames)
-                    }*/
-
                 }
                 Constants.CLAIM_KEY_SURNAME -> {
                     title = context.getString(R.string.title_fact_surname)

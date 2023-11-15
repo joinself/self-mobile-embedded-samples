@@ -31,6 +31,7 @@ import com.joinself.sdk.models.VerificationRequest
 import com.joinself.sdk.models.VerificationResponse
 import com.joinself.sdk.sample.chat.R
 import com.joinself.sdk.sample.chat.databinding.FragmentConversationBinding
+import com.joinself.sdk.sample.common.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
