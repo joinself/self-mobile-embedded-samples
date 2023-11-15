@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -101,7 +102,7 @@ class MainActivity : ComponentActivity() {
                     SelfSDKSamplesTheme {
                         Surface(modifier = Modifier
                             .fillMaxSize()
-                            .padding(start = 0.dp, top = 50.dp, end = 0.dp, bottom = 0.dp),
+                            .padding(start = 0.dp, top = 30.dp, end = 0.dp, bottom = 0.dp),
                             color = MaterialTheme.colorScheme.background
                         ) {
                             LivenessCheckScreen(account = account, activity = this@MainActivity) { attestation ->
@@ -118,7 +119,7 @@ class MainActivity : ComponentActivity() {
                     SelfSDKSamplesTheme {
                         Surface(modifier = Modifier
                             .fillMaxSize()
-                            .padding(start = 0.dp, top = 50.dp, end = 0.dp, bottom = 0.dp),
+                            .padding(start = 0.dp, top = 0.dp, end = 0.dp, bottom = 0.dp),
                             color = MaterialTheme.colorScheme.background
                         ) {
                             MessagingView(account = account)
@@ -200,6 +201,8 @@ fun LivenessCheckScreen(account: Account, activity: Activity, onResult: (attesta
 
 @Composable
 fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestation: Attestation?) -> Unit) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
     val livenessCheck = LivenessCheck()
 
     var cameraPreview: com.joinself.sdk.liveness.CameraSourcePreview? = null
@@ -233,7 +236,8 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestati
 
         Text(
             text = txt,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            maxLines = 3, minLines = 2
         )
         Text(
             text = "Status: ${error?.name ?: status.name}"
@@ -257,7 +261,7 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestati
         }
     }
 
-    DisposableEffect(Unit) {
+    LaunchedEffect(lifecycleOwner) {
         if (graphicOverlay != null && cameraPreview != null) {
             livenessCheck.initialize(account, activity, graphicOverlay!!, cameraPreview!!,
                 onStatusUpdated = { sts ->
@@ -280,6 +284,8 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestati
 
             livenessCheck.start()
         }
+    }
+    DisposableEffect(lifecycleOwner) {
         onDispose {
             livenessCheck.stop()
         }
@@ -305,7 +311,7 @@ fun MessagingView(account: Account) {
 
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.padding(10.dp)
+        modifier = Modifier.padding(4.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
