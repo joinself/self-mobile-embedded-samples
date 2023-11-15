@@ -1,4 +1,4 @@
-package com.joinself.sdk.sample
+package com.joinself.sdk.sample.common
 
 class Constants {
     companion object {

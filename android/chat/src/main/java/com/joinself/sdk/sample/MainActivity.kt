@@ -18,8 +18,4 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
     }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-    }
 }

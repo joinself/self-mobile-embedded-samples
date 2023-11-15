@@ -7,12 +7,12 @@
         android:title="Get all attestations"
         app:showAsAction="never" />
     <item android:id="@+id/item_fact_response"
-        android:title="Response last fact request"
+        android:title="Respond to attestation request"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/item_request_fact"
-        android:title="@string/lbl_request_fact"
+        android:title="Request attestation"
         app:showAsAction="never">
         <menu>
 

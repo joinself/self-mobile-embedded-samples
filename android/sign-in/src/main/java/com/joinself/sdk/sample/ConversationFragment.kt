@@ -27,6 +27,7 @@ import com.joinself.sdk.models.Fact
 import com.joinself.sdk.models.ResponseStatus
 import com.joinself.sdk.models.VerificationRequest
 import com.joinself.sdk.models.VerificationResponse
+import com.joinself.sdk.sample.common.Utils
 import com.joinself.sdk.sample.signin.databinding.FragmentConversationBinding
 import com.joinself.sdk.sample.signin.R
 import kotlinx.coroutines.Dispatchers

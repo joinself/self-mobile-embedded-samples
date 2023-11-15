@@ -48,7 +48,9 @@ dependencyResolutionManagement {
     }
 }
 
+include(":common")
 include(":chat")
 include(":sign-in")
+include(":chat-compose")
 //include(":self-android-sdk")
 //project(":self-android-sdk").projectDir = file( "${rootProject.projectDir.parentFile.parentFile.path}/self-mobile-embedded/self-android-sdk")
