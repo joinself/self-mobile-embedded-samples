@@ -2,7 +2,7 @@ object Config {
     object Version {
         const val kotlinVersion = "1.9.20"
         const val androidGradlePluginVersion = "8.1.3"
-        const val realmVersion = "1.11.1"
+        const val realmVersion = "1.12.0"
 
         const val jacocoVersion = "0.8.10"
         const val supportVersion = "27.0.2"
@@ -35,9 +35,9 @@ object Config {
         const val protobufVersion = "3.24.1"
         const val glideVersion = "4.15.1"
         const val eventbusVersion = "3.3.1"
-        const val ktorVersion = "2.3.5"
+        const val ktorVersion = "2.3.6"
         const val kotlinxDatetime = "0.4.1"
-        const val kotlinxSerialization = "1.6.0"
+        const val kotlinxSerialization = "1.6.1"
         const val kotlinxCoroutines = "1.7.3"
     }
 
