@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -34,6 +37,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -56,11 +60,13 @@ import com.joinself.sdk.models.VerificationResponse
 import com.joinself.sdk.sample.common.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.time.Duration
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MessagingView(account: Account, onBack: ()->Unit) {
     val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     var toSelfId by remember { mutableStateOf("") }
     val mySelfId = account.identifier()
@@ -136,165 +142,167 @@ fun MessagingView(account: Account, onBack: ()->Unit) {
             messages.add(verificationRequest)
         }
     }
-
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(4.dp)
-    ) {
-        val (topbar, toSelf, msgList, msgInput, sendBtn) = createRefs()
-        TopAppBar(
-            modifier = Modifier.constrainAs(topbar){
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
-            title = { Text(text = "Messaging" ) },
-            navigationIcon = {
-                IconButton(onClick = { onBack.invoke() }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.Black)
-                }
-            },
-            actions = {
-                OverflowMenu(onRequest = ::sendFactRequest,
-                    onAllAttestation = {
-                        messages.addAll(account.attestations())
-                    },
-                    onRespondFactRequest = {
-                        respondAttestationRequest()
-                    }, onVerifyDoc = {
-                        verifyIdCard()
+    Scaffold(modifier = Modifier
+        .padding(0.dp)
+        .fillMaxSize(),
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Messaging" ) },
+                navigationIcon = {
+                    IconButton(onClick = { onBack.invoke() }) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.Black)
                     }
-                )
-            }
-        )
-
-        Row(
-            modifier = Modifier.constrainAs(toSelf){
-                top.linkTo(topbar.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            },
-            verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "To SelfId: "
-            )
-            TextField(
-                value = toSelfId,
-                onValueChange = { toSelfId = it },
-                maxLines = 1, singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-        }
-        Column(
-            modifier = Modifier.constrainAs(msgList){
-                top.linkTo(toSelf.bottom)
-                bottom.linkTo(msgInput.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-                height = Dimension.fillToConstraints
-            }
-        ) {
-            messages.forEach { item ->
-                if (item is Message) {
-                    key(item.id()) {
-                        val title = if (item.fromIdentifier() == mySelfId) "You" else item.fromIdentifier()
-                        val msg = when (item) {
-                            is ChatMessage -> {
-                                val msgBuilder = StringBuilder()
-                                msgBuilder.append(item.message())
-                                if (item.attachments().isNotEmpty()) {
-                                    val attString = item.attachments().map { "${it.name()} size: ${it.content().size} bytes" }.joinToString(", ")
-                                    msgBuilder.appendLine()
-                                    msgBuilder.append(attString)
-                                }
-                                msgBuilder.toString()
-                            }
-                            is AttestationRequest -> {
-                                val factString = item.facts().map { it.name() }.joinToString(", ")
-                                "Fact Req: $factString"
-                            }
-                            is AttestationResponse -> {
-                                val factString = item.attestations().map { "${it.fact().name()}:${it.fact().value()}" }.joinToString("\n")
-                                "Fact Resp: ${item.status().name} \n$factString"
-                            }
-                            is VerificationRequest -> {
-                                "Verification Req: ${item.type()}"
-                            }
-                            is VerificationResponse -> {
-                                val factString = item.attestations().map { "${it.fact().name()}:${it.fact().value()}" }.joinToString("\n")
-                                "Verification Resp: ${item.status().name} \n$factString"
-                            }
-                            else -> ""
+                },
+                actions = {
+                    OverflowMenu(onRequest = ::sendFactRequest,
+                        onAllAttestation = {
+                            messages.addAll(account.attestations())
+                        },
+                        onRespondFactRequest = {
+                            respondAttestationRequest()
+                        }, onVerifyDoc = {
+                            verifyIdCard()
                         }
-                        Column() {
-                            Text(
-                                text = title,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = msg
-                            )
-                        }
-                    }
-                } else if (item is Attestation) {
-                    Text(
-                        text = "${item.fact().name()}:${item.fact().value()}"
                     )
                 }
-            }
-        }
-
-        TextField(
-            modifier = Modifier.constrainAs(msgInput){
-                bottom.linkTo(parent.bottom, margin = 8.dp)
-                start.linkTo(parent.start)
-                end.linkTo(sendBtn.start)
-                width = Dimension.fillToConstraints
-            },
-            value = msgText,
-            onValueChange = { msgText = it },
-            maxLines = 5, singleLine = false,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        )
-
-        Button(
-            modifier = Modifier
-                .constrainAs(sendBtn) {
-                    bottom.linkTo(parent.bottom, margin = 8.dp)
-                    start.linkTo(msgInput.end)
-                    end.linkTo(parent.end)
-                    width = Dimension.wrapContent
+            )
+        },
+        content = { innerPadding ->
+            ConstraintLayout(
+                modifier = Modifier
+                    .padding(innerPadding).padding(8.dp)
+                    .fillMaxSize()
+            ) {
+                val (toSelf, msgList, msgInput, sendBtn) = createRefs()
+                Row(
+                    modifier = Modifier.constrainAs(toSelf){
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "To SelfId: "
+                    )
+                    TextField(
+                        value = toSelfId,
+                        onValueChange = { toSelfId = it },
+                        maxLines = 1, singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
                 }
-                .wrapContentWidth(),
-            enabled = msgText.isNotBlank(),
-            onClick = {
-                coroutineScope.launch(Dispatchers.Default) {
-                    if (toSelfId.isBlank()) {
-                        return@launch
+                Column(
+                    modifier = Modifier.constrainAs(msgList){
+                        top.linkTo(toSelf.bottom)
+                        bottom.linkTo(msgInput.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                        height = Dimension.fillToConstraints
                     }
+                ) {
+                    messages.forEach { item ->
+                        if (item is Message) {
+                            key(item.id()) {
+                                val title = if (item.fromIdentifier() == mySelfId) "You" else item.fromIdentifier()
+                                val msg = when (item) {
+                                    is ChatMessage -> {
+                                        val msgBuilder = StringBuilder()
+                                        msgBuilder.append(item.message())
+                                        if (item.attachments().isNotEmpty()) {
+                                            val attString = item.attachments().map { "${it.name()} size: ${it.content().size} bytes" }.joinToString(", ")
+                                            msgBuilder.appendLine()
+                                            msgBuilder.append(attString)
+                                        }
+                                        msgBuilder.toString()
+                                    }
+                                    is AttestationRequest -> {
+                                        val factString = item.facts().map { it.name() }.joinToString(", ")
+                                        "Fact Req: $factString"
+                                    }
+                                    is AttestationResponse -> {
+                                        val factString = item.attestations().map { "${it.fact().name()}:${it.fact().value()}" }.joinToString("\n")
+                                        "Fact Resp: ${item.status().name} \n$factString"
+                                    }
+                                    is VerificationRequest -> {
+                                        "Verification Req: ${item.type()}"
+                                    }
+                                    is VerificationResponse -> {
+                                        val factString = item.attestations().map { "${it.fact().name()}:${it.fact().value()}" }.joinToString("\n")
+                                        "Verification Resp: ${item.status().name} \n$factString"
+                                    }
+                                    else -> ""
+                                }
+                                Column() {
+                                    Text(
+                                        text = title,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = msg
+                                    )
+                                }
+                            }
+                        } else if (item is Attestation) {
+                            Text(
+                                text = "${item.fact().name()}:${item.fact().value()}"
+                            )
+                        }
+                    }
+                }
 
-                    val attachment = Attachment.Builder()
-                        .setData("hello".toByteArray())
-                        .setName("test.txt")
-                        .build()
+                TextField(
+                    modifier = Modifier.constrainAs(msgInput){
+                        bottom.linkTo(parent.bottom, margin = 8.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(sendBtn.start)
+                        width = Dimension.fillToConstraints
+                    },
+                    value = msgText,
+                    onValueChange = { msgText = it },
+                    maxLines = 5, singleLine = false,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                )
+                Button(
+                    modifier = Modifier
+                        .constrainAs(sendBtn) {
+                            bottom.linkTo(parent.bottom, margin = 8.dp)
+                            start.linkTo(msgInput.end)
+                            end.linkTo(parent.end)
+                            width = Dimension.wrapContent
+                        }
+                        .wrapContentWidth(),
+                    enabled = msgText.isNotBlank(),
+                    onClick = {
+                        coroutineScope.launch(Dispatchers.Default) {
+                            if (toSelfId.isBlank()) {
+                                snackbarHostState.showSnackbar("Please enter recipient SelfId ", duration = SnackbarDuration.Short)
+                                return@launch
+                            }
 
-                    val chatMsg = ChatMessage.Builder()
-                        .setToIdentifier(toSelfId)
-                        .setMessage(msgText)
-                        .build()
+                            val attachment = Attachment.Builder()
+                                .setData("hello".toByteArray())
+                                .setName("test.txt")
+                                .build()
 
-                    msgText = ""
-                    messages.add(chatMsg)
+                            val chatMsg = ChatMessage.Builder()
+                                .setToIdentifier(toSelfId)
+                                .setMessage(msgText)
+                                .build()
 
-                    account.send(message = chatMsg) { }
+                            msgText = ""
+                            messages.add(chatMsg)
+
+                            account.send(message = chatMsg) { }
+                        }
+                    }
+                ) {
+                    Text(text = "Send")
                 }
             }
-        ) {
-            Text(text = "Send")
         }
-    }
+    )
 }
 
 @Composable
