@@ -54,18 +54,20 @@ import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.Date
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // setup account
         val account = Account.Builder()
             .setContext(this)
             .setEnvironment(Environment.review)
             .setStoragePath("account1")
             .build()
+
+        // callback for registration
         var attestationCallBack: ((attesation: Attestation?) -> Unit)? = null
 
         setContent {
@@ -257,7 +259,9 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (attestati
             text = "Status: ${error?.name ?: status.name}"
         )
         Surface(
-            modifier = Modifier.width(300.dp).height(300.dp)
+            modifier = Modifier
+                .width(300.dp)
+                .height(300.dp)
         ) {
             AndroidView(modifier = Modifier.fillMaxSize(),
                 factory = { ctx ->
