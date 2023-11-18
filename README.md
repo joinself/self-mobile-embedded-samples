@@ -22,4 +22,4 @@ then open `open self-ios-sample.xcworkspace`
 <img width="1123" alt="Screenshot 2023-11-17 at 18 32 19" src="https://github.com/joinself/self-mobile-embedded-samples/assets/2587012/cf0e75ff-c6e6-477b-ac83-68635c5ead81">
 
 
-### Notes: Because our embedded SDK is depending on MLKit/FaceDetector so it only support run on physic devices only
+### Notes: Because our embedded SDK is depending on MLKit/FaceDetector so it only support run on physical devices only
