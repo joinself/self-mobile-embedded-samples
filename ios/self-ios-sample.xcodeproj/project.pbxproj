@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29FF59BCCEFFF6211E4550FE /* Pods_self_ios_sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D847EE0A3E72BF854CA66C /* Pods_self_ios_sample.framework */; };
 		637BB8332ACC1C1800A304A1 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BB8322ACC1C1800A304A1 /* ChatView.swift */; };
 		637BB8352ACC290400A304A1 /* ChatRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BB8342ACC290400A304A1 /* ChatRow.swift */; };
 		637BB8382ACC293800A304A1 /* MessageModelSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BB8372ACC293800A304A1 /* MessageModelSample.swift */; };
@@ -42,6 +43,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		49D847EE0A3E72BF854CA66C /* Pods_self_ios_sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_self_ios_sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		637BB8322ACC1C1800A304A1 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		637BB8342ACC290400A304A1 /* ChatRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRow.swift; sourceTree = "<group>"; };
 		637BB8372ACC293800A304A1 /* MessageModelSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModelSample.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29FF59BCCEFFF6211E4550FE /* Pods_self_ios_sample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +84,7 @@
 		51E51BFB5ED8D3A3888C6419 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				49D847EE0A3E72BF854CA66C /* Pods_self_ios_sample.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

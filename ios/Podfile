@@ -5,6 +5,7 @@ target 'self-ios-sample' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
+  pod 'self-mobile-kmp', :git => 'https://github.com/joinself/self-mobile-kmp.git'
   pod 'self-embedded-ios', :git => 'https://github.com/joinself/self-embedded-ios.git'
   
   pod 'MBProgressHUD'
