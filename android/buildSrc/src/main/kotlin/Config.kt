@@ -1,8 +1,8 @@
 object Config {
     object Version {
-        const val kotlinVersion = "1.9.20"
-        const val androidGradlePluginVersion = "8.1.3"
-        const val realmVersion = "1.12.0"
+        const val kotlinVersion = "1.9.22"
+        const val androidGradlePluginVersion = "8.2.2"
+        const val realmVersion = "1.13.0"
 
         const val jacocoVersion = "0.8.10"
         const val supportVersion = "27.0.2"
@@ -12,12 +12,12 @@ object Config {
         const val firebasePerformanceVersion = "20.3.2"
         const val playservicesVersion = "20.5.0"
         const val dynamicLinksVersion = "21.1.0"
-        const val materialVersion = "1.10.0"
+        const val materialVersion = "1.11.0"
 
         const val androidxCore = "1.12.0"
         const val androidxAppcompatVersion = "1.6.1"
         const val androidxTestVersion = "1.4.0"
-        const val navigationVersion = "2.7.5"
+        const val navigationVersion = "2.7.7"
         const val lifecycleVersion = "2.6.2"
         const val pagingVersion = "3.1.1"
         const val workVersion = "2.8.1"

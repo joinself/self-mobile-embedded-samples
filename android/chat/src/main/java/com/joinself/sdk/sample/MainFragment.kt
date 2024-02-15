@@ -84,6 +84,10 @@ class MainFragment : Fragment() {
 
         }
 
+        binding.buttonExportBackup.setOnClickListener {
+
+        }
+
         updateUI()
     }
 
