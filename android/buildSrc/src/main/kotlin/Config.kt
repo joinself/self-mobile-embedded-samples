@@ -35,9 +35,9 @@ object Config {
         const val protobufVersion = "3.24.1"
         const val glideVersion = "4.15.1"
         const val eventbusVersion = "3.3.1"
-        const val ktorVersion = "2.3.6"
-        const val kotlinxDatetime = "0.4.1"
-        const val kotlinxSerialization = "1.6.1"
+        const val ktorVersion = "2.3.8"
+        const val kotlinxDatetime = "0.5.0"
+        const val kotlinxSerialization = "1.6.2"
         const val kotlinxCoroutines = "1.7.3"
     }
 

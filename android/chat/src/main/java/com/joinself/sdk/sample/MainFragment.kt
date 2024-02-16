@@ -85,7 +85,15 @@ class MainFragment : Fragment() {
         }
 
         binding.buttonExportBackup.setOnClickListener {
+            lifecycleScope.launch(Dispatchers.Default) {
+                account.backup()
+            }
+        }
 
+        binding.buttonImportBackup.setOnClickListener {
+            lifecycleScope.launch(Dispatchers.Default) {
+                account.restore(byteArrayOf())
+            }
         }
 
         updateUI()
@@ -106,6 +114,8 @@ class MainFragment : Fragment() {
                 binding.buttonSignIn.isEnabled = selfId.isNullOrEmpty()
                 binding.buttonSendMessage.isEnabled = !selfId.isNullOrEmpty()
                 binding.buttonVerify.isEnabled = !selfId.isNullOrEmpty()
+                binding.buttonExportBackup.isEnabled = !selfId.isNullOrEmpty()
+//                binding.buttonImportBackup.isEnabled = selfId.isNullOrEmpty()
             } catch (ex: Exception) {
                 Timber.e(ex)
             }

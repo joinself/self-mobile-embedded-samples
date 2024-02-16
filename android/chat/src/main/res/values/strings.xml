@@ -62,6 +62,7 @@
     <string name="last_verified_by">Last Verified by</string>
     <string name="verified_by">Verified by</string>
     <string name="button_export_backup">Export Backup</string>
+    <string name="button_import_backup">Import Backup</string>
     <string name="button_messaging">Messaging</string>
     <string name="button_selfie_check">Selfie Check</string>
     <string name="button_create_account">Create Account</string>
