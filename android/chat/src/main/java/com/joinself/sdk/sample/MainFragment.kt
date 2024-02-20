@@ -1,6 +1,7 @@
 package com.joinself.sdk.sample
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,13 +20,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.io.File
+import java.net.URLDecoder
 
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class MainFragment : Fragment() {
-
+    private val REQUEST_CODE_PICK_DOCUMENT = 1002
     private var _binding: FragmentFirstBinding? = null
 
     private val binding get() = _binding!!
@@ -105,19 +108,7 @@ class MainFragment : Fragment() {
         }
 
         binding.buttonImportBackup.setOnClickListener {
-            LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
-                lifecycleScope.launch(Dispatchers.Default) {
-                    if (attestation != null) {
-                        try {
-                            account.restore(byteArrayOf(), selfieImage)
-                        } catch (ex: Exception) {
-                            Snackbar.make(binding.root, ex.message.toString(), Snackbar.LENGTH_LONG).show()
-                        }
-                    }
-                }
-            }
-            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+            openDocumentPicker()
         }
 
         updateUI()
@@ -126,6 +117,34 @@ class MainFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_PICK_DOCUMENT) {
+            if (data != null && data.clipData != null) { // multiple files
+                val mClipData = data.clipData
+                val filePaths = mutableListOf<Uri>()
+                for (i in 0 until mClipData!!.itemCount) {
+                    val item = mClipData.getItemAt(i)
+                    val uri = item.uri
+                    uri?.let {
+                        filePaths.add(it)
+                    }
+                }
+                handleRestoreFromFile(filePaths.first())
+            } else if (data?.data != null) {
+                val uri = data.data ?: return
+
+                try {
+                    handleRestoreFromFile(uri)
+                } catch (e: Exception) {
+
+                }
+            }
+        }
     }
 
     @UiThread
@@ -146,4 +165,51 @@ class MainFragment : Fragment() {
         }
     }
 
+
+    private fun openDocumentPicker() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "*/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        startActivityForResult(intent, REQUEST_CODE_PICK_DOCUMENT)
+    }
+
+    private fun handleRestoreFromFile(uri: Uri) {
+        val afterDecode = URLDecoder.decode(uri.path, "UTF-8")
+        val name = afterDecode.substring(afterDecode.lastIndexOf('/') + 1)
+        val nameParts = name.split(".")
+
+        if (nameParts.size != 4 || nameParts.last() != "self_backup") {
+            Snackbar.make(binding.root, "Invalid backup file", Snackbar.LENGTH_LONG).show()
+            return
+        }
+
+        val rootDir = requireContext().cacheDir
+        val zippedFile = File(rootDir, name)
+        if (zippedFile.exists()) zippedFile.delete()
+        val inputStream = requireContext().contentResolver.openInputStream(uri)
+        if (inputStream != null) {
+            FileUtils.writeToFile(inputStream, zippedFile, doProgress = {})
+        }
+        Timber.d("Copy file to ${zippedFile.absolutePath}")
+        if (zippedFile.exists() && zippedFile.length() > 0) {
+            activity?.runOnUiThread {
+                LivenessCheckFragment.account = account
+                LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
+                    lifecycleScope.launch(Dispatchers.Default) {
+                        if (attestation != null) {
+                            try {
+                                account.restore(zippedFile, selfieImage)
+                            } catch (ex: Exception) {
+                                Timber.e(ex)
+                                withContext(Dispatchers.Main) {
+                                    Snackbar.make(binding.root, ex.message.toString(), Snackbar.LENGTH_LONG).show()
+                                }
+                            }
+                        }
+                    }
+                }
+                findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+            }
+        }
+    }
 }
