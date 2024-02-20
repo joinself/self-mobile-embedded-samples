@@ -30,7 +30,7 @@ class LivenessCheckFragment: Fragment() {
     private var livenessCheck = LivenessCheck()
 
     companion object {
-         var onVerificationCallback: ((Attestation?) -> Unit)? = null
+         var onVerificationCallback: ((ByteArray, Attestation?) -> Unit)? = null
          lateinit var account: Account
     }
 
@@ -102,9 +102,9 @@ class LivenessCheckFragment: Fragment() {
             onError = {error ->
                 updateDescription(challenge = null, error = error)
             },
-            onResult = { attestation ->
+            onResult = { selfieImage, attestation ->
                 if (onVerificationCallback != null) {
-                    onVerificationCallback?.invoke(attestation)
+                    onVerificationCallback?.invoke(selfieImage, attestation)
                     onVerificationCallback = null
                     findNavController().navigateUp()
                 }
