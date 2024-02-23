@@ -104,9 +104,9 @@ class LivenessCheckFragment: Fragment() {
             },
             onResult = { selfieImage, attestation ->
                 if (onVerificationCallback != null) {
+                    findNavController().navigateUp()
                     onVerificationCallback?.invoke(selfieImage, attestation)
                     onVerificationCallback = null
-                    findNavController().navigateUp()
                 }
             }
         )

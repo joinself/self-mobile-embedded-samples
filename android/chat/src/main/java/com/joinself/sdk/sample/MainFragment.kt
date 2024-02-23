@@ -178,7 +178,7 @@ class MainFragment : Fragment() {
         val name = afterDecode.substring(afterDecode.lastIndexOf('/') + 1)
         val nameParts = name.split(".")
 
-        if (nameParts.size != 4 || nameParts.last() != "self_backup") {
+        if (nameParts.last() != "self_backup") {
             Snackbar.make(binding.root, "Invalid backup file", Snackbar.LENGTH_LONG).show()
             return
         }
@@ -199,6 +199,8 @@ class MainFragment : Fragment() {
                         if (attestation != null) {
                             try {
                                 account.restore(zippedFile, selfieImage)
+                                Timber.d("Restore successfully")
+                                updateUI()
                             } catch (ex: Exception) {
                                 Timber.e(ex)
                                 withContext(Dispatchers.Main) {
