@@ -1,7 +1,7 @@
 object Config {
     object Version {
         const val kotlinVersion = "1.9.22"
-        const val androidGradlePluginVersion = "8.2.2"
+        const val androidGradlePluginVersion = "8.3.0"
         const val realmVersion = "1.13.0"
 
         const val firebaseMessagingVersion = "23.1.2"
@@ -32,8 +32,8 @@ object Config {
         const val eventbusVersion = "3.3.1"
         const val ktorVersion = "2.3.8"
         const val kotlinxDatetime = "0.5.0"
-        const val kotlinxSerialization = "1.6.2"
-        const val kotlinxCoroutines = "1.7.3"
+        const val kotlinxSerialization = "1.6.3"
+        const val kotlinxCoroutines = "1.8.0"
     }
 
     object Android {

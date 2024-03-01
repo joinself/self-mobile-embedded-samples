@@ -1,12 +1,15 @@
 package com.joinself.sdk.sample
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -29,6 +32,7 @@ import java.net.URLDecoder
  */
 class MainFragment : Fragment() {
     private val REQUEST_CODE_PICK_DOCUMENT = 1002
+    private val REQUEST_CODE_LOCATION = 1003
     private var _binding: FragmentFirstBinding? = null
 
     private val binding get() = _binding!!
@@ -78,6 +82,13 @@ class MainFragment : Fragment() {
 
         binding.buttonCheckLiveness.setOnClickListener {
             LivenessCheckFragment.account = account
+            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
+                lifecycleScope.launch(Dispatchers.Default) {
+                    if (attestation != null) {
+                        account.verifySelfieImage(selfieImage)
+                    }
+                }
+            }
             findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
         }
 
@@ -109,6 +120,10 @@ class MainFragment : Fragment() {
 
         binding.buttonImportBackup.setOnClickListener {
             openDocumentPicker()
+        }
+
+        binding.buttonLocation.setOnClickListener {
+            getLocation()
         }
 
         updateUI()
@@ -213,5 +228,25 @@ class MainFragment : Fragment() {
                 findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
             }
         }
+    }
+
+    private fun getLocation() {
+        if (!checkLocationPermission())  {
+            requestLocationPermissions()
+            return
+        }
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            account.requestLocation()
+        }
+    }
+
+    private fun checkLocationPermission(): Boolean {
+        return !(ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+    }
+
+    private fun requestLocationPermissions() {
+        requireActivity().requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE_LOCATION)
     }
 }
