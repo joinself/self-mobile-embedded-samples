@@ -173,7 +173,8 @@ class MainFragment : Fragment() {
                 binding.buttonSendMessage.isEnabled = !selfId.isNullOrEmpty()
                 binding.buttonVerify.isEnabled = !selfId.isNullOrEmpty()
                 binding.buttonExportBackup.isEnabled = !selfId.isNullOrEmpty()
-//                binding.buttonImportBackup.isEnabled = selfId.isNullOrEmpty()
+                binding.buttonImportBackup.isEnabled = selfId.isNullOrEmpty()
+                binding.buttonLocation.isEnabled = !selfId.isNullOrEmpty()
             } catch (ex: Exception) {
                 Timber.e(ex)
             }
@@ -192,11 +193,6 @@ class MainFragment : Fragment() {
         val afterDecode = URLDecoder.decode(uri.path, "UTF-8")
         val name = afterDecode.substring(afterDecode.lastIndexOf('/') + 1)
         val nameParts = name.split(".")
-
-        if (nameParts.last() != "self_backup") {
-            Snackbar.make(binding.root, "Invalid backup file", Snackbar.LENGTH_LONG).show()
-            return
-        }
 
         val rootDir = requireContext().cacheDir
         val zippedFile = File(rootDir, name)
@@ -237,7 +233,8 @@ class MainFragment : Fragment() {
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
-            account.requestLocation()
+            val locAttestation = account.location()
+            Timber.d("loc attestation: ${locAttestation}")
         }
     }
 
