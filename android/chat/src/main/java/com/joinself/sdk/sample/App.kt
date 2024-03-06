@@ -16,6 +16,7 @@ class App: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        setupTimberLog()
 
         SelfSDK.initialize(applicationContext)
     }

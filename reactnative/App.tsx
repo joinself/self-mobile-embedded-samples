@@ -15,6 +15,7 @@ import {
   Text,
   useColorScheme,
   View,
+  Button
 } from 'react-native';
 
 import {
@@ -76,6 +77,19 @@ function App(): React.JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+          <Section title="Self">
+            <Button
+                    title="Request Location"
+                    style={styles.button}
+                    onPress={() => {
+                        WalletRNModule.createTestEvent('testName', result => {
+                            Alert.alert(`recovery key isRevoked: ${result}`);
+                            console.log(`RN: recovery key ${result}`);
+                        });
+                        
+                    }}
+                  />           
+          </Section>
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
@@ -85,11 +99,7 @@ function App(): React.JSX.Element {
           </Section>
           <Section title="Debug">
             <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+          </Section>          
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -113,6 +123,17 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
+  button: {
+      width: '40%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 12,
+      paddingHorizontal: 32,
+      borderRadius: 4,
+      elevation: 3,
+      marginHorizontal: 16,
+      marginVertical: 16
+  }
 });
 
 export default App;
