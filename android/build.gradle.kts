@@ -14,7 +14,8 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Config.Version.kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${Config.Version.kotlinVersion}")
         classpath("com.google.gms:google-services:4.3.15")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.5")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.7")
+        classpath("com.squareup.wire:wire-gradle-plugin:4.9.7")
     }
 }
 
