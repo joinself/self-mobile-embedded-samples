@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.bridge.Arguments
+import com.joinself.sdk.models.Account
 import timber.log.Timber
 
 
@@ -23,10 +24,13 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         rnContext = reactContext
 
         instance = this
+
+        Timber.d("SelfSDKRNModule initialized")
     }
 
     companion object {
         var instance: SelfSDKRNModule? = null
+        var account: Account? = null
         var openLivenessCheckCallback: (()->Unit)? = null
     }
 
@@ -50,6 +54,11 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         Timber.d("Create event called with name: $name")
 
         callback.invoke("hello from sdk", "abc")
+    }
+
+    @ReactMethod
+    fun getSelfId(callback: Callback) {
+        callback.invoke(account?.identifier() ?: "not registered")
     }
 
     @ReactMethod

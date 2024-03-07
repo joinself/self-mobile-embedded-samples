@@ -53,7 +53,6 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         startReactNativeFragment()
     }
 
@@ -72,7 +71,7 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var reactNativeFragment: ReactFragment
-    fun startReactNativeFragment() {
+    private fun startReactNativeFragment() {
         val params = Bundle().apply {
             putString("message", "test")
         }
@@ -83,6 +82,7 @@ class MainFragment : Fragment() {
             .build()
 
         binding.reactNativeFragment.visibility = View.VISIBLE
+        SelfSDKRNModule.account = account
 
         requireActivity().supportFragmentManager
             .beginTransaction()
@@ -90,7 +90,7 @@ class MainFragment : Fragment() {
             .commit()
     }
 
-    fun removeReactNativeFragment() {
+    private fun removeReactNativeFragment() {
         if (this::reactNativeFragment.isInitialized) {
             requireActivity().supportFragmentManager.beginTransaction()
                 .remove(reactNativeFragment)

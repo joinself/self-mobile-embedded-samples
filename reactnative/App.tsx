@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -68,6 +68,15 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const [selfId, setSelfId] = useState(true);
+
+  useEffect(() => {
+    console.log('componentDidMount');
+    SelfSDKRNModule.getSelfId(result => {
+      setSelfId(result)
+    })
+  }, []);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -82,29 +91,33 @@ function App(): React.JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+
           <Section title="Self">
+            <Text>
+              SelfId: {selfId}
+            </Text>
             <Button
-                    title="Create Account"
-                    style={styles.button}
-                    onPress={() => {
-                        SelfSDKRNModule.openLivenessCheck(result => {
-                            Alert.alert(`openLivenessCheck: ${result}`);
-                            console.log(`RN: ${result}`);
-                        });
-                        
-                    }}
-                  />  
+              title="Create Account"
+              style={styles.button}
+              onPress={() => {
+                  SelfSDKRNModule.openLivenessCheck(result => {
+                      Alert.alert(`openLivenessCheck: ${result}`);
+                      console.log(`RN: ${result}`);
+                  });
+                  
+              }}
+            />  
             <Button
-                    title="Request Location"
-                    style={styles.button}
-                    onPress={() => {
-                        SelfSDKRNModule.createTestEvent('testName', result => {
-                            Alert.alert(`createTestEvent: ${result}`);
-                            console.log(`RN: ${result}`);
-                        });
-                        
-                    }}
-                  />           
+              title="Request Location"
+              style={styles.button}
+              onPress={() => {
+                  SelfSDKRNModule.createTestEvent('testName', result => {
+                      Alert.alert(`createTestEvent: ${result}`);
+                      console.log(`RN: ${result}`);
+                  });
+                  
+              }}
+            />           
           </Section>
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
