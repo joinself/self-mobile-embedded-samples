@@ -5,11 +5,10 @@ plugins {
 
 android {
     namespace = "com.joinself.sdk.sample.common"
-    compileSdk = Config.Android.compileSdkVersion
+    compileSdk = 34
 
     defaultConfig {
-        minSdk = Config.Android.minSdkVersion
-        targetSdk = Config.Android.targetSdkVersion
+        minSdk = 26
     }
 
     buildTypes {

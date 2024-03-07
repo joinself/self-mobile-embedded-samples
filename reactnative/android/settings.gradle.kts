@@ -54,3 +54,7 @@ applyNativeModules(settings)
 
 include(":app")
 includeBuild("../node_modules/@react-native/gradle-plugin")
+
+print("path: ${rootProject.projectDir.parentFile.parentFile.path}")
+include(":common")
+project(":common").projectDir = file( "${rootProject.projectDir.parentFile.parentFile.path}/android/common")

@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">React Native - SDK Sample</string>
+
+    <string name="thank_you">Thank You</string>
+    <string name="thank_you_2">Thank you!</string>
+    <string name="msg_liveness_desc">Place your face inside the oval and follow the instructions.</string>
+    <string name="msg_liveness_smile">Please Smile</string>
+    <string name="msg_liveness_blink">Please Blink</string>
+    <string name="msg_liveness_turn_left">Please Turn Left</string>
+    <string name="msg_liveness_turn_right">Please Turn Right</string>
+    <string name="msg_liveness_share">You have been reverified. Would you like to share the result with</string>
+    <string name="error_liveness_faceid_changed">Different face detected</string>
+    <string name="error_liveness_out_of_preview">Please keep your face inside the oval and follow the instructions.</string>
+    <string name="error_liveness_timeout">Exceed 5 seconds </string>
+    <string name="error_liveness_failed">Selfie verification failed</string>
+
 </resources>
