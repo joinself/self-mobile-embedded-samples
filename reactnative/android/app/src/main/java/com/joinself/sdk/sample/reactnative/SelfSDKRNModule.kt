@@ -15,7 +15,7 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         return "SelfSDKRNModule"
     }
 
-    var openLivenessCheckCallback: (()->Unit)? = null
+
 
     private var rnContext: ReactContext
 
@@ -27,6 +27,7 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
 
     companion object {
         var instance: SelfSDKRNModule? = null
+        var openLivenessCheckCallback: (()->Unit)? = null
     }
 
 
@@ -54,6 +55,6 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
     @ReactMethod
     fun openLivenessCheck(callback: Callback) {
         Timber.d("openLivenessCheck")
-
+        openLivenessCheckCallback?.invoke()
     }
 }
