@@ -29,6 +29,9 @@ class MainApplication : Application(), ReactApplication {
                 }
 
             override fun getJSMainModuleName(): String = "index"
+            override fun getBundleAssetName(): String? {
+                return "index.android.bundle"
+            }
 
             override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
 

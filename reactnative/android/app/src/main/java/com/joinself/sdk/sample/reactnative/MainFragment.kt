@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.facebook.react.ReactFragment
 import com.joinself.sdk.Environment
 import com.joinself.sdk.models.Account
 import com.joinself.sdk.sample.reactnative.databinding.FragmentMainBinding
@@ -51,10 +52,41 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        startReactNativeFragment()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        removeReactNativeFragment()
         _binding = null
     }
+
+    private lateinit var reactNativeFragment: ReactFragment
+    fun startReactNativeFragment() {
+        val params = Bundle().apply {
+            putString("message", "test")
+        }
+        reactNativeFragment = ReactFragment.Builder()
+            .setComponentName("reactnative")
+            .setLaunchOptions(params)
+            .setFabricEnabled(true)
+            .build()
+
+        binding.reactNativeFragment.visibility = View.VISIBLE
+
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .add(R.id.reactNativeFragment, reactNativeFragment)
+            .commit()
+    }
+
+    fun removeReactNativeFragment() {
+        if (this::reactNativeFragment.isInitialized) {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .remove(reactNativeFragment)
+                .commit()
+            binding.reactNativeFragment.visibility = View.GONE
+        }
+    }
+
 }
