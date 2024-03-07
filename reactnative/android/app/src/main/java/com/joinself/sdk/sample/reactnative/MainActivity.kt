@@ -24,18 +24,11 @@ class MainActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
 
     override fun onResume() {
         super.onResume()
-
-        SelfSDKRNModule.openLivenessCheckCallback = {
-            openLivenssCheck()
-        }
     }
 
     override fun invokeDefaultOnBackPressed() {
         super.onBackPressed()
     }
 
-    private fun openLivenssCheck() {
-        val livenessCheckFragment = LivenessCheckFragment()
 
-    }
 }

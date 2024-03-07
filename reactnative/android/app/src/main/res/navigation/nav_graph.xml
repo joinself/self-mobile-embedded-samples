@@ -10,5 +10,15 @@
         android:name="com.joinself.sdk.sample.reactnative.MainFragment"
         android:label="Main Fragment"
         tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_livenessCheckFragment"
+            app:destination="@id/livenessCheckFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/livenessCheckFragment"
+        android:name="com.joinself.sdk.sample.reactnative.LivenessCheckFragment"
+        android:label="LivenessCheckFragment"
+        tools:layout="@layout/fragment_liveness_check">
     </fragment>
 </navigation>

@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.MainThread
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.facebook.react.ReactFragment
 import com.joinself.sdk.Environment
 import com.joinself.sdk.models.Account
@@ -61,6 +63,14 @@ class MainFragment : Fragment() {
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        SelfSDKRNModule.openLivenessCheckCallback = {
+            openLivenssCheck()
+        }
+    }
+
     private lateinit var reactNativeFragment: ReactFragment
     fun startReactNativeFragment() {
         val params = Bundle().apply {
@@ -89,4 +99,21 @@ class MainFragment : Fragment() {
         }
     }
 
+
+    @MainThread
+    private fun openLivenssCheck() {
+        activity?.runOnUiThread {
+            LivenessCheckFragment.account = account
+            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
+                Timber.d("onVerificationCallback")
+                lifecycleScope.launch(Dispatchers.Default) {
+                    if (attestation != null) {
+                        val selfId = account.register(selfieImage, attestation)
+                        Timber.d("SelfId: $selfId")
+                    }
+                }
+            }
+            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+        }
+    }
 }
