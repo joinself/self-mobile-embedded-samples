@@ -15,7 +15,8 @@ import {
   Text,
   useColorScheme,
   View,
-  Button
+  Button,
+  Alert
 } from 'react-native';
 
 import {
@@ -25,6 +26,10 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+import {NativeEventEmitter, NativeModules} from 'react-native';
+const {SelfSDKRNModule} = NativeModules;
+
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -79,12 +84,23 @@ function App(): React.JSX.Element {
           }}>
           <Section title="Self">
             <Button
+                    title="Create Account"
+                    style={styles.button}
+                    onPress={() => {
+                        SelfSDKRNModule.openLivenessCheck(result => {
+                            Alert.alert(`openLivenessCheck: ${result}`);
+                            console.log(`RN: ${result}`);
+                        });
+                        
+                    }}
+                  />  
+            <Button
                     title="Request Location"
                     style={styles.button}
                     onPress={() => {
-                        WalletRNModule.createTestEvent('testName', result => {
-                            Alert.alert(`recovery key isRevoked: ${result}`);
-                            console.log(`RN: recovery key ${result}`);
+                        SelfSDKRNModule.createTestEvent('testName', result => {
+                            Alert.alert(`createTestEvent: ${result}`);
+                            console.log(`RN: ${result}`);
                         });
                         
                     }}
