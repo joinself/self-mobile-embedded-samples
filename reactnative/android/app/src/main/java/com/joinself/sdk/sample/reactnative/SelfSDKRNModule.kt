@@ -42,11 +42,11 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
             .emit(eventName, params)
     }
 
-    fun sendSelfieEvent(result: Boolean) {
+    fun sendSelfId(selfId: String) {
         val params = Arguments.createMap().apply {
-            putBoolean("result", result)
+            putString("selfId", selfId)
         }
-        sendEvent(rnContext, "EventSelfieVerification", params)
+        sendEvent(rnContext, "EventSelfId", params)
     }
 
     @ReactMethod

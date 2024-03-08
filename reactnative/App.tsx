@@ -72,9 +72,22 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     console.log('componentDidMount');
+
+    const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
+    let eventListener = eventEmitter.addListener('EventSelfId', event => {
+      console.log("selfId: " + event.selfId)
+      setSelfId(event.selfId)
+    });
+
+    // Removes the listener once unmounted
+    return () => {
+      eventListener.remove();
+    };
+
+    
     SelfSDKRNModule.getSelfId(result => {
       setSelfId(result)
-    })
+    });
   }, []);
 
   return (
@@ -111,9 +124,8 @@ function App(): React.JSX.Element {
               title="Request Location"
               style={styles.button}
               onPress={() => {
-                  SelfSDKRNModule.createTestEvent('testName', result => {
-                      Alert.alert(`createTestEvent: ${result}`);
-                      console.log(`RN: ${result}`);
+                  SelfSDKRNModule.getLocation(result => {
+                      Alert.alert(`location: ${result}`);
                   });
                   
               }}

@@ -110,6 +110,8 @@ class MainFragment : Fragment() {
                     if (attestation != null) {
                         val selfId = account.register(selfieImage, attestation)
                         Timber.d("SelfId: $selfId")
+
+                        SelfSDKRNModule.instance?.sendSelfId(selfId ?: "")
                     }
                 }
             }
