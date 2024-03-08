@@ -79,15 +79,14 @@ function App(): React.JSX.Element {
       setSelfId(event.selfId)
     });
 
+    SelfSDKRNModule.getSelfId(result => {
+      setSelfId(result)
+    });
+
     // Removes the listener once unmounted
     return () => {
       eventListener.remove();
     };
-
-    
-    SelfSDKRNModule.getSelfId(result => {
-      setSelfId(result)
-    });
   }, []);
 
   return (
@@ -113,18 +112,18 @@ function App(): React.JSX.Element {
               title="Create Account"
               style={styles.button}
               onPress={() => {
-                  SelfSDKRNModule.openLivenessCheck(result => {
-                      Alert.alert(`openLivenessCheck: ${result}`);
-                      console.log(`RN: ${result}`);
-                  });
-                  
+                  SelfSDKRNModule.openLivenessCheck();                
               }}
             />  
             <Button
               title="Request Location"
               style={styles.button}
               onPress={() => {
-                  SelfSDKRNModule.getLocation(result => {
+                  SelfSDKRNModule.getLocation(
+                    error => {
+                      Alert.alert(`error: ${error}`);                      
+                    },
+                    result => {
                       Alert.alert(`location: ${result}`);
                   });
                   

@@ -56,9 +56,15 @@ class MainFragment : Fragment() {
         startReactNativeFragment()
     }
 
+    override fun onStop() {
+        super.onStop()
+        
+        removeReactNativeFragment()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        removeReactNativeFragment()
+
         _binding = null
     }
 

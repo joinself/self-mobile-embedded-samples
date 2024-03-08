@@ -1,4 +1,7 @@
 package com.joinself.sdk.sample.reactnative
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -8,6 +11,14 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.bridge.Arguments
 import com.joinself.sdk.models.Account
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 
@@ -16,7 +27,7 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         return "SelfSDKRNModule"
     }
 
-
+    val scope = CoroutineScope(Job())
 
     private var rnContext: ReactContext
 
@@ -26,6 +37,11 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         instance = this
 
         Timber.d("SelfSDKRNModule initialized")
+    }
+
+    override fun invalidate() {
+        super.invalidate()
+        scope.cancel()
     }
 
     companion object {
@@ -62,8 +78,29 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
     }
 
     @ReactMethod
-    fun openLivenessCheck(callback: Callback) {
+    fun getLocation(errorCallback: Callback, successCallback: Callback) {
+        if (!checkLocationPermission()) {
+            errorCallback.invoke("location permission required")
+            return
+        }
+        Timber.d("getLocation")
+        scope.launch {
+            val locationAttestation = account?.location()
+            val value = locationAttestation?.firstOrNull()?.fact()?.value() ?: ""
+            successCallback.invoke(value)
+        }
+
+    }
+
+    @ReactMethod
+    fun openLivenessCheck() {
         Timber.d("openLivenessCheck")
+        if (!account?.identifier().isNullOrEmpty()) return
         openLivenessCheckCallback?.invoke()
+    }
+
+    private fun checkLocationPermission(): Boolean {
+        return !(ActivityCompat.checkSelfPermission(reactApplicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(reactApplicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
     }
 }
