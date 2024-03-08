@@ -74,7 +74,7 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
 
     @ReactMethod
     fun getSelfId(callback: Callback) {
-        callback.invoke(account?.identifier() ?: "not registered")
+        callback.invoke(account?.identifier() ?: "")
     }
 
     @ReactMethod

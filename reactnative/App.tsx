@@ -69,10 +69,11 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const [selfId, setSelfId] = useState(true);
+  const [selfId, setSelfId] = useState('');
 
   useEffect(() => {
     console.log('componentDidMount');
+    console.log("selfId:" + selfId)
 
     const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
     let eventListener = eventEmitter.addListener('EventSelfId', event => {
@@ -80,7 +81,7 @@ function App(): React.JSX.Element {
       setSelfId(event.selfId)
     });
 
-    SelfSDKRNModule.getSelfId(result => {
+    SelfSDKRNModule.getSelfId(result => {      
       setSelfId(result)
     });
 
@@ -105,11 +106,11 @@ function App(): React.JSX.Element {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {        
         SelfSDKRNModule.getLocation(
           error => {
-            Alert.alert(`error: ${error}`);                      
+            Alert.alert(error, error);
           },
           result => {
             console.log("location: " + result)
-            Alert.alert(`location: ${result}`);
+            Alert.alert('Location', result);
         });
       } else {
         console.log('Location permission denied');
@@ -132,7 +133,7 @@ function App(): React.JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          
+
           <View style={styles.container}>
             <Text>
               SelfId: {selfId}
@@ -140,6 +141,7 @@ function App(): React.JSX.Element {
             <Button
               title="Create Account"
               style={styles.button}
+              disabled={selfId != ''}
               onPress={() => {
                   SelfSDKRNModule.openLivenessCheck();                
               }}
@@ -147,10 +149,9 @@ function App(): React.JSX.Element {
             <Button
               title="Request Location"
               style={styles.button}
+              disabled={selfId == ''}
               onPress={() => {
                 requestLocationPermission()
-                
-                  
               }}
             />           
           </View>                  
@@ -166,6 +167,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     margin: 20,
+    gap: 10
   },
   sectionContainer: {
     marginTop: 32,
@@ -184,7 +186,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   button: {
-      width: '40%',
+      
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: 12,
@@ -192,7 +194,8 @@ const styles = StyleSheet.create({
       borderRadius: 4,
       elevation: 3,
       marginHorizontal: 16,
-      marginVertical: 16
+      marginVertical: 16,
+      marginTop: 24
   }
 });
 
