@@ -12,6 +12,7 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  PermissionsAndroid,
   Text,
   useColorScheme,
   View,
@@ -89,6 +90,34 @@ function App(): React.JSX.Element {
     };
   }, []);
 
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message: 'SelfSDK needs access to your location',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {        
+        SelfSDKRNModule.getLocation(
+          error => {
+            Alert.alert(`error: ${error}`);                      
+          },
+          result => {
+            console.log("location: " + result)
+            Alert.alert(`location: ${result}`);
+        });
+      } else {
+        console.log('Location permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -119,13 +148,8 @@ function App(): React.JSX.Element {
               title="Request Location"
               style={styles.button}
               onPress={() => {
-                  SelfSDKRNModule.getLocation(
-                    error => {
-                      Alert.alert(`error: ${error}`);                      
-                    },
-                    result => {
-                      Alert.alert(`location: ${result}`);
-                  });
+                requestLocationPermission()
+                
                   
               }}
             />           

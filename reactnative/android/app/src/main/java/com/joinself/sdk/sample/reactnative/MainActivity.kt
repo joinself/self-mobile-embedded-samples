@@ -3,14 +3,12 @@ package com.joinself.sdk.sample.reactnative
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.facebook.react.ReactActivity
-import com.facebook.react.ReactActivityDelegate
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
-import com.facebook.react.defaults.DefaultReactActivityDelegate
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
+import com.facebook.react.modules.core.PermissionAwareActivity
+import com.facebook.react.modules.core.PermissionListener
 import com.joinself.sdk.sample.reactnative.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
+class MainActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler, PermissionAwareActivity {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -30,5 +28,18 @@ class MainActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         super.onBackPressed()
     }
 
+    private var permissionListener: PermissionListener? = null
+
+    override fun requestPermissions(permissions: Array<out String>, requestCode: Int, listener: PermissionListener?) {
+        permissionListener = listener
+        requestPermissions(permissions, requestCode)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (permissionListener != null && permissionListener?.onRequestPermissionsResult(requestCode, permissions, grantResults) == true) {
+            permissionListener = null
+        }
+    }
 
 }

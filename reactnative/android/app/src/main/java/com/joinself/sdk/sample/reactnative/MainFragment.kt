@@ -58,7 +58,7 @@ class MainFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        
+
         removeReactNativeFragment()
     }
 
