@@ -75,7 +75,7 @@ function App(): React.JSX.Element {
     console.log('componentDidMount');
     console.log("selfId:" + selfId)
 
-    const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
+    const eventEmitter = new NativeEventEmitter(NativeModules.SelfSDKRNModule);
     let eventListener = eventEmitter.addListener('EventSelfId', event => {
       console.log("selfId: " + event.selfId)
       setSelfId(event.selfId)
