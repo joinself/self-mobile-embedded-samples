@@ -73,15 +73,16 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     console.log('componentDidMount');
-    console.log("selfId:" + selfId)
+    console.log("loading selfId:" + selfId)
 
     const eventEmitter = new NativeEventEmitter(NativeModules.SelfSDKRNModule);
     let eventListener = eventEmitter.addListener('EventSelfId', event => {
-      console.log("selfId: " + event.selfId)
+      console.log("EventSelfId selfId: " + event.selfId)
       setSelfId(event.selfId)
     });
 
-    SelfSDKRNModule.getSelfId(result => {      
+    SelfSDKRNModule.getSelfId(result => {     
+      console.log("getSelfId:" + result) 
       setSelfId(result)
     });
 
@@ -119,6 +120,7 @@ function App(): React.JSX.Element {
       console.warn(err);
     }
   };
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -151,6 +153,14 @@ function App(): React.JSX.Element {
               style={styles.button}
               disabled={selfId == ''}
               onPress={() => {
+                // SelfSDKRNModule.getLocation(
+                //   error => {
+                //     Alert.alert(error, error);
+                //   },
+                //   result => {
+                //     console.log("location: " + result)
+                //     Alert.alert('Location', result);
+                // });
                 requestLocationPermission()
               }}
             />           

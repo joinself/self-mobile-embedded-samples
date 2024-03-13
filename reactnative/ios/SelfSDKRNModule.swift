@@ -8,8 +8,8 @@
 import Foundation
 import React
 
-@objc(SelfSDKRNModule2)
-class SelfSDKRNModule2: RCTEventEmitter  {
+@objc(SelfSDKRNModule)
+class SelfSDKRNModule: RCTEventEmitter  {
   override class func requiresMainQueueSetup() -> Bool {
     return false
   }
@@ -29,24 +29,24 @@ class SelfSDKRNModule2: RCTEventEmitter  {
   
   
   func sendSelfIdEvent() {
-    
+    print("sendSelfIdEvent \(hasListeners)")
     if (hasListeners) {
       self.sendEvent(withName: "EventSelfId", body: ["selfId": "1234567"])
     }
   }
   
-  @objc(callback:)
-  func getSelfId(callback: RCTResponseSenderBlock) -> Void {
-    let selfId = "12345"
+  @objc func getSelfId(_ callback: RCTResponseSenderBlock) -> Void {
+    let selfId = "123"
     
     callback([selfId])
   }
   
-//  @objc(getLocation:callback:)
-//  func getLocation(callback: RCTResponseSenderBlock) -> Void {
-//    let selfId = "12345"
-//    callback([selfId])
-//  }
+  
+  @objc func getLocation(_ success: RCTResponseSenderBlock, error: RCTResponseSenderBlock) -> Void {
+    let data = "location"
+    success([data])
+    sendSelfIdEvent()
+  }
   
   
   override func constantsToExport() -> [AnyHashable : Any]! {

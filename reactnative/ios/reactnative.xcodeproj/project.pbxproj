@@ -17,7 +17,6 @@
 		63FB45F12BA14E6C00BB7EBB /* SSSSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63FB45F02BA14E6C00BB7EBB /* SSSSwift */; };
 		63FB45F42BA15A2B00BB7EBB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 63FB45F32BA15A2B00BB7EBB /* ZIPFoundation */; };
 		7189B9702BA15B330061623D /* SelfSDKRNModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7189B96F2BA15B330061623D /* SelfSDKRNModule.swift */; };
-		71BFAE642B9F173400B05A61 /* RCTSelfSDKRNModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 71BFAE632B9F173400B05A61 /* RCTSelfSDKRNModule.m */; };
 		71C621B12BA199F400305CBC /* SelfSDKRNModuleBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 71C621B02BA199F400305CBC /* SelfSDKRNModuleBridge.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -49,8 +48,6 @@
 		63FB45EC2BA14E0D00BB7EBB /* reactnative-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "reactnative-Bridging-Header.h"; sourceTree = "<group>"; };
 		63FB45ED2BA14E0D00BB7EBB /* Demo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demo.swift; sourceTree = "<group>"; };
 		7189B96F2BA15B330061623D /* SelfSDKRNModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelfSDKRNModule.swift; sourceTree = "<group>"; };
-		71BFAE622B9F16EA00B05A61 /* RCTSelfSDKRNModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RCTSelfSDKRNModule.h; path = reactnative/RCTSelfSDKRNModule.h; sourceTree = "<group>"; };
-		71BFAE632B9F173400B05A61 /* RCTSelfSDKRNModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RCTSelfSDKRNModule.m; path = reactnative/RCTSelfSDKRNModule.m; sourceTree = "<group>"; };
 		71C621B02BA199F400305CBC /* SelfSDKRNModuleBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelfSDKRNModuleBridge.m; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = reactnative/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-reactnative-reactnativeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-reactnative-reactnativeTests.release.xcconfig"; path = "Target Support Files/Pods-reactnative-reactnativeTests/Pods-reactnative-reactnativeTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -107,8 +104,6 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				71BFAE622B9F16EA00B05A61 /* RCTSelfSDKRNModule.h */,
-				71BFAE632B9F173400B05A61 /* RCTSelfSDKRNModule.m */,
 				7189B96F2BA15B330061623D /* SelfSDKRNModule.swift */,
 				63FB45EC2BA14E0D00BB7EBB /* reactnative-Bridging-Header.h */,
 				71C621B02BA199F400305CBC /* SelfSDKRNModuleBridge.m */,
@@ -420,7 +415,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71BFAE642B9F173400B05A61 /* RCTSelfSDKRNModule.m in Sources */,
 				7189B9702BA15B330061623D /* SelfSDKRNModule.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				63FB45EE2BA14E0D00BB7EBB /* Demo.swift in Sources */,
