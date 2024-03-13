@@ -10,20 +10,11 @@ import React
 
 @objc(SelfSDKRNModule2)
 class SelfSDKRNModule2: RCTEventEmitter  {
-  var hasListeners = false
-  
-  @objc(callback:)
-  func getSelfId(callback: RCTResponseSenderBlock) -> Void {
-    let selfId = "12345"
-    
-    callback([selfId])
+  override class func requiresMainQueueSetup() -> Bool {
+    return false
   }
   
-//  @objc(getLocation:callback:)
-//  func getLocation(callback: RCTResponseSenderBlock) -> Void {
-//    let selfId = "12345"
-//    callback([selfId])
-//  }
+  var hasListeners = false
   
   override func supportedEvents() -> [String]! {
     return ["EventSelfId"]
@@ -43,9 +34,23 @@ class SelfSDKRNModule2: RCTEventEmitter  {
       self.sendEvent(withName: "EventSelfId", body: ["selfId": "1234567"])
     }
   }
-//  @objc
-//  func constantsToExport() -> [String: Any]! {
-//    return ["someKey": "someValue"]
+  
+  @objc(callback:)
+  func getSelfId(callback: RCTResponseSenderBlock) -> Void {
+    let selfId = "12345"
+    
+    callback([selfId])
+  }
+  
+//  @objc(getLocation:callback:)
+//  func getLocation(callback: RCTResponseSenderBlock) -> Void {
+//    let selfId = "12345"
+//    callback([selfId])
 //  }
+  
+  
+  override func constantsToExport() -> [AnyHashable : Any]! {
+    return ["someKey": "someValue"]
+  }
   
 }
