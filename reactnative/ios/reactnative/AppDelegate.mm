@@ -1,6 +1,8 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <React/RCTEventEmitter.h>
+#import <React/RCTBridgeModule.h>
 
 #import "reactnative-Swift.h"
 
