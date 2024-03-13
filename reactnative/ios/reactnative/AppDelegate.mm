@@ -2,6 +2,8 @@
 
 #import <React/RCTBundleURLProvider.h>
 
+#import "reactnative-Swift.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -11,6 +13,8 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
+  [[[DemoSdk alloc] init] testCall];
+  
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

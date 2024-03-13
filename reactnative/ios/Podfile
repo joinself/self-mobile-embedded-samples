@@ -27,9 +27,9 @@ end
 
 target 'reactnative' do
   config = use_native_modules!
-  # use_frameworks!
+   use_frameworks!
 
-  # pod 'self-embedded-ios', :git => 'https://github.com/joinself/self-embedded-ios.git'
+   pod 'self-embedded-ios', :git => 'https://github.com/joinself/self-embedded-ios.git'
 
   use_react_native!(
     :path => config[:reactNativePath],
