@@ -13,8 +13,8 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(getSelfId: (RCTResponseSenderBlock)callback)
 {
-  NSInteger eventId = 123;
-  callback(@[@(eventId)]);
+  NSString *eventId = @"";
+  callback(@[eventId]);
 }
 
 bool hasListeners;
