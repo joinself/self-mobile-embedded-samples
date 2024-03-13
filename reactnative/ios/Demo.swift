@@ -7,6 +7,8 @@
 
 import Foundation
 import self_ios_sdk
+import ZIPFoundation
+import libsss
 
 
 class DemoSdk: NSObject {
