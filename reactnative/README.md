@@ -31,3 +31,8 @@ yarn ios
 ```
 
 
+## Start Dev Server
+
+```bash
+yarn start
+```
