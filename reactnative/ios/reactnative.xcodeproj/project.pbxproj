@@ -15,7 +15,6 @@
 		5699DC7549FCA941C3D65913 /* Pods_reactnative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 589D4C57D4CEC8F9611BD2D8 /* Pods_reactnative.framework */; };
 		63FB45EE2BA14E0D00BB7EBB /* Demo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FB45ED2BA14E0D00BB7EBB /* Demo.swift */; };
 		63FB45F12BA14E6C00BB7EBB /* SSSSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63FB45F02BA14E6C00BB7EBB /* SSSSwift */; };
-		63FB45F42BA15A2B00BB7EBB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 63FB45F32BA15A2B00BB7EBB /* ZIPFoundation */; };
 		7189B9702BA15B330061623D /* SelfSDKRNModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7189B96F2BA15B330061623D /* SelfSDKRNModule.swift */; };
 		71C621B12BA199F400305CBC /* SelfSDKRNModuleBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 71C621B02BA199F400305CBC /* SelfSDKRNModuleBridge.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -70,7 +69,6 @@
 			files = (
 				63FB45F12BA14E6C00BB7EBB /* SSSSwift in Frameworks */,
 				5699DC7549FCA941C3D65913 /* Pods_reactnative.framework in Frameworks */,
-				63FB45F42BA15A2B00BB7EBB /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,7 +204,6 @@
 			name = reactnative;
 			packageProductDependencies = (
 				63FB45F02BA14E6C00BB7EBB /* SSSSwift */,
-				63FB45F32BA15A2B00BB7EBB /* ZIPFoundation */,
 			);
 			productName = reactnative;
 			productReference = 13B07F961A680F5B00A75B9A /* reactnative.app */;
@@ -239,8 +236,7 @@
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			packageReferences = (
-				63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift" */,
-				63FB45F22BA15A2B00BB7EBB /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift.git" */,
 			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
@@ -657,7 +653,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -736,7 +735,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -777,7 +779,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift" */ = {
+		63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/joinself/sss-swift.git";
 			requirement = {
@@ -785,26 +787,13 @@
 				kind = branch;
 			};
 		};
-		63FB45F22BA15A2B00BB7EBB /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.9.18;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		63FB45F02BA14E6C00BB7EBB /* SSSSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift" */;
+			package = 63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift.git" */;
 			productName = SSSSwift;
-		};
-		63FB45F32BA15A2B00BB7EBB /* ZIPFoundation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 63FB45F22BA15A2B00BB7EBB /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
-			productName = ZIPFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
