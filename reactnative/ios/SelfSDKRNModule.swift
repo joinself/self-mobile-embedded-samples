@@ -31,7 +31,7 @@ class SelfSDKRNModule: RCTEventEmitter  {
   func sendSelfIdEvent() {
     print("sendSelfIdEvent \(hasListeners)")
     if (hasListeners) {
-      self.sendEvent(withName: "EventSelfId", body: ["selfId": "1234567"])
+      self.sendEvent(withName: "EventSelfId", body: ["selfId": "event1234567"])
     }
   }
   
