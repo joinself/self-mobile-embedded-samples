@@ -153,15 +153,15 @@ function App(): React.JSX.Element {
               style={styles.button}
               disabled={selfId == ''}
               onPress={() => {
-                // SelfSDKRNModule.getLocation(
-                //   error => {
-                //     Alert.alert(error, error);
-                //   },
-                //   result => {
-                //     console.log("location: " + result)
-                //     Alert.alert('Location', result);
-                // });
-                requestLocationPermission()
+                SelfSDKRNModule.getLocation(
+                  error => {
+                    Alert.alert(error, error);
+                  },
+                  result => {
+                    console.log("location: " + result)
+                    Alert.alert('Location', result);
+                });
+                // requestLocationPermission()
               }}
             />           
           </View>                  
