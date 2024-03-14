@@ -23,8 +23,8 @@ class ViewController: UIViewController {
       super.viewDidLoad()
       // Do any additional setup after loading the view.
       
-    
-    viewReactNative.backgroundColor = .red
+    viewReactNative.layer.borderWidth = 1
+    viewReactNative.layer.borderColor = UIColor.red.cgColor
     
     
     btnCreate.addTarget(self, action: #selector(onButtonPressed(_:)), for: .touchUpInside)
@@ -32,11 +32,11 @@ class ViewController: UIViewController {
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    
+    openReactNative()
   }
     
   @objc func onButtonPressed(_ sender: Any) {
-    openReactNative()
+    
   }
   
   func openReactNative() {
@@ -53,10 +53,12 @@ class ViewController: UIViewController {
       )
       self.bridge = rootView.bridge
       
-      let vc = UIViewController()
-      vc.view = rootView
-      self.present(vc, animated: true, completion: nil)
-//      viewReactNative.addSubview(rootView)
+//      let vc = UIViewController()
+//      vc.view = rootView
+//      self.present(vc, animated: true, completion: nil)
+      rootView.frame = viewReactNative.bounds
+      viewReactNative.addSubview(rootView)
+      
     }
     
   }
