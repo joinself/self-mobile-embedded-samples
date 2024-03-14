@@ -29,7 +29,7 @@ target 'reactnative' do
   config = use_native_modules!
    use_frameworks!
 
-   # pod 'self-embedded-ios', :git => 'https://github.com/joinself/self-embedded-ios.git'
+   pod 'self-embedded-ios', :git => 'https://github.com/joinself/self-embedded-ios.git'
    pod 'SwiftyBeaver'
    
   use_react_native!(
