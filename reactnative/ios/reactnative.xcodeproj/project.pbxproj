@@ -18,6 +18,7 @@
 		713FB7E92BA2E0C90032C7B3 /* AppStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713FB7E52BA2E0C90032C7B3 /* AppStoryboard.swift */; };
 		713FB7EB2BA2E1160032C7B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 713FB7EA2BA2E1160032C7B3 /* Main.storyboard */; };
 		713FB7ED2BA2E1C00032C7B3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713FB7EC2BA2E1C00032C7B3 /* Extensions.swift */; };
+		714688472BA3ED6700DB2FDF /* LivenessCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714688462BA3ED6700DB2FDF /* LivenessCheckViewController.swift */; };
 		7189B9702BA15B330061623D /* SelfSDKRNModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7189B96F2BA15B330061623D /* SelfSDKRNModule.swift */; };
 		71C621B12BA199F400305CBC /* SelfSDKRNModuleBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 71C621B02BA199F400305CBC /* SelfSDKRNModuleBridge.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -51,6 +52,7 @@
 		713FB7E52BA2E0C90032C7B3 /* AppStoryboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppStoryboard.swift; path = reactnative/AppStoryboard.swift; sourceTree = "<group>"; };
 		713FB7EA2BA2E1160032C7B3 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = reactnative/Main.storyboard; sourceTree = "<group>"; };
 		713FB7EC2BA2E1C00032C7B3 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = reactnative/Extensions.swift; sourceTree = "<group>"; };
+		714688462BA3ED6700DB2FDF /* LivenessCheckViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivenessCheckViewController.swift; sourceTree = "<group>"; };
 		7189B96F2BA15B330061623D /* SelfSDKRNModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelfSDKRNModule.swift; sourceTree = "<group>"; };
 		71C621B02BA199F400305CBC /* SelfSDKRNModuleBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelfSDKRNModuleBridge.m; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = reactnative/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 		13B07FAE1A68108700A75B9A /* reactnative */ = {
 			isa = PBXGroup;
 			children = (
+				714688462BA3ED6700DB2FDF /* LivenessCheckViewController.swift */,
 				713FB7EC2BA2E1C00032C7B3 /* Extensions.swift */,
 				713FB7EA2BA2E1160032C7B3 /* Main.storyboard */,
 				713FB7E22BA2E0C80032C7B3 /* AppDelegate.swift */,
@@ -180,7 +183,6 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
-				4F7EFAF6B55B057B1D0C0BC3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -202,7 +204,6 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				1D82C8B554C6ECCBC8393A27 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -243,7 +244,7 @@
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			packageReferences = (
-				63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift.git" */,
+				63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift" */,
 			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
@@ -307,40 +308,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-reactnative/Pods-reactnative-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		1D82C8B554C6ECCBC8393A27 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-reactnative/Pods-reactnative-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-reactnative/Pods-reactnative-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-reactnative/Pods-reactnative-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		4F7EFAF6B55B057B1D0C0BC3 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-reactnative-reactnativeTests/Pods-reactnative-reactnativeTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-reactnative-reactnativeTests/Pods-reactnative-reactnativeTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-reactnative-reactnativeTests/Pods-reactnative-reactnativeTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
@@ -425,6 +392,7 @@
 				7189B9702BA15B330061623D /* SelfSDKRNModule.swift in Sources */,
 				713FB7ED2BA2E1C00032C7B3 /* Extensions.swift in Sources */,
 				713FB7E82BA2E0C90032C7B3 /* ViewController.swift in Sources */,
+				714688472BA3ED6700DB2FDF /* LivenessCheckViewController.swift in Sources */,
 				71C621B12BA199F400305CBC /* SelfSDKRNModuleBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -663,10 +631,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -745,10 +710,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -789,7 +751,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift.git" */ = {
+		63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/joinself/sss-swift.git";
 			requirement = {
@@ -802,7 +764,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		63FB45F02BA14E6C00BB7EBB /* SSSSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift.git" */;
+			package = 63FB45EF2BA14E6C00BB7EBB /* XCRemoteSwiftPackageReference "sss-swift" */;
 			productName = SSSSwift;
 		};
 /* End XCSwiftPackageProductDependency section */

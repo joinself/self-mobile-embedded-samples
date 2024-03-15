@@ -36,7 +36,10 @@ class ViewController: UIViewController {
   }
     
   @objc func onButtonPressed(_ sender: Any) {
-    
+    let vc = LivenessCheckViewController()
+    let navigationController = UINavigationController(rootViewController: vc)
+
+    self.present(navigationController, animated: true, completion: nil)
   }
   
   func openReactNative() {
