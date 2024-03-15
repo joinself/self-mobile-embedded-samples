@@ -7,6 +7,7 @@
 
 import Foundation
 import React
+import self_ios_sdk
 
 @objc(SelfSDKRNModule)
 class SelfSDKRNModule: RCTEventEmitter  {
@@ -15,6 +16,7 @@ class SelfSDKRNModule: RCTEventEmitter  {
   }
   
   var hasListeners = false
+  static var account: Account? = nil
   
   override func supportedEvents() -> [String]! {
     return ["EventSelfId"]
@@ -35,8 +37,15 @@ class SelfSDKRNModule: RCTEventEmitter  {
     }
   }
   
+  @objc func createAccount(_ callback: RCTResponseSenderBlock) -> Void {
+    
+    NotificationCenter.default.post(name: Notification.Name("CreateAccount"), object: nil)
+    
+    callback([""])
+  }
+  
   @objc func getSelfId(_ callback: RCTResponseSenderBlock) -> Void {
-    let selfId = "123"
+    let selfId = SelfSDKRNModule.account?.identifier() ?? ""
     
     callback([selfId])
   }

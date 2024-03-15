@@ -145,7 +145,9 @@ function App(): React.JSX.Element {
               style={styles.button}
               disabled={selfId != ''}
               onPress={() => {
-                  SelfSDKRNModule.openLivenessCheck();                
+                  SelfSDKRNModule.createAccount(result => {     
+
+                  });                
               }}
             />  
             <Button

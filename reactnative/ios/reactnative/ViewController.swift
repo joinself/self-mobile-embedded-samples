@@ -21,6 +21,8 @@ class ViewController: UIViewController {
   
   private var account: Account!
   
+  static var onCreateAccountCallback: (() -> Void)? = nil
+  
   override func viewDidLoad() {
       super.viewDidLoad()
       // Do any additional setup after loading the view.
@@ -31,11 +33,14 @@ class ViewController: UIViewController {
     
     btnCreate.addTarget(self, action: #selector(onButtonPressed(_:)), for: .touchUpInside)
     
+    NotificationCenter.default.addObserver(self, selector: #selector(createAccount), name: Notification.Name("CreateAccount"), object: nil)
+
+    
     account = Account.Builder()
         .withEnvironment(Environment.review)
         .withStoragePath("account1")
         .build()
-    
+    SelfSDKRNModule.account = account
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -51,9 +56,6 @@ class ViewController: UIViewController {
 
         }
     }
-//    let navigationController = UINavigationController(rootViewController: vc)
-
-//    self.navigationController?.pushViewController(vc, animated: true)
     self.present(vc, animated: true)
   }
   
@@ -79,5 +81,22 @@ class ViewController: UIViewController {
       
     }
     
+  }
+  
+  @objc private func createAccount(notification: Notification) {
+    log.debug("createAccount start")
+    DispatchQueue.main.async {
+      let vc = LivenessCheckViewController()
+      vc.account = self.account
+      vc.onFinishCallback = {selfieImage, attestation in
+        Task {
+            if let attestation = attestation {
+                let selfId = try! await self.account.register(selfieImage: selfieImage, attestation: attestation)
+                log.debug("SelfId: \(selfId)")                                
+            }
+        }
+      }
+      self.present(vc, animated: true)
+    }
   }
 }

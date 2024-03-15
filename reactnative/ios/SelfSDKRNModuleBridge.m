@@ -10,6 +10,7 @@
 
 @interface RCT_EXTERN_MODULE(SelfSDKRNModule, RCTEventEmitter)
 
+RCT_EXTERN_METHOD(createAccount:(RCTResponseSenderBlock *)callback)
 RCT_EXTERN_METHOD(getSelfId:(RCTResponseSenderBlock *)callback)
 RCT_EXTERN_METHOD(getLocation:(RCTResponseSenderBlock *)success error:(RCTResponseSenderBlock *)error)
 
