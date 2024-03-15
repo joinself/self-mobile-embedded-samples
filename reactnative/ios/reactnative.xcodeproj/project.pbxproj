@@ -13,6 +13,10 @@
 		5699DC7549FCA941C3D65913 /* Pods_reactnative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 589D4C57D4CEC8F9611BD2D8 /* Pods_reactnative.framework */; };
 		63D65A612BA446360088C349 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 63D65A602BA446360088C349 /* ZIPFoundation */; };
 		63FB45F12BA14E6C00BB7EBB /* SSSSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63FB45F02BA14E6C00BB7EBB /* SSSSwift */; };
+		71196DF72BA4550400602177 /* PermissionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71196DF62BA4550400602177 /* PermissionHelper.swift */; };
+		71196DFA2BA4581700602177 /* DialogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71196DF82BA4581700602177 /* DialogHelper.swift */; };
+		71196DFB2BA4581700602177 /* SelfError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71196DF92BA4581700602177 /* SelfError.swift */; };
+		71196DFD2BA45C1C00602177 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 71196DFC2BA45C1C00602177 /* Localizable.strings */; };
 		713FB7E62BA2E0C90032C7B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713FB7E22BA2E0C80032C7B3 /* AppDelegate.swift */; };
 		713FB7E72BA2E0C90032C7B3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713FB7E32BA2E0C80032C7B3 /* SceneDelegate.swift */; };
 		713FB7E82BA2E0C90032C7B3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713FB7E42BA2E0C80032C7B3 /* ViewController.swift */; };
@@ -47,6 +51,10 @@
 		589D4C57D4CEC8F9611BD2D8 /* Pods_reactnative.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_reactnative.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B7EB9410499542E8C5724F5 /* Pods-reactnative-reactnativeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-reactnative-reactnativeTests.debug.xcconfig"; path = "Target Support Files/Pods-reactnative-reactnativeTests/Pods-reactnative-reactnativeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		63FB45EC2BA14E0D00BB7EBB /* reactnative-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "reactnative-Bridging-Header.h"; sourceTree = "<group>"; };
+		71196DF62BA4550400602177 /* PermissionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PermissionHelper.swift; path = reactnative/PermissionHelper.swift; sourceTree = "<group>"; };
+		71196DF82BA4581700602177 /* DialogHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DialogHelper.swift; path = reactnative/DialogHelper.swift; sourceTree = "<group>"; };
+		71196DF92BA4581700602177 /* SelfError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelfError.swift; path = reactnative/SelfError.swift; sourceTree = "<group>"; };
+		71196DFC2BA45C1C00602177 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		713FB7E22BA2E0C80032C7B3 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = reactnative/AppDelegate.swift; sourceTree = "<group>"; };
 		713FB7E32BA2E0C80032C7B3 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = reactnative/SceneDelegate.swift; sourceTree = "<group>"; };
 		713FB7E42BA2E0C80032C7B3 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = reactnative/ViewController.swift; sourceTree = "<group>"; };
@@ -104,19 +112,23 @@
 		13B07FAE1A68108700A75B9A /* reactnative */ = {
 			isa = PBXGroup;
 			children = (
+				713FB7E42BA2E0C80032C7B3 /* ViewController.swift */,
 				714688462BA3ED6700DB2FDF /* LivenessCheckViewController.swift */,
+				71196DF82BA4581700602177 /* DialogHelper.swift */,
+				71196DF92BA4581700602177 /* SelfError.swift */,
+				71196DF62BA4550400602177 /* PermissionHelper.swift */,
 				713FB7EC2BA2E1C00032C7B3 /* Extensions.swift */,
-				713FB7EA2BA2E1160032C7B3 /* Main.storyboard */,
 				713FB7E22BA2E0C80032C7B3 /* AppDelegate.swift */,
 				713FB7E52BA2E0C90032C7B3 /* AppStoryboard.swift */,
 				713FB7E32BA2E0C80032C7B3 /* SceneDelegate.swift */,
-				713FB7E42BA2E0C80032C7B3 /* ViewController.swift */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
+				713FB7EA2BA2E1160032C7B3 /* Main.storyboard */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				7189B96F2BA15B330061623D /* SelfSDKRNModule.swift */,
 				63FB45EC2BA14E0D00BB7EBB /* reactnative-Bridging-Header.h */,
 				71C621B02BA199F400305CBC /* SelfSDKRNModuleBridge.m */,
+				71196DFC2BA45C1C00602177 /* Localizable.strings */,
 			);
 			name = reactnative;
 			sourceTree = "<group>";
@@ -275,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				713FB7EB2BA2E1160032C7B3 /* Main.storyboard in Resources */,
+				71196DFD2BA45C1C00602177 /* Localizable.strings in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
@@ -428,10 +441,13 @@
 			files = (
 				713FB7E62BA2E0C90032C7B3 /* AppDelegate.swift in Sources */,
 				713FB7E92BA2E0C90032C7B3 /* AppStoryboard.swift in Sources */,
+				71196DF72BA4550400602177 /* PermissionHelper.swift in Sources */,
+				71196DFB2BA4581700602177 /* SelfError.swift in Sources */,
 				713FB7E72BA2E0C90032C7B3 /* SceneDelegate.swift in Sources */,
 				7189B9702BA15B330061623D /* SelfSDKRNModule.swift in Sources */,
 				713FB7ED2BA2E1C00032C7B3 /* Extensions.swift in Sources */,
 				713FB7E82BA2E0C90032C7B3 /* ViewController.swift in Sources */,
+				71196DFA2BA4581700602177 /* DialogHelper.swift in Sources */,
 				714688472BA3ED6700DB2FDF /* LivenessCheckViewController.swift in Sources */,
 				71C621B12BA199F400305CBC /* SelfSDKRNModuleBridge.m in Sources */,
 			);

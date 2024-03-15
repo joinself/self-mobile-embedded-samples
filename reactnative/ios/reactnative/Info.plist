@@ -31,8 +31,14 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
+	<key>NSCameraUsageDescription</key>
+	<string>Turning on the camera allows us to ensure it's only you using Self</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>use location to improve experience</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>use location to improve experience</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -8,7 +8,7 @@
 import UIKit
 import SwiftyBeaver
 import React
-//import self_ios_sdk
+import self_ios_sdk
 
 let log = SwiftyBeaver.self
 
@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         setupLogger()
-//        SelfSDK.initialize()
+        SelfSDK.initialize()
       
         return true
     }

@@ -7,7 +7,7 @@
 
 import UIKit
 import SwiftUI
-//import self_ios_sdk
+import self_ios_sdk
 import UniformTypeIdentifiers
 import CoreLocation
 import React
@@ -19,6 +19,8 @@ class ViewController: UIViewController {
   @IBOutlet weak var btnCreate: UIButton!
   @IBOutlet weak var viewReactNative: UIView!
   
+  private var account: Account!
+  
   override func viewDidLoad() {
       super.viewDidLoad()
       // Do any additional setup after loading the view.
@@ -28,6 +30,12 @@ class ViewController: UIViewController {
     
     
     btnCreate.addTarget(self, action: #selector(onButtonPressed(_:)), for: .touchUpInside)
+    
+    account = Account.Builder()
+        .withEnvironment(Environment.review)
+        .withStoragePath("account1")
+        .build()
+    
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -37,9 +45,16 @@ class ViewController: UIViewController {
     
   @objc func onButtonPressed(_ sender: Any) {
     let vc = LivenessCheckViewController()
-    let navigationController = UINavigationController(rootViewController: vc)
+    vc.account = self.account
+    vc.onFinishCallback = {selfieImage, attestation in
+        Task {
 
-    self.present(navigationController, animated: true, completion: nil)
+        }
+    }
+//    let navigationController = UINavigationController(rootViewController: vc)
+
+//    self.navigationController?.pushViewController(vc, animated: true)
+    self.present(vc, animated: true)
   }
   
   func openReactNative() {
