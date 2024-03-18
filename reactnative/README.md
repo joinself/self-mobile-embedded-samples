@@ -36,3 +36,11 @@ npm run ios
 # OR using Yarn
 yarn ios
 ```
+
+Open `reactnative/ios/reactnative.xcworkspace` to modify codes
+
+## Start Dev Server
+
+```bash
+yarn start
+```
