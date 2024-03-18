@@ -6,9 +6,15 @@
 git@github.com:joinself/self-mobile-embedded-samples.git
 ```
 
-Build and run the following apps
 
-## Chat app
+## API Usages
+
+[Android SelfSDK Usages](USAGE.md)
+
+
+## Build and run the following apps
+
+### Chat app
 This app demonstrates:
 - register an account 
 - send and receive messages
@@ -20,7 +26,7 @@ cd android
 ./gradlew :chat:assembleDebug
 ```
 
-## Chat Compose
+### Chat Compose
 This app use Jetpack Compose to build the UI
 
 __Build__
@@ -29,7 +35,7 @@ __Build__
 ```
 
 
-## Sign In
+### Sign In
 Sign in from existing SelfID from Chat app above.
 
 __Build__

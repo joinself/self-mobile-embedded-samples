@@ -1,4 +1,4 @@
-# self embedded SDK samples
+# Self Embedded-SDK samples
 
 ### Android
 

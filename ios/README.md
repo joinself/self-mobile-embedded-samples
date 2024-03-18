@@ -1,12 +1,16 @@
 # iOS Self Embedded-SDK Samples
 
-Clone the samples
+## Clone the samples
 
 ```
 git@github.com:joinself/self-mobile-embedded-samples.git
 ```
 
-### To build iOS example app
+## API Usages
+
+[iOS SelfSDK Usages](USAGE.md)
+
+## Build sample apps
 
 ```
 cd ios
