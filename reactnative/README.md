@@ -1,4 +1,5 @@
-# Getting Started
+# React Native Self Embedded-SDK samples
+
 React Native sample app that uses Self SDK
 
 ## Clone project

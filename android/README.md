@@ -1,4 +1,4 @@
-# Self Android Embedded samples
+# Android Self Embedded-SDK samples
 
 ## Clone project
 

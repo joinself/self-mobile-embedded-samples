@@ -1,4 +1,4 @@
-# Self iOS Embedded-SDK Samples
+# iOS Self Embedded-SDK Samples
 
 Clone the samples
 
