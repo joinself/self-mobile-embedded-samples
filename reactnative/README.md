@@ -1,10 +1,17 @@
 # Getting Started
-React Native sample app uses Self-SDK
+React Native sample app that uses Self SDK
 
-## Step 1: Install dependencies
+## Clone project
+
+```bash
+git@github.com:joinself/self-mobile-embedded-samples.git
+```
+
+## Step1: Install dependencies
 
 
 ```bash
+cd reactnative
 yarn install
 ```
 
@@ -29,5 +36,3 @@ npm run ios
 # OR using Yarn
 yarn ios
 ```
-
-

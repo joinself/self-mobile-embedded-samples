@@ -1,5 +1,13 @@
 # Self Android Embedded samples
 
+## Clone project
+
+```bash
+git@github.com:joinself/self-mobile-embedded-samples.git
+```
+
+Build and run the following apps
+
 ## Chat app
 This app demonstrates:
 - register an account 
@@ -8,8 +16,19 @@ This app demonstrates:
 
 __Build__
 ```bash
+cd android
 ./gradlew :chat:assembleDebug
 ```
+
+## Chat Compose
+This app use Jetpack Compose to build the UI
+
+__Build__
+```bash
+./gradlew :chat-compose:assembleDebug
+```
+
+
 ## Sign In
 Sign in from existing SelfID from Chat app above.
 
