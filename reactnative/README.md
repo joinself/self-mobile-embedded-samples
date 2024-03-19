@@ -16,6 +16,13 @@ cd reactnative
 yarn install
 ```
 
+__Install CocoaPod dependencies for iOS__
+
+```bash
+cd ios
+pod install
+```
+
 ## Step 2: Start your Application
 
 ### For Android
@@ -45,3 +52,10 @@ Open `reactnative/ios/reactnative.xcworkspace` to modify codes
 ```bash
 yarn start
 ```
+
+## Get project info
+
+```bash
+npx react-native info
+```
+

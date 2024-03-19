@@ -28,6 +28,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Share from 'react-native-share';
+
 
 import {NativeEventEmitter, NativeModules} from 'react-native';
 const {SelfSDKRNModule} = NativeModules;
@@ -168,6 +170,26 @@ function App(): React.JSX.Element {
                 } else if (Platform.OS === 'android') {
                   requestLocationPermission()                  
                 }
+              }}
+            />  
+
+            <Button
+              title="Export Backup"
+              style={styles.button}
+              disabled={selfId == ''}
+              onPress={() => {
+                SelfSDKRNModule.exportBackup(result => {                       
+                  var backupUrl = `file://${result}`
+                  console.log("backupUrl: " + backupUrl)
+                  const options = {
+                    title: 'Export backup',
+                    subject: 'Export backup',
+                    message: `Export backup`,
+                    url: backupUrl,
+                    type: "application/zip"
+                  }
+                  Share.open(options);
+                });                
               }}
             />           
           </View>                  
