@@ -32,6 +32,7 @@ class ViewController: UIViewController {
     
     
     btnCreate.addTarget(self, action: #selector(onButtonPressed(_:)), for: .touchUpInside)
+    btnCreate.isHidden = true
     
     NotificationCenter.default.addObserver(self, selector: #selector(createAccount), name: Notification.Name("CreateAccount"), object: nil)
 

@@ -8,6 +8,7 @@
 import Foundation
 import React
 import self_ios_sdk
+import CoreLocation
 
 @objc(SelfSDKRNModule)
 class SelfSDKRNModule: RCTEventEmitter  {
@@ -51,10 +52,25 @@ class SelfSDKRNModule: RCTEventEmitter  {
   }
   
   
-  @objc func getLocation(_ success: RCTResponseSenderBlock, error: RCTResponseSenderBlock) -> Void {
-    let data = "location"
-    success([data])
-    sendSelfIdEvent()
+  @objc func getLocation(_ success: @escaping RCTResponseSenderBlock, error: @escaping RCTResponseSenderBlock) -> Void {
+      
+    let locationManager = CLLocationManager()
+    if (locationManager.authorizationStatus == .notDetermined ||
+        locationManager.authorizationStatus == .denied ||
+        locationManager.authorizationStatus == .restricted) {
+        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
+        return
+    }
+    
+    Task {
+      if let locAttestation = try! await SelfSDKRNModule.account?.location() {
+        print("Location fact: \(locAttestation.first?.fact())")
+        if let fact = locAttestation.first?.fact() {
+          success([fact.value()])
+        }
+      }
+    }
   }
   
   
