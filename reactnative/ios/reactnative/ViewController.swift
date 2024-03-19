@@ -92,8 +92,9 @@ class ViewController: UIViewController {
       vc.onFinishCallback = {selfieImage, attestation in
         Task {
             if let attestation = attestation {
-                let selfId = try! await self.account.register(selfieImage: selfieImage, attestation: attestation)
-                log.debug("SelfId: \(selfId)")                                
+              let selfId = try! await self.account.register(selfieImage: selfieImage, attestation: attestation)
+              log.debug("SelfId: \(selfId)")
+              NotificationCenter.default.post(name: Notification.Name("SelfIdUpdated"), object: nil, userInfo: ["selfId": selfId])
             }
         }
       }
