@@ -69,9 +69,9 @@ class SelfSDKRNModule: RCTEventEmitter  {
     if (locationManager.authorizationStatus == .notDetermined ||
         locationManager.authorizationStatus == .denied ||
         locationManager.authorizationStatus == .restricted) {
-        locationManager.requestAlwaysAuthorization()
-        locationManager.requestWhenInUseAuthorization()
-        return
+      locationManager.requestAlwaysAuthorization()
+      locationManager.requestWhenInUseAuthorization()
+      return
     }
     
     Task {
@@ -84,9 +84,19 @@ class SelfSDKRNModule: RCTEventEmitter  {
     }
   }
   
+  @objc func exportBackup(_ callback: @escaping RCTResponseSenderBlock) {
+    print("onExportBackupPressed")
+    Task {
+      if let fileUrl = await SelfSDKRNModule.account?.backup() {
+        print("exportBackup: \(fileUrl.path)")
+        callback([fileUrl.path])
+      }
+    }
+  }
   
-//  override func constantsToExport() -> [AnyHashable : Any]! {
-//    return ["someKey": "someValue"]
-//  }
+  
+  //  override func constantsToExport() -> [AnyHashable : Any]! {
+  //    return ["someKey": "someValue"]
+  //  }
   
 }
