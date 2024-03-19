@@ -52,3 +52,10 @@ Open `reactnative/ios/reactnative.xcworkspace` to modify codes
 ```bash
 yarn start
 ```
+
+## Get project info
+
+```bash
+npx react-native info
+```
+

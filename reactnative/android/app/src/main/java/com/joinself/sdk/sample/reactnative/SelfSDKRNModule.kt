@@ -112,4 +112,15 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         return !(ActivityCompat.checkSelfPermission(reactApplicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(reactApplicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
     }
+
+    @ReactMethod
+    fun exportBackup(callback: Callback) {
+        scope.launch {
+            val backupFile = account?.backup()
+            if (backupFile != null) {
+                Timber.d("exportBackup: ${backupFile.absolutePath}")
+                callback.invoke(backupFile.absolutePath)
+            }
+        }
+    }
 }
