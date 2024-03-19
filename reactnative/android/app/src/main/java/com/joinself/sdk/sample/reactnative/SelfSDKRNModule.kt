@@ -2,23 +2,19 @@ package com.joinself.sdk.sample.reactnative
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Callback
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.Callback
-import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import com.facebook.react.bridge.Arguments
 import com.joinself.sdk.models.Account
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 
@@ -30,7 +26,7 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
     val scope = CoroutineScope(Job())
 
     private var rnContext: ReactContext
-
+    private var hasListeners = false
     init {
         rnContext = reactContext
 
@@ -50,12 +46,25 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         var openLivenessCheckCallback: (()->Unit)? = null
     }
 
+    @ReactMethod
+    fun addListener(eventName: String?) {
+        Timber.d("addListener $eventName")
+        hasListeners = true
+    }
+
+    @ReactMethod
+    fun removeListeners(count: Int?) {
+        Timber.d("removeListeners $count")
+        hasListeners = false
+    }
 
     // send event from kotlin to react native
     private fun sendEvent(reactContext: ReactContext, eventName: String, params: WritableMap?) {
-        reactContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(eventName, params)
+        if (hasListeners) {
+            reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                .emit(eventName, params)
+        }
     }
 
     fun sendSelfId(selfId: String) {
@@ -78,7 +87,7 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
     }
 
     @ReactMethod
-    fun getLocation(errorCallback: Callback, successCallback: Callback) {
+    fun getLocation(successCallback: Callback, errorCallback: Callback) {
         if (!checkLocationPermission()) {
             errorCallback.invoke("location permission required")
             return

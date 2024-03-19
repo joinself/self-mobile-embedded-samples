@@ -8,6 +8,7 @@
 import Foundation
 import React
 import self_ios_sdk
+import CoreLocation
 
 @objc(SelfSDKRNModule)
 class SelfSDKRNModule: RCTEventEmitter  {
@@ -17,6 +18,13 @@ class SelfSDKRNModule: RCTEventEmitter  {
   
   var hasListeners = false
   static var account: Account? = nil
+  
+  override init() {
+    super.init()
+    print("SelfSDKRNModule init")
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(selfIdUpdated), name: Notification.Name("SelfIdUpdated"), object: nil)
+  }
   
   override func supportedEvents() -> [String]! {
     return ["EventSelfId"]
@@ -30,20 +38,24 @@ class SelfSDKRNModule: RCTEventEmitter  {
   }
   
   
-  func sendSelfIdEvent() {
-    print("sendSelfIdEvent \(hasListeners)")
+  func sendSelfIdEvent(_ selfId: String) {
+    print("sendSelfIdEvent: \(hasListeners)")
     if (hasListeners) {
-      self.sendEvent(withName: "EventSelfId", body: ["selfId": "event1234567"])
+      self.sendEvent(withName: "EventSelfId", body: ["selfId": selfId])
+    }
+  }
+  
+  @objc private func selfIdUpdated(notification: Notification) {
+    if let selfId = notification.userInfo?["selfId"] as? String {
+      sendSelfIdEvent(selfId)
     }
   }
   
   @objc func createAccount(_ callback: RCTResponseSenderBlock) -> Void {
-    
     NotificationCenter.default.post(name: Notification.Name("CreateAccount"), object: nil)
-    
-    callback([""])
   }
   
+  // get selfId from sdk
   @objc func getSelfId(_ callback: RCTResponseSenderBlock) -> Void {
     let selfId = SelfSDKRNModule.account?.identifier() ?? ""
     
@@ -51,15 +63,30 @@ class SelfSDKRNModule: RCTEventEmitter  {
   }
   
   
-  @objc func getLocation(_ success: RCTResponseSenderBlock, error: RCTResponseSenderBlock) -> Void {
-    let data = "location"
-    success([data])
-    sendSelfIdEvent()
+  // get location from sdk
+  @objc func getLocation(_ success: @escaping RCTResponseSenderBlock, error: @escaping RCTResponseSenderBlock) -> Void {
+    let locationManager = CLLocationManager()
+    if (locationManager.authorizationStatus == .notDetermined ||
+        locationManager.authorizationStatus == .denied ||
+        locationManager.authorizationStatus == .restricted) {
+        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
+        return
+    }
+    
+    Task {
+      if let locAttestation = try! await SelfSDKRNModule.account?.location() {
+        print("Location fact: \(locAttestation.first?.fact())")
+        if let fact = locAttestation.first?.fact() {
+          success([fact.value()])
+        }
+      }
+    }
   }
   
   
-  override func constantsToExport() -> [AnyHashable : Any]! {
-    return ["someKey": "someValue"]
-  }
+//  override func constantsToExport() -> [AnyHashable : Any]! {
+//    return ["someKey": "someValue"]
+//  }
   
 }

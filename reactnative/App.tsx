@@ -8,6 +8,7 @@
 import React, {useState, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  Platform,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -106,13 +107,13 @@ function App(): React.JSX.Element {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {        
         SelfSDKRNModule.getLocation(
-          error => {
-            Alert.alert(error, error);
-          },
           result => {
             console.log("location: " + result)
             Alert.alert('Location', result);
-        });
+          },
+          error => {
+            Alert.alert('Error', error);
+          });
       } else {
         console.log('Location permission denied');
       }
@@ -137,7 +138,7 @@ function App(): React.JSX.Element {
           }}>
 
           <View style={styles.container}>
-            <Text>
+            <Text style={styles.text}>
               SelfId: {selfId}
             </Text>
             <Button
@@ -155,15 +156,18 @@ function App(): React.JSX.Element {
               style={styles.button}
               disabled={selfId == ''}
               onPress={() => {
-                SelfSDKRNModule.getLocation(
-                  error => {
-                    Alert.alert(error, error);
-                  },
-                  result => {
-                    console.log("location: " + result)
-                    Alert.alert('Location', result);
-                });
-                // requestLocationPermission()
+                if (Platform.OS === 'ios') {
+                  SelfSDKRNModule.getLocation(
+                    result => {
+                      console.log("location: " + result)
+                      Alert.alert('Location', result);
+                    },
+                    error => {                    
+                      Alert.alert('Error', error);
+                  });
+                } else if (Platform.OS === 'android') {
+                  requestLocationPermission()                  
+                }
               }}
             />           
           </View>                  
@@ -179,7 +183,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     margin: 20,
-    gap: 10
+    gap: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   sectionContainer: {
     marginTop: 32,
@@ -197,17 +203,17 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
-  button: {
-      
+  text: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  button: {      
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: 12,
       paddingHorizontal: 32,
       borderRadius: 4,
-      elevation: 3,
-      marginHorizontal: 16,
-      marginVertical: 16,
-      marginTop: 24
+      elevation: 3      
   }
 });
 

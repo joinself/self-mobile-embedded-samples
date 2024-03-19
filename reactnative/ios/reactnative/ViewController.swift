@@ -32,6 +32,7 @@ class ViewController: UIViewController {
     
     
     btnCreate.addTarget(self, action: #selector(onButtonPressed(_:)), for: .touchUpInside)
+    btnCreate.isHidden = true
     
     NotificationCenter.default.addObserver(self, selector: #selector(createAccount), name: Notification.Name("CreateAccount"), object: nil)
 
@@ -91,8 +92,9 @@ class ViewController: UIViewController {
       vc.onFinishCallback = {selfieImage, attestation in
         Task {
             if let attestation = attestation {
-                let selfId = try! await self.account.register(selfieImage: selfieImage, attestation: attestation)
-                log.debug("SelfId: \(selfId)")                                
+              let selfId = try! await self.account.register(selfieImage: selfieImage, attestation: attestation)
+              log.debug("SelfId: \(selfId)")
+              NotificationCenter.default.post(name: Notification.Name("SelfIdUpdated"), object: nil, userInfo: ["selfId": selfId])
             }
         }
       }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">React Native - SDK Sample</string>
+    <string name="app_name">React Native - Self SDK Sample</string>
 
     <string name="thank_you">Thank You</string>
     <string name="thank_you_2">Thank you!</string>

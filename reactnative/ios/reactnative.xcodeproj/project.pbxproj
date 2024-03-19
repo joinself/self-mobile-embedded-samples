@@ -538,7 +538,7 @@
 					"\"$PROJECT_DIR/Pods\"/**",
 				);
 				INFOPLIST_FILE = reactnative/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "ReactNative - SDK Sample";
+				INFOPLIST_KEY_CFBundleDisplayName = "React Native - Self SDK Sample";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -583,7 +583,7 @@
 					"\"$PROJECT_DIR/Pods\"/**",
 				);
 				INFOPLIST_FILE = reactnative/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "ReactNative - SDK Sample";
+				INFOPLIST_KEY_CFBundleDisplayName = "React Native - Self SDK Sample";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
