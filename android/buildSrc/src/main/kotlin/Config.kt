@@ -26,7 +26,7 @@ object Config {
         const val mockwebserverVersion = "3.10.0"
         const val mockitoVersion = "4.11.0"
         const val espressoVersion = "3.5.1"
-        const val cameraxVersion = "1.3.1"
+        const val cameraxVersion = "1.3.2"
         const val protobufVersion = "3.24.1"
         const val glideVersion = "4.15.1"
         const val eventbusVersion = "3.3.1"
