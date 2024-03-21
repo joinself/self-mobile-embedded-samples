@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7il-dN-3Vt">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7il-dN-3Vt">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -34,38 +34,39 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="hello" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ylv-pT-A2z">
-                                <rect key="frame" x="178.33333333333334" y="153" width="36.333333333333343" height="21"/>
+                                <rect key="frame" x="178.33333333333334" y="153" width="36.333333333333343" height="20.333333333333343"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctY-qW-o5s">
-                                <rect key="frame" x="124.66666666666669" y="224" width="144" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Liveness Check"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d7T-4t-Hdu">
-                                <rect key="frame" x="125" y="309" width="143" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Create Account"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2he-BI-iam">
-                                <rect key="frame" x="128.33333333333331" y="394" width="136.33333333333331" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Send Message"/>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="oSP-ce-Yga">
+                                <rect key="frame" x="125.00000000000001" y="193.33333333333337" width="143.33333333333337" height="155"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctY-qW-o5s">
+                                        <rect key="frame" x="0.0" y="0.0" width="143.33333333333334" height="38.333333333333336"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Liveness Check"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d7T-4t-Hdu">
+                                        <rect key="frame" x="0.0" y="58.333333333333314" width="143.33333333333334" height="38.333333333333343"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Create Account"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2he-BI-iam">
+                                        <rect key="frame" x="0.0" y="116.66666666666664" width="143.33333333333334" height="38.333333333333329"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Send Message"/>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="ctY-qW-o5s" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Pyp-yP-0tT"/>
                             <constraint firstItem="ylv-pT-A2z" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="50" id="QWV-ZH-3dh"/>
+                            <constraint firstItem="oSP-ce-Yga" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="SQY-lc-vjl"/>
                             <constraint firstItem="ylv-pT-A2z" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="X9j-IQ-T21"/>
-                            <constraint firstItem="d7T-4t-Hdu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="hWY-yK-gga"/>
-                            <constraint firstItem="2he-BI-iam" firstAttribute="top" secondItem="d7T-4t-Hdu" secondAttribute="bottom" constant="50" id="icw-eJ-y4H"/>
-                            <constraint firstItem="d7T-4t-Hdu" firstAttribute="top" secondItem="ctY-qW-o5s" secondAttribute="bottom" constant="50" id="qAu-6j-ZHV"/>
-                            <constraint firstItem="2he-BI-iam" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="qOI-j4-a07"/>
-                            <constraint firstItem="ctY-qW-o5s" firstAttribute="top" secondItem="ylv-pT-A2z" secondAttribute="bottom" constant="50" id="t7d-Cl-NXl"/>
+                            <constraint firstItem="oSP-ce-Yga" firstAttribute="top" secondItem="ylv-pT-A2z" secondAttribute="bottom" constant="20" id="Y10-Hw-8q8"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Wdh-Id-uIY"/>

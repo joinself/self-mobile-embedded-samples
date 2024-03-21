@@ -1,6 +1,7 @@
 package com.joinself.sdk.sample
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -85,7 +86,7 @@ class MainFragment : Fragment() {
             LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
                 lifecycleScope.launch(Dispatchers.Default) {
                     if (attestation != null) {
-                        account.verifySelfieImage(selfieImage)
+
                     }
                 }
             }
@@ -234,7 +235,16 @@ class MainFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             val locAttestation = account.location()
-            Timber.d("loc attestation: ${locAttestation}")
+            Timber.d("loc attestation: ${locAttestation.firstOrNull()?.fact()?.value()}")
+            withContext(Dispatchers.Main) {
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Location")
+                builder.setMessage(locAttestation.firstOrNull()?.fact()?.value())
+                builder.setPositiveButton("OK") { dialog, which ->
+
+                }
+                builder.show()
+            }
         }
     }
 

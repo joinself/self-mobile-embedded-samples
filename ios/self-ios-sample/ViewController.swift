@@ -64,14 +64,12 @@ class ViewController: UIViewController {
     }
 
     @objc func onCreatePressed(_ sender: Any) {
-        
-        
         let vc = LivenessCheckViewController.instantiate(from: .Main)
         vc.account = self.account
-        vc.onFinishCallback = { attestation in
+        vc.onFinishCallback = { selfieImage, attestation in
             Task {
                 if let attestation = attestation {
-                    let selfId = try! await self.account.register(attestation: attestation)
+                    let selfId = try! await self.account.register(selfieImage: selfieImage, attestation: attestation)
                     log.debug("SelfId: \(selfId)")
                     
                     self.updateUI()
