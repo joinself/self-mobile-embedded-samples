@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		29FF59BCCEFFF6211E4550FE /* Pods_self_ios_sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D847EE0A3E72BF854CA66C /* Pods_self_ios_sample.framework */; };
+		634907DE2BAC414B00BE8D18 /* SSSSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 634907DD2BAC414B00BE8D18 /* SSSSwift */; };
+		634907E12BAC451F00BE8D18 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 634907E02BAC451F00BE8D18 /* ZIPFoundation */; };
 		637BB8332ACC1C1800A304A1 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BB8322ACC1C1800A304A1 /* ChatView.swift */; };
 		637BB8352ACC290400A304A1 /* ChatRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BB8342ACC290400A304A1 /* ChatRow.swift */; };
 		637BB8382ACC293800A304A1 /* MessageModelSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637BB8372ACC293800A304A1 /* MessageModelSample.swift */; };
@@ -74,7 +76,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				634907DE2BAC414B00BE8D18 /* SSSSwift in Frameworks */,
 				29FF59BCCEFFF6211E4550FE /* Pods_self_ios_sample.framework in Frameworks */,
+				634907E12BAC451F00BE8D18 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,6 +175,10 @@
 			dependencies = (
 			);
 			name = "self-ios-sample";
+			packageProductDependencies = (
+				634907DD2BAC414B00BE8D18 /* SSSSwift */,
+				634907E02BAC451F00BE8D18 /* ZIPFoundation */,
+			);
 			productName = "self-ios-sample";
 			productReference = 714C43522AA85D7300F1BAEF /* self-ios-sample.app */;
 			productType = "com.apple.product-type.application";
@@ -199,6 +207,10 @@
 				Base,
 			);
 			mainGroup = 714C43492AA85D7300F1BAEF;
+			packageReferences = (
+				634907DC2BAC414B00BE8D18 /* XCRemoteSwiftPackageReference "sss-swift" */,
+				634907DF2BAC451F00BE8D18 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
 			productRefGroup = 714C43532AA85D7300F1BAEF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -538,6 +550,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		634907DC2BAC414B00BE8D18 /* XCRemoteSwiftPackageReference "sss-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/joinself/sss-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		634907DF2BAC451F00BE8D18 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.18;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		634907DD2BAC414B00BE8D18 /* SSSSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 634907DC2BAC414B00BE8D18 /* XCRemoteSwiftPackageReference "sss-swift" */;
+			productName = SSSSwift;
+		};
+		634907E02BAC451F00BE8D18 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 634907DF2BAC451F00BE8D18 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 714C434A2AA85D7300F1BAEF /* Project object */;
 }
