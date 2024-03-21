@@ -86,7 +86,7 @@ class MainFragment : Fragment() {
             LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
                 lifecycleScope.launch(Dispatchers.Default) {
                     if (attestation != null) {
-                        account.verifySelfieImage(selfieImage)
+
                     }
                 }
             }
