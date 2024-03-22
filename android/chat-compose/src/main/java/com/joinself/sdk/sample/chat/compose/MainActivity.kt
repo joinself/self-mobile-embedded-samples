@@ -1,6 +1,7 @@
 package com.joinself.sdk.sample.chat.compose
 
 import android.app.Activity
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -47,11 +48,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
+import com.google.accompanist.permissions.PermissionsRequired
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.joinself.sdk.Environment
 import com.joinself.sdk.liveness.LivenessCheck
@@ -73,6 +77,7 @@ class MainActivity : ComponentActivity() {
             .setEnvironment(Environment.review)
             .setStoragePath("account1")
             .build()
+        account.setDevMode(true)
 
         // callback for registration
         var attestationCallBack: ((ByteArray, attesation: Attestation?) -> Unit)? = null
@@ -82,6 +87,8 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             var selfId: String? by remember { mutableStateOf(account.identifier()) }
             var showDialog by remember { mutableStateOf(false) }
+            var showLocation by remember { mutableStateOf(false) }
+
 
             NavHost(navController = navController, startDestination = "main") {
                 composable("main") {
@@ -90,6 +97,12 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
+                            fun getLocation() {
+                                lifecycleScope.launch {
+                                    val location = account.location()
+                                    Timber.d("location: ${location.firstOrNull()?.fact()?.value()}")
+                                }
+                            }
                             MainView(selfId = selfId,
                                 onCreateAccount = {
                                     attestationCallBack = { selfieImage, attestation ->
@@ -106,10 +119,28 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateToLivenessCheck = {
                                     navController.navigate("livenessCheck")
-                                }, onNavigateToMessaging = {
+                                },
+                                onNavigateToMessaging = {
                                     navController.navigate("messaging")
+                                },
+                                onGetLocation = {
+
+                                    coroutineScope.launch(Dispatchers.Default) {
+                                        val checkResult = checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                                        if (checkResult != PackageManager.PERMISSION_GRANTED ) {
+                                            showLocation = true
+                                            return@launch
+                                        }
+                                        getLocation()
+                                    }
                                 }
                             )
+                            if (showLocation) {
+                                LocationView(onPermissionGranted = {
+                                    getLocation()
+                                })
+                            }
+
                             ProgressDialog(showDialog)
                         }
                     }
@@ -157,7 +188,8 @@ class MainActivity : ComponentActivity() {
 fun MainView(selfId: String?,
              onCreateAccount: () -> Unit,
              onNavigateToLivenessCheck: () -> Unit,
-             onNavigateToMessaging: () -> Unit) {
+             onNavigateToMessaging: () -> Unit,
+             onGetLocation: () -> Unit) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -187,9 +219,42 @@ fun MainView(selfId: String?,
         }, enabled = true) {
             Text(text = "Liveness Check")
         }
+
+        Button(onClick = {
+            onGetLocation.invoke()
+        }, enabled = !selfId.isNullOrEmpty()) {
+            Text(text = "Location")
+        }
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun LocationView(onPermissionGranted: () -> Unit) {
+    val context = LocalContext.current
+    val cameraPermissionState =
+        rememberMultiplePermissionsState(permissions = listOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION))
+
+    PermissionsRequired(
+        multiplePermissionsState = cameraPermissionState,
+        permissionsNotGrantedContent = {
+            LaunchedEffect(Unit) {
+                cameraPermissionState.launchMultiplePermissionRequest()
+            }
+        },
+        permissionsNotAvailableContent = {
+            Column {
+                Toast.makeText(context, "Permission denied.", Toast.LENGTH_LONG).show()
+            }
+        },
+        content = {
+            LaunchedEffect(Unit) {
+                Timber.d("location permission granted")
+                onPermissionGranted.invoke()
+            }
+        }
+    )
+}
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

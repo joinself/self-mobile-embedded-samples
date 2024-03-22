@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -171,7 +173,8 @@ fun MessagingView(account: Account, onBack: ()->Unit) {
         content = { innerPadding ->
             ConstraintLayout(
                 modifier = Modifier
-                    .padding(innerPadding).padding(8.dp)
+                    .padding(innerPadding)
+                    .padding(8.dp)
                     .fillMaxSize()
             ) {
                 val (toSelf, msgList, msgInput, sendBtn) = createRefs()
@@ -193,14 +196,16 @@ fun MessagingView(account: Account, onBack: ()->Unit) {
                     )
                 }
                 Column(
-                    modifier = Modifier.constrainAs(msgList){
-                        top.linkTo(toSelf.bottom)
-                        bottom.linkTo(msgInput.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                        height = Dimension.fillToConstraints
-                    }
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState(), enabled = true)
+                        .constrainAs(msgList) {
+                            top.linkTo(toSelf.bottom)
+                            bottom.linkTo(msgInput.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            width = Dimension.fillToConstraints
+                            height = Dimension.fillToConstraints
+                        }
                 ) {
                     messages.forEach { item ->
                         if (item is Message) {
