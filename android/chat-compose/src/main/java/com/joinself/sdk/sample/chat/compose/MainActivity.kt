@@ -6,7 +6,9 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -66,11 +68,14 @@ import com.joinself.sdk.liveness.LivenessCheck
 import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
+import com.joinself.sdk.sample.common.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
+import java.net.URLDecoder
+import java.util.UUID
 
 class MainActivity : ComponentActivity() {
 
@@ -96,6 +101,35 @@ class MainActivity : ComponentActivity() {
             var showLocationPermission by remember { mutableStateOf(false) }
             var showLocationDialog = remember { mutableStateOf(false) }
             var locationValue = ""
+
+            val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { fileUri ->
+                Timber.d("selected file URI ${fileUri.toString()}")
+                if (fileUri != null) {
+                    val name = UUID.randomUUID().toString()
+                    val rootDir = baseContext.cacheDir
+                    val zippedFile = File(rootDir, name)
+                    if (zippedFile.exists()) zippedFile.delete()
+                    val inputStream = baseContext.contentResolver.openInputStream(fileUri)
+                    if (inputStream != null) {
+                        FileUtils.writeToFile(inputStream, zippedFile, doProgress = {})
+                    }
+                    Timber.d("Copy file to ${zippedFile.absolutePath}")
+                    if (zippedFile.exists() && zippedFile.length() > 0) {
+                        attestationCallBack = { selfieImage, attestation ->
+                            coroutineScope.launch(Dispatchers.Default) {
+                                try {
+                                    account.restore(zippedFile, selfieImage)
+                                    Timber.d("Restore successfully")
+                                    selfId = account.identifier()
+                                } catch (ex: Exception) {
+                                    Timber.e(ex)
+                                }
+                            }
+                        }
+                        navController.navigate("livenessCheck")
+                    }
+                }
+            }
 
             NavHost(navController = navController, startDestination = "main") {
                 composable("main") {
@@ -143,6 +177,9 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     }
+                                },
+                                onImportBackup = {
+                                    launcher.launch(arrayOf("application/*"))
                                 },
                                 onGetLocation = {
                                     val checkResult = checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -229,7 +266,6 @@ class MainActivity : ComponentActivity() {
         chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         applicationContext.startActivity(chooserIntent)
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -239,6 +275,7 @@ fun MainView(selfId: String?,
              onNavigateToLivenessCheck: () -> Unit,
              onNavigateToMessaging: () -> Unit,
              onExportBackup: () -> Unit,
+             onImportBackup: () -> Unit,
              onGetLocation: () -> Unit) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -274,6 +311,11 @@ fun MainView(selfId: String?,
             onExportBackup.invoke()
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Export backup")
+        }
+        Button(onClick = {
+            onImportBackup.invoke()
+        }, enabled = selfId.isNullOrEmpty()) {
+            Text(text = "Import backup")
         }
 
         Button(onClick = {

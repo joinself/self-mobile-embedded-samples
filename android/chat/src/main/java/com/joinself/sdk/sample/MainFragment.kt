@@ -20,6 +20,7 @@ import com.joinself.sdk.Environment
 import com.joinself.sdk.models.Account
 import com.joinself.sdk.sample.chat.R
 import com.joinself.sdk.sample.chat.databinding.FragmentFirstBinding
+import com.joinself.sdk.sample.common.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
