@@ -56,10 +56,10 @@ class MainFragment : Fragment() {
         binding.buttonCreate.visibility = View.GONE
         binding.buttonCreate.setOnClickListener {
             LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { attestation ->
+            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
                 lifecycleScope.launch(Dispatchers.Default) {
                     if (attestation != null) {
-                        val selfId = account.register(attestation)
+                        val selfId = account.register(selfieImage, attestation)
                         Timber.d("SelfId: $selfId")
                         updateUI()
                     }
