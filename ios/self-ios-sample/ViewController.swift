@@ -60,6 +60,7 @@ class ViewController: UIViewController {
             .withEnvironment(Environment.review)
             .withStoragePath("account1")
             .build()
+        account.setDevMode(enabled: true)
         
         updateUI()
     }

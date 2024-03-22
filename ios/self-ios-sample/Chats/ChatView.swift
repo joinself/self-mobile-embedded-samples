@@ -24,6 +24,9 @@ struct ChatView: View {
         
         VStack {
             Menu("Options") {
+                Button("Get all Attestations", action: {
+                    viewModel.getAllAttestations()
+                })
                 Button("Test Verification", action: {
                     viewModel.verifyDrivingLicense()
                 })

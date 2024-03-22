@@ -11,7 +11,7 @@ import self_ios_sdk
 class ChatViewModel: ObservableObject {
     private let account: Account
     
-    @Published var messages: [Message] = []
+    @Published var messages: [Any] = []
     
     init(account: Account) {
         self.account = account
@@ -71,12 +71,19 @@ class ChatViewModel: ObservableObject {
         self.messages = []
     }
     
-    func addMessage(msg: Message) {
+    func addMessage(msg: Any) {
         ez.runThisInMainThread {
             self.messages.append(msg)
         }
     }
     // MARK: - Fact Requests
+    func getAllAttestations() {
+        let attestations = account.attestations()
+        attestations.forEach {
+            self.addMessage(msg: $0)
+        }
+        
+    }
     func requestFact(recipient: String) -> () {
         let fact = Fact.Builder()
             .withName("unverified_phone_number")
