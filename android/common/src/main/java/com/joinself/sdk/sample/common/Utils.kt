@@ -7,7 +7,7 @@ class Utils {
     companion object {
         val fieldOrderList = arrayListOf(
             Constants.CLAIM_KEY_PHOTO,
-            Constants.CLAIM_KEY_PHONE,
+            Constants.CLAIM_KEY_UNVERIFIED_PHONE,
             Constants.CLAIM_KEY_EMAIL,
             Constants.CLAIM_KEY_NUMBER,
             Constants.CLAIM_KEY_GIVEN_NAME,
@@ -31,7 +31,7 @@ class Utils {
                 Constants.CLAIM_KEY_NAME -> {
                     title = context.getString(R.string.name_title)
                 }
-                Constants.CLAIM_KEY_PHONE -> {
+                Constants.CLAIM_KEY_PHONE, Constants.CLAIM_KEY_UNVERIFIED_PHONE -> {
                     title = context.getString(R.string.title_fact_phones)
                 }
                 Constants.CLAIM_KEY_EMAIL -> {
