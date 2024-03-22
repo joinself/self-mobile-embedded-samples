@@ -1,6 +1,7 @@
 package com.joinself.sdk.sample.chat.compose
 
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -66,7 +68,9 @@ import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.io.File
 
 class MainActivity : ComponentActivity() {
 
@@ -129,6 +133,16 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateToMessaging = {
                                     navController.navigate("messaging")
+                                },
+                                onExportBackup = {
+                                    lifecycleScope.launch(Dispatchers.Default) {
+                                        val backupFile = account.backup()
+                                        if (backupFile != null) {
+                                            withContext(Dispatchers.Main) {
+                                                shareFile(backupFile)
+                                            }
+                                        }
+                                    }
                                 },
                                 onGetLocation = {
                                     val checkResult = checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -203,6 +217,19 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun shareFile(backupFile: File) {
+        val uri = FileProvider.getUriForFile(baseContext, baseContext.packageName + ".file_provider", backupFile)
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "application/*"
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val chooserIntent = Intent.createChooser(intent, "Share file with")
+        chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        applicationContext.startActivity(chooserIntent)
+    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -211,6 +238,7 @@ fun MainView(selfId: String?,
              onCreateAccount: () -> Unit,
              onNavigateToLivenessCheck: () -> Unit,
              onNavigateToMessaging: () -> Unit,
+             onExportBackup: () -> Unit,
              onGetLocation: () -> Unit) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -240,6 +268,12 @@ fun MainView(selfId: String?,
             onNavigateToLivenessCheck.invoke()
         }, enabled = true) {
             Text(text = "Liveness Check")
+        }
+
+        Button(onClick = {
+            onExportBackup.invoke()
+        }, enabled = !selfId.isNullOrEmpty()) {
+            Text(text = "Export backup")
         }
 
         Button(onClick = {
