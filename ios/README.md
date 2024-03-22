@@ -12,10 +12,18 @@ git@github.com:joinself/self-mobile-embedded-samples.git
 
 ## Build sample apps
 
+__Install dependencies__   
 ```
 cd ios
 pod install
 ```
+
+__Update existing dependencies__  
+```
+cd ios
+pod update
+```
+
 
 then open `open self-ios-sample.xcworkspace`
 
