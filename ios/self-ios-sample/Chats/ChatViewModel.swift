@@ -10,8 +10,13 @@ import self_ios_sdk
 
 class ChatViewModel: ObservableObject {
     private let account: Account
+    struct MsgData: Identifiable {
+         let id = UUID()
+         var message: Message? = nil
+        var attestation: Attestation? = nil
+     }
     
-    @Published var messages: [Any] = []
+    @Published var messages: [MsgData] = []
     
     init(account: Account) {
         self.account = account
@@ -71,19 +76,25 @@ class ChatViewModel: ObservableObject {
         self.messages = []
     }
     
-    func addMessage(msg: Any) {
+    func addMessage(msg: Message) {
         ez.runThisInMainThread {
-            self.messages.append(msg)
+            self.messages.append(MsgData(message: msg))
         }
     }
+    func addAttestation(att: Attestation) {
+        ez.runThisInMainThread {
+            self.messages.append(MsgData(attestation: att))
+        }
+    }
+    
     // MARK: - Fact Requests
     func getAllAttestations() {
         let attestations = account.attestations()
         attestations.forEach {
-            self.addMessage(msg: $0)
+            self.addAttestation(att: $0)
         }
-        
     }
+    
     func requestFact(recipient: String) -> () {
         let fact = Fact.Builder()
             .withName("unverified_phone_number")

@@ -56,35 +56,40 @@ struct ChatView: View {
             
             
             // Chat history.
-            List(0..<viewModel.messages.count, id: \.self) { index in
-                
-                VStack(alignment: .leading) {
-                    let msg = viewModel.messages[index]
-                    if msg.fromIdentifier().isEmpty {
-                        Text("You").bold()
-                    } else {
-                        Text(msg.fromIdentifier()).bold()
-                    }
-                    if let chatMsg = msg as? ChatMessage {                        
-                        Text("\(chatMsg.message())")
-                            .font(.subheadline)
-                        if !chatMsg.attachments().isEmpty {
-                            let attachmentInfo = chatMsg.attachments().map{ "\($0.name()) \($0.content().count) bytes"}.joined(separator: ";")
-                            Text(attachmentInfo)
+            List {
+                ForEach(viewModel.messages) { msgData in
+                    VStack(alignment: .leading) {
+                        if let msg = msgData.message {
+                            if msg.fromIdentifier().isEmpty {
+                                Text("You").bold()
+                            } else {
+                                Text(msg.fromIdentifier()).bold()
+                            }
+                            if let chatMsg = msg as? ChatMessage {
+                                Text("\(chatMsg.message())")
+                                    .font(.subheadline)
+                                if !chatMsg.attachments().isEmpty {
+                                    let attachmentInfo = chatMsg.attachments().map{ "\($0.name()) \($0.content().count) bytes"}.joined(separator: ";")
+                                    Text(attachmentInfo)
+                                        .font(.subheadline)
+                                }
+                            } else if let request = msg as? AttestationRequest {
+                                Text("Attestation Req: \(request.facts().map{$0.name()}.joined(separator: ","))")
+                                    .font(.subheadline)
+                            } else if let response = msg as? AttestationResponse {
+                                Text("Attestation Resp: \(response.status().rawValue)\n\(response.attestations().map{"\($0.fact().name()):\($0.fact().value())"}.joined(separator: "\n"))")
+                                    .font(.subheadline)
+                            } else if let request = msg as? VerificationRequest {
+                                Text("Verification Req: \(request.type())")
+                                    .font(.subheadline)
+                            } else if let response = msg as? VerificationResponse {
+                                Text("Verification Resp: \(response.status().rawValue)\n\(response.attestations().map{"\($0.fact().name()):\($0.fact().value())"}.joined(separator: "\n"))")
+                                    .font(.subheadline)
+                            }
+                        } else if let att = msgData.attestation {
+                            Text("\(att.fact().name()):\(att.fact().value())")
                                 .font(.subheadline)
                         }
-                    } else if let request = msg as? AttestationRequest {
-                        Text("Attestation Req: \(request.facts().map{$0.name()}.joined(separator: ","))")
-                            .font(.subheadline)
-                    } else if let response = msg as? AttestationResponse {
-                        Text("Attestation Resp: \(response.status().rawValue)\n\(response.attestations().map{"\($0.fact().name()):\($0.fact().value())"}.joined(separator: "\n"))")
-                            .font(.subheadline)
-                    } else if let request = msg as? VerificationRequest {
-                        Text("Verification Req: \(request.type())")
-                            .font(.subheadline)
-                    } else if let response = msg as? VerificationResponse {
-                        Text("Verification Resp: \(response.status().rawValue)\n\(response.attestations().map{"\($0.fact().name()):\($0.fact().value())"}.joined(separator: "\n"))")
-                            .font(.subheadline)
                     }
                 }
             }
