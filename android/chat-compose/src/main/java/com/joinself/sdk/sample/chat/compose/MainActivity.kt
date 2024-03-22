@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -87,8 +89,9 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             var selfId: String? by remember { mutableStateOf(account.identifier()) }
             var showDialog by remember { mutableStateOf(false) }
-            var showLocation by remember { mutableStateOf(false) }
-
+            var showLocationPermission by remember { mutableStateOf(false) }
+            var showLocationDialog = remember { mutableStateOf(false) }
+            var locationValue = ""
 
             NavHost(navController = navController, startDestination = "main") {
                 composable("main") {
@@ -100,7 +103,11 @@ class MainActivity : ComponentActivity() {
                             fun getLocation() {
                                 lifecycleScope.launch {
                                     val location = account.location()
-                                    Timber.d("location: ${location.firstOrNull()?.fact()?.value()}")
+                                    locationValue = location.firstOrNull()?.fact()?.value() ?: ""
+                                    if (locationValue.isNotEmpty()) {
+                                        showLocationDialog.value = true
+                                    }
+                                    Timber.d("location: ${locationValue}")
                                 }
                             }
                             MainView(selfId = selfId,
@@ -124,21 +131,36 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate("messaging")
                                 },
                                 onGetLocation = {
-
-                                    coroutineScope.launch(Dispatchers.Default) {
-                                        val checkResult = checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
-                                        if (checkResult != PackageManager.PERMISSION_GRANTED ) {
-                                            showLocation = true
-                                            return@launch
-                                        }
-                                        getLocation()
+                                    val checkResult = checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                                    if (checkResult != PackageManager.PERMISSION_GRANTED ) {
+                                        showLocationPermission = true
+                                        return@MainView
                                     }
+                                    getLocation()
                                 }
                             )
-                            if (showLocation) {
+                            if (showLocationPermission) {
                                 LocationView(onPermissionGranted = {
                                     getLocation()
                                 })
+                            }
+                            when {
+                                showLocationDialog.value -> {
+                                    AlertDialog(
+                                        title = { Text(text = "Location") },
+                                        text = { Text(text = locationValue) },
+                                        onDismissRequest = {},
+                                        confirmButton = {
+                                            TextButton(
+                                                onClick = {
+                                                    showLocationDialog.value = false
+                                                }
+                                            ) {
+                                                Text("OK")
+                                            }
+                                        }
+                                    )
+                                }
                             }
 
                             ProgressDialog(showDialog)
