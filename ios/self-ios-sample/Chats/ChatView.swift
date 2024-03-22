@@ -10,7 +10,7 @@ import self_ios_sdk
 
 struct ChatView: View {
     let account: Account
-    @State private var recipient = "20084590084"
+    @State private var recipient = ""
     @State private var message = ""
     @State private var showingAlert = false
     @ObservedObject private var viewModel: ChatViewModel
@@ -25,7 +25,7 @@ struct ChatView: View {
         VStack {
             Menu("Options") {
                 Button("Test Verification", action: {
-                    viewModel.requestVerification()
+                    viewModel.verifyDrivingLicense()
                 })
                 Button("Request Fact", action: {
                     viewModel.requestFact(recipient: recipient)

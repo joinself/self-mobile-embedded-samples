@@ -8,7 +8,8 @@
 import UIKit
 import SwiftUI
 import self_ios_sdk
-
+import UniformTypeIdentifiers
+import CoreLocation
 
 class ViewController: UIViewController {
 
@@ -16,6 +17,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var btnLiveness: UIButton!
     @IBOutlet weak var btnCreate: UIButton!
     @IBOutlet weak var btnSendMessage: UIButton!
+    @IBOutlet weak var btnExportBackup: UIButton!
+    @IBOutlet weak var btnImportBackup: UIButton!
+    @IBOutlet weak var btnLocation: UIButton!
     
     private var account: Account!
     private var message: Message? = nil
@@ -31,6 +35,9 @@ class ViewController: UIViewController {
         btnLiveness.addTarget(self, action: #selector(onLivenessPressed(_:)), for: .touchUpInside)
         btnCreate.addTarget(self, action: #selector(onCreatePressed(_:)), for: .touchUpInside)
         btnSendMessage.addTarget(self, action: #selector(onSendMessagePressed(_:)), for: .touchUpInside)
+        btnExportBackup.addTarget(self, action: #selector(onExportBackupPressed(_:)), for: .touchUpInside)
+        btnImportBackup.addTarget(self, action: #selector(onImportBackupPressed(_:)), for: .touchUpInside)
+        btnLocation.addTarget(self, action: #selector(onLocationPressed(_:)), for: .touchUpInside)
         
         onMessage = { msg in
             if let chatMsg = msg as? ChatMessage {
@@ -60,13 +67,16 @@ class ViewController: UIViewController {
     @objc func onLivenessPressed(_ sender: Any) {
         let vc = LivenessCheckViewController.instantiate(from: .Main)
         vc.account = self.account
+        vc.onFinishCallback = {selfieImage, attestation in
+            
+        }
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
     @objc func onCreatePressed(_ sender: Any) {
         let vc = LivenessCheckViewController.instantiate(from: .Main)
         vc.account = self.account
-        vc.onFinishCallback = { selfieImage, attestation in
+        vc.onFinishCallback = {selfieImage, attestation in
             Task {
                 if let attestation = attestation {
                     let selfId = try! await self.account.register(selfieImage: selfieImage, attestation: attestation)
@@ -82,86 +92,76 @@ class ViewController: UIViewController {
     @objc func onSendMessagePressed(_ sender: Any) {
         log.debug("Open Chat.")
         self.openChatView()
-        return
-        do {
-            let msg = "ios \(Date().toRFC3339String())"
-            let receiver = "20084590084"
-            
-            var attachments: [Attachment] = []
-            if let data = "hello".data(using: .utf8) {
-                let attachment = Attachment.Builder()
-                    .withData(data)
-                    .withName("test.txt")
-                    .build()
-                attachments.append(attachment)
+    }
+    
+    @objc func onExportBackupPressed(_ sender: Any) {
+        print("onExportBackupPressed")
+        Task {
+            if let fileUrl = await account.backup() {
+                print("onExportBackupPressed: \(fileUrl.path)")
+                shareFile(fileURL: fileUrl)
             }
-            
-            let chatMsg = ChatMessage.Builder()
-                .toIdentifier(receiver)
-                .withMessage(msg)
-//                .withAttachments(attachments)
-                .build()
-            
-            Task {
-                try await account.send(message: chatMsg, onAcknowledgement: {error in })
-            }
-            
-            let fact = Fact.Builder()
-                .withName("phone_number")
-                .build()
-            let factRequest = AttestationRequest.Builder()
-                .toIdentifier(receiver)
-                .withFacts([fact])
-                .build()
-            
-//            Task {
-//                try await account.send(message: factRequest, onAcknowledgement: {error in
-//                })
-//            }
-//            if let messsage = message {
-//                Task {
-//                    try await account.accept(message: messsage, onAcknowledgement: {error in })
-//                }
-//            }
-            
-            // verification
-            var proofs: [String: DataObject] = [:]
-            if let data = "front".data(using: .utf8) {
-                let front = DataObject.Builder()
-                    .withData(data)
-                    .withContentType("image/jpeg")
-                    .build()
-                proofs["document_image_front"] = front
-            }
-            if let data = "back".data(using: .utf8) {
-                let back = DataObject.Builder()
-                    .withData(data)
-                    .withContentType("image/jpeg")
-                    .build()
-                proofs["document_image_back"] = back
-            }
-            
-            let verificationRequest = VerificationRequest.Builder()
-                .toIdentifier("self_verification")
-                .withType("driving_license")
-                .withProofs(proofs)
-                .build()
-//            Task {
-//                try await account.send(message: verificationRequest, onAcknowledgement: {error in
-//                })
-//            }
-        } catch {
-            
         }
+    }
+    
+    @objc func onImportBackupPressed(_ sender: Any) {
+        let supportedTypes: [UTType] = [UTType.init(filenameExtension: "self_backup")! as UTType]
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: supportedTypes)
+        documentPicker.delegate = self
+        documentPicker.allowsMultipleSelection = false
+        present(documentPicker, animated: true, completion: nil)
+    }
+    
+    @objc func onLocationPressed(_ sender: Any) {
+        let locationManager = CLLocationManager()
+        if (locationManager.authorizationStatus == .notDetermined ||
+            locationManager.authorizationStatus == .denied ||
+            locationManager.authorizationStatus == .restricted) {
+            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
+            return
+        }
+        
+        Task {
+            let locAttestation = try! await self.account.location()
+            print("Location fact: \(locAttestation)")
+            if let fact = locAttestation.first?.fact() {
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Location", message: fact.value(), preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+        }
+    }
+    
+    private func restoreFromURL(selectedFileURL: URL) {
+        let vc = LivenessCheckViewController.instantiate(from: .Main)
+        vc.account = self.account
+        vc.onFinishCallback = {selfieImage, attestation in
+            Task {
+                await self.account.restore(backupFile: selectedFileURL, selfieImage: selfieImage)
+                self.updateUI()
+            }
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     private func updateUI() {
         ez.runThisInMainThread {
             if let selfId = self.account.identifier() {
                 self.lblInfo.text = "SelfId: \(selfId)"
-                self.btnCreate.isEnabled = false            
+                self.btnCreate.isEnabled = false
+                self.btnSendMessage.isEnabled = true
+                self.btnExportBackup.isEnabled = true
+                self.btnImportBackup.isEnabled = false
+                self.btnLocation.isEnabled = true
             } else {
                 self.btnCreate.isEnabled = true
+                self.btnSendMessage.isEnabled = false
+                self.btnExportBackup.isEnabled = false
+                self.btnImportBackup.isEnabled = true
+                self.btnLocation.isEnabled = false
             }
         }
     }
@@ -171,5 +171,23 @@ class ViewController: UIViewController {
         let vc = UIHostingController(rootView: chatView)
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    private func shareFile(fileURL: URL) {
+        var filesToShare = [Any]()
+        filesToShare.append(fileURL)
+                
+        let activityViewController = UIActivityViewController(activityItems: filesToShare, applicationActivities: nil)
+                
+        self.present(activityViewController, animated: true, completion: nil)
+    }
 }
 
+extension ViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let selectedFileURL = urls.first else {
+            return
+        }
+    
+        restoreFromURL(selectedFileURL: selectedFileURL)
+    }
+}

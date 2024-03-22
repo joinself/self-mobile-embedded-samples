@@ -79,7 +79,7 @@ class ChatViewModel: ObservableObject {
     // MARK: - Fact Requests
     func requestFact(recipient: String) -> () {
         let fact = Fact.Builder()
-            .withName("phone_number")
+            .withName("unverified_phone_number")
             .build()
         let factRequest = AttestationRequest.Builder()
             .toIdentifier(recipient)
@@ -102,12 +102,12 @@ class ChatViewModel: ObservableObject {
                 Task {
                     try await account.accept(message: response, onAcknowledgement: {error in
                     })
-                }                
+                }
             }
         }
     }
     
-    func requestVerification() -> () {
+    func verifyIDCard() -> () {
         var proofs: [String: DataObject] = [:]
         if let data = "front".data(using: .utf8) {
             let front = DataObject.Builder()
@@ -123,9 +123,77 @@ class ChatViewModel: ObservableObject {
                 .build()
             proofs[DocumentDataType.DOCUMENT_IMAGE_BACK] = back
         }
+        if let data = "IDGBR1234567897<<<<<<<<<<<<<<<7704145F1907313GBR<<<<<<<<K<<8HENDERSON<<ELIZABETH<<<<<<<<<<".data(using: .utf8) {
+            let mrz = DataObject.Builder()
+                .withData(data)
+                .withContentType("text/plain")
+                .build()
+            proofs[DocumentDataType.MRZ] = mrz
+        }
+        let verificationRequest = VerificationRequest.Builder()
+            .withType(DocumentType.IDCARD)
+            .withProofs(proofs)
+            .build()
+        Task {
+            try await account.send(message: verificationRequest, onAcknowledgement: {error in
+            })
+        }
         
+        addMessage(msg: verificationRequest)
+    }
+    
+    func verifyDrivingLicense() -> () {
+        var proofs: [String: DataObject] = [:]
+        if let data = "front".data(using: .utf8) {
+            let front = DataObject.Builder()
+                .withData(data)
+                .withContentType("image/jpeg")
+                .build()
+            proofs[DocumentDataType.DOCUMENT_IMAGE_FRONT] = front
+        }
+        if let data = "back".data(using: .utf8) {
+            let back = DataObject.Builder()
+                .withData(data)
+                .withContentType("image/jpeg")
+                .build()
+            proofs[DocumentDataType.DOCUMENT_IMAGE_BACK] = back
+        }
         let verificationRequest = VerificationRequest.Builder()
             .withType(DocumentType.DRIVING_LICENSE)
+            .withProofs(proofs)
+            .build()
+        Task {            
+            try await account.send(message: verificationRequest, onAcknowledgement: {error in
+            })
+        }
+        
+        addMessage(msg: verificationRequest)
+    }
+    func verifyPasspord() -> () {
+        var proofs: [String: DataObject] = [:]
+        if let data = "dg1".data(using: .utf8) {
+            let dg1 = DataObject.Builder()
+                .withData(data)
+                .withContentType("application/x-binary")
+                .build()
+            proofs[DocumentDataType.DG1] = dg1
+        }
+        if let data = "dg2".data(using: .utf8) {
+            let dg2 = DataObject.Builder()
+                .withData(data)
+                .withContentType("application/x-binary")
+                .build()
+            proofs[DocumentDataType.DG2] = dg2
+        }
+        if let data = "sod".data(using: .utf8) {
+            let sod = DataObject.Builder()
+                .withData(data)
+                .withContentType("application/x-binary")
+                .build()
+            proofs[DocumentDataType.SOD] = sod
+        }
+        let verificationRequest = VerificationRequest.Builder()
+            .withType(DocumentType.PASSPORT)
             .withProofs(proofs)
             .build()
         Task {
@@ -138,17 +206,28 @@ class ChatViewModel: ObservableObject {
     
     func signData() {
         let payload = "hello"
-        if let signable = account.sign(payload: payload) {            
+        if let signable = account.sign(payload: payload) {
             let verified = account.verify(signable: signable)
             
             log.debug("verified \(verified)")
         }
         
         if let response = messages.last as? AttestationResponse {
-            if let attestation = response.attestations().first {        
+            if let attestation = response.attestations().first {
                 let verified = account.verify(signable: attestation)
                 log.debug("verified \(verified)")
             }
         }
+//        Task {
+//            if let data = "hello".data(using: .utf8) {
+//                let dataObject = DataObject.Builder()
+//                    .withData(data)
+//                    .withContentType("text/plain")
+//                    .build()
+//                if let dataLink = try await account.upload(dataObject: dataObject) {
+//                    let result = try await account.download(dataLink: dataLink)
+//                }
+//            }
+//        }
     }
 }

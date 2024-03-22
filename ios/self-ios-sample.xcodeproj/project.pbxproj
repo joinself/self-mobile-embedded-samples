@@ -474,6 +474,9 @@
 				INFOPLIST_FILE = "self-ios-sample/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Chat - Self SDK Sample";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Turning on the camera allows us to ensure it's only you using Self";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Use location to improve experience";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Use location to improve experience";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Use location to improve experience";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -512,6 +515,9 @@
 				INFOPLIST_FILE = "self-ios-sample/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Chat - Self SDK Sample";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Turning on the camera allows us to ensure it's only you using Self";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Use location to improve experience";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Use location to improve experience";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Use location to improve experience";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
