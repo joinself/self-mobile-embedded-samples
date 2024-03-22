@@ -40,22 +40,37 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="oSP-ce-Yga">
-                                <rect key="frame" x="125.00000000000001" y="193.33333333333337" width="143.33333333333337" height="155"/>
+                                <rect key="frame" x="118.66666666666669" y="193.33333333333337" width="156" height="330"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctY-qW-o5s">
-                                        <rect key="frame" x="0.0" y="0.0" width="143.33333333333334" height="38.333333333333336"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="156" height="38.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Liveness Check"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d7T-4t-Hdu">
-                                        <rect key="frame" x="0.0" y="58.333333333333314" width="143.33333333333334" height="38.333333333333343"/>
+                                        <rect key="frame" x="0.0" y="58.333333333333314" width="156" height="38.333333333333343"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Create Account"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2he-BI-iam">
-                                        <rect key="frame" x="0.0" y="116.66666666666664" width="143.33333333333334" height="38.333333333333329"/>
+                                        <rect key="frame" x="0.0" y="116.66666666666664" width="156" height="38.333333333333329"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Send Message"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W8x-ay-9yT">
+                                        <rect key="frame" x="0.0" y="174.99999999999997" width="156" height="38.333333333333343"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Export Backup"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0gA-AM-Xy8">
+                                        <rect key="frame" x="0.0" y="233.33333333333334" width="156" height="38.333333333333343"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Import Backup"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ou3-tJ-axL">
+                                        <rect key="frame" x="0.0" y="291.66666666666663" width="156" height="38.333333333333314"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Request Location"/>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -72,7 +87,10 @@
                     <navigationItem key="navigationItem" id="Wdh-Id-uIY"/>
                     <connections>
                         <outlet property="btnCreate" destination="d7T-4t-Hdu" id="9yj-Dx-zJw"/>
+                        <outlet property="btnExportBackup" destination="W8x-ay-9yT" id="wde-D4-bvN"/>
+                        <outlet property="btnImportBackup" destination="0gA-AM-Xy8" id="ujL-qE-CAx"/>
                         <outlet property="btnLiveness" destination="ctY-qW-o5s" id="niZ-S2-LvZ"/>
+                        <outlet property="btnLocation" destination="ou3-tJ-axL" id="e2G-kH-CyF"/>
                         <outlet property="btnSendMessage" destination="2he-BI-iam" id="GMZ-KB-MOL"/>
                         <outlet property="lblInfo" destination="ylv-pT-A2z" id="Nd5-tC-CtV"/>
                     </connections>

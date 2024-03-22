@@ -67,7 +67,6 @@ android {
 dependencies {
     implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
     implementation(project(":common"))
-//    implementation(project(":self-android-sdk"))
 
     implementation("com.jakewharton.timber:timber:${Config.Version.timberVersion}")
     implementation("androidx.core:core-ktx:${Config.Version.androidxCore}")

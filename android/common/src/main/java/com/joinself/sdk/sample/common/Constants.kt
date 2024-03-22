@@ -4,6 +4,7 @@ class Constants {
     companion object {
         const val CLAIM_KEY_EMAIL = "email_address"
         const val CLAIM_KEY_PHONE = "phone_number"
+        const val CLAIM_KEY_UNVERIFIED_PHONE = "unverified_phone_number"
         const val CLAIM_KEY_PHOTO = "photo"
         const val CLAIM_KEY_NAME = "display_name"
         const val CLAIM_KEY_GIVEN_NAME = "given_names"

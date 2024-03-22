@@ -48,6 +48,7 @@ class MainFragment : Fragment() {
             .setEnvironment(Environment.review)
             .setStoragePath("account1")
             .build()
+        account.setDevMode(true)
     }
 
     override fun onCreateView(
