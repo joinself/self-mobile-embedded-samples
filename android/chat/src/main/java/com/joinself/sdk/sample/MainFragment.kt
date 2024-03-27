@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.joinself.sdk.Environment
 import com.joinself.sdk.models.Account
+import com.joinself.sdk.models.KeyValue
 import com.joinself.sdk.sample.chat.R
 import com.joinself.sdk.sample.chat.databinding.FragmentFirstBinding
 import com.joinself.sdk.sample.common.FileUtils
@@ -257,5 +258,20 @@ class MainFragment : Fragment() {
 
     private fun requestLocationPermissions() {
         requireActivity().requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE_LOCATION)
+    }
+
+    private fun keyValueData() {
+        val data1 = KeyValue.Builder()
+            .setKey("name")
+            .setValue("Test User")
+            .setSensitive(true)
+            .setMime("text/plain")
+            .build()
+        account.store(data1)
+
+        val result = account.get("name")
+
+        Timber.d("key value: ${data1.value()} - ${result?.value()}")
+
     }
 }
