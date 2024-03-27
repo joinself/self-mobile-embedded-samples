@@ -181,6 +181,26 @@ class ViewController: UIViewController {
                 
         self.present(activityViewController, animated: true, completion: nil)
     }
+    
+    private func testKeyValue() {
+        let data1 = KeyValue.Builder()
+            .withKey("name")
+            .withValue("Test User 2")
+            .withSensitive(true)
+            .build()
+        account.store(keyValue: data1)
+        
+        let result = account.get(key: "name")
+        
+        assert(data1.value() == result?.value())
+        assert(data1.isSensitive() == result?.isSensitive())
+        
+        let deleted = account.remove(key: "name")
+        assert(deleted == true)
+        
+        let result2 = account.get(key: "name")
+        assert(result2 == nil)
+    }
 }
 
 extension ViewController: UIDocumentPickerDelegate {

@@ -260,7 +260,7 @@ class MainFragment : Fragment() {
         requireActivity().requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE_LOCATION)
     }
 
-    private fun keyValueData() {
+    private fun testKeyValueData() {
         val data1 = KeyValue.Builder()
             .setKey("name")
             .setValue("Test User")
@@ -270,8 +270,12 @@ class MainFragment : Fragment() {
         account.store(data1)
 
         val result = account.get("name")
+        assert(data1.value() == result?.value())
+        assert(data1.isSensitive() == result?.isSensitive())
 
-        Timber.d("key value: ${data1.value()} - ${result?.value()}")
-
+        val deleted = account.remove("name")
+        assert(deleted == true)
+        val result2 = account.get("name")
+        assert(result2 == null)
     }
 }
