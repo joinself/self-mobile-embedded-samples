@@ -1,11 +1,14 @@
 package com.joinself.sdk.sample.common
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import java.util.Locale
 
 class Utils {
     companion object {
         val fieldOrderList = arrayListOf(
+            Constants.CLAIM_KEY_LOCATION,
             Constants.CLAIM_KEY_PHOTO,
             Constants.CLAIM_KEY_UNVERIFIED_PHONE,
             Constants.CLAIM_KEY_EMAIL,
