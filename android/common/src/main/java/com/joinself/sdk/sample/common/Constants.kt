@@ -27,6 +27,7 @@ class Constants {
         const val CLAIM_KEY_COUNTRY_OF_ISSUANCE = "country_of_issuance"
         const val CLAIM_KEY_MRZ= "document_mrz"
         const val CLAIM_KEY_SELFIE_VERIFICATION = "selfie_verification"
+        const val CLAIM_KEY_LOCATION = "location"
 
         const val FIELD_ACCOUNT_ID = "account_id"
         const val FIELD_NICKNAME = "nickname"

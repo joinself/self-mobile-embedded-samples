@@ -10,9 +10,12 @@ import self_ios_sdk
 
 struct ChatView: View {
     let account: Account
+    @State private var attestationRequest: AttestationRequest? = nil
+    @State private var locationAttesttation: Attestation? = nil
     @State private var recipient = ""
     @State private var message = ""
     @State private var showingAlert = false
+    @State private var showingLocationAlert = false
     @ObservedObject private var viewModel: ChatViewModel
     
     init(account: Account) {
@@ -30,12 +33,43 @@ struct ChatView: View {
                 Button("Test Verification", action: {
                     viewModel.verifyDrivingLicense()
                 })
-                Button("Request Fact", action: {
-                    viewModel.requestFact(recipient: recipient)
+                Button("Response to attestation request", action: {
+                    if let factRequest = viewModel.messages.last?.message as? AttestationRequest, factRequest.facts().first?.name() == Constants.CLAIM_KEY_LOCATION {
+                        Task {
+                            let locAttestation = try! await self.account.location()
+                            locationAttesttation = locAttestation.first
+                            attestationRequest = factRequest
+                            showingLocationAlert = true
+                            print("Location fact: \(locAttestation.first?.fact().value())")
+                            
+                        }
+                    } else {
+                        viewModel.responseFactRequest()
+                    }
                 })
-                Button("Response to fact request", action: {
-                    viewModel.responseFactRequest(recipient: recipient)
-                })
+                Menu("Request attestation") {
+                    Button("Location", action: {
+                        if recipient.isEmpty {
+                            showingAlert = true
+                        } else {
+                            viewModel.requestFact(recipient: recipient, fact: Constants.CLAIM_KEY_LOCATION)
+                        }
+                    })
+                    Button("Phone number", action: {
+                        if recipient.isEmpty {
+                            showingAlert = true
+                        } else {
+                            viewModel.requestFact(recipient: recipient, fact: Constants.CLAIM_KEY_UNVERIFIED_PHONE)
+                        }
+                    })
+                    Button("Email", action: {
+                        if recipient.isEmpty {
+                            showingAlert = true
+                        } else {
+                            viewModel.requestFact(recipient: recipient, fact: Constants.CLAIM_KEY_EMAIL)
+                        }
+                    })
+                }
             }
             
             HStack {
@@ -118,6 +152,21 @@ struct ChatView: View {
                 .alert(isPresented: $showingAlert) {
                             Alert(title: Text("Warning!"), message: Text("Please provider a recipient's SelfId"), dismissButton: .default(Text("Got it!")))
                         }
+                .alert(isPresented: $showingLocationAlert, content: {
+                    Alert(title: Text("Share location"),
+                          message: Text("\(locationAttesttation?.fact().value() ?? "" )"),
+                          primaryButton: .default(
+                                          Text("OK"),
+                                          action: {
+                                              if let locationAttesttation = locationAttesttation, let attestationRequest = attestationRequest {
+                                                  viewModel.responseFactRequest(request: attestationRequest, att: locationAttesttation)
+                                              }
+                                          }
+                                      ),
+                          secondaryButton: .cancel()
+                    )
+                                        
+                })
             }
             .padding()
         }

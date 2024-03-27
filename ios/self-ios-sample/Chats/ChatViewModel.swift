@@ -95,9 +95,9 @@ class ChatViewModel: ObservableObject {
         }
     }
     
-    func requestFact(recipient: String) -> () {
+    func requestFact(recipient: String, fact: String) -> () {
         let fact = Fact.Builder()
-            .withName("unverified_phone_number")
+            .withName(fact)
             .build()
         let factRequest = AttestationRequest.Builder()
             .toIdentifier(recipient)
@@ -111,17 +111,28 @@ class ChatViewModel: ObservableObject {
         addMessage(msg: factRequest)
     }
     
-    func responseFactRequest(recipient: String) -> () {
-        if let request = messages.last as? AttestationRequest {
+    func responseFactRequest() -> () {
+        if let request = messages.last?.message as? AttestationRequest {
             let attestations = account.attestations()
             let att = attestations.first {$0.fact().name() == request.facts().first?.name()}
-            if let selfSignedAttestation = account.makeSelfSignedAttestation(source: "user_specified", name: "surname", value: "Test User") {
-                let response = request.makeAttestationResponse(status: .accepted, attestations: [selfSignedAttestation])
+            let selfSignedAttestation = account.makeSelfSignedAttestation(source: "user_specified", name: "surname", value: "Test User")
+            if att != nil {
+                let response = request.makeAttestationResponse(status: .accepted, attestations: [att!])
+                addMessage(msg: response)
                 Task {
                     try await account.accept(message: response, onAcknowledgement: {error in
                     })
                 }
             }
+        }
+    }
+    
+    func responseFactRequest(request: AttestationRequest, att: Attestation) -> () {
+        let response = request.makeAttestationResponse(status: .accepted, attestations: [att])
+        addMessage(msg: response)
+        Task {
+            try await account.accept(message: response, onAcknowledgement: {error in
+            })
         }
     }
     

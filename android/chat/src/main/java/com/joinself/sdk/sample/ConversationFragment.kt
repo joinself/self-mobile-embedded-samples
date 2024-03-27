@@ -1,5 +1,8 @@
 package com.joinself.sdk.sample
 
+import android.Manifest
+import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -9,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.widget.doOnTextChanged
@@ -31,13 +35,16 @@ import com.joinself.sdk.models.VerificationRequest
 import com.joinself.sdk.models.VerificationResponse
 import com.joinself.sdk.sample.chat.R
 import com.joinself.sdk.sample.chat.databinding.FragmentConversationBinding
+import com.joinself.sdk.sample.common.Constants
 import com.joinself.sdk.sample.common.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Date
 
 class ConversationFragment: Fragment() {
+    private val REQUEST_CODE_LOCATION = 1003
     private var _binding: FragmentConversationBinding? = null
     private val binding get() = _binding!!
 
@@ -103,7 +110,7 @@ class ConversationFragment: Fragment() {
             val messageText = binding.editTextMessage.text.toString().trim()
             binding.editTextMessage.text?.clear()
 
-            val receiver = getReceiver()
+            val receiver = getReceiver() ?: return@setOnClickListener
             val msg = if (messageText.isEmpty()) "android ${Date()}" else messageText
 
             lifecycleScope.launch (Dispatchers.Default) {
@@ -156,9 +163,17 @@ class ConversationFragment: Fragment() {
         }
     }
 
-    private fun getReceiver(): String {
+    private fun getReceiver(): String? {
         val selfId = binding.editTextSelfId.text.toString().trim()
-        return selfId.ifEmpty {"20084590084"}  //{ "74136454327" }
+        if (selfId.isEmpty()) {
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setMessage("Receiver selfId can not be null")
+            builder.setPositiveButton("OK") { dialog, which ->
+            }
+            builder.show()
+            return null
+        }
+        return selfId
     }
 
     private lateinit var factItems: Map<String, String>
@@ -189,12 +204,13 @@ class ConversationFragment: Fragment() {
                     } else {
                         val factKey = factItems.get(menuItem.title)
                         if (!factKey.isNullOrEmpty()) {
+                            val receiver = getReceiver() ?: return true
                             lifecycleScope.launch {
                                 val fact = Fact.Builder()
                                     .setName(factKey)
                                     .build()
                                 val factRequest = AttestationRequest.Builder()
-                                    .setToIdentifier(getReceiver())
+                                    .setToIdentifier(receiver)
                                     .setFacts(listOf(fact))
                                     .build()
                                 account.send(factRequest) {}
@@ -213,16 +229,39 @@ class ConversationFragment: Fragment() {
     private fun responseAttestationReqest() {
         val request = messageList.lastOrNull() as? AttestationRequest
         if (request != null) {
-            val selfSignedAttestation = account.makeSelfSignedAttestation(source = "user_specified", "surname", "Test User")
-            val attestations = account.attestations()
-            val att = attestations.firstOrNull { it.fact().name() == request.facts().first().name() }
-            if (att != null) {
-                val response = request.makeAttestationResponse(ResponseStatus.accepted, attestations = listOf(att))
-                lifecycleScope.launch {
-                    account.accept(response) {
-
+            if (request.facts().first().name() == Constants.CLAIM_KEY_LOCATION) {
+                if (!checkLocationPermission()) {
+                    requestLocationPermissions()
+                    return
+                }
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val locAttestation = account.location()
+                    withContext(Dispatchers.Main) {
+                        val builder = AlertDialog.Builder(requireContext())
+                        builder.setTitle("Share your location")
+                        builder.setMessage(locAttestation.firstOrNull()?.fact()?.value())
+                        builder.setPositiveButton("OK") { dialog, which ->
+                            lifecycleScope.launch {
+                                val response = request.makeAttestationResponse(ResponseStatus.accepted, attestations = locAttestation)
+                                account.accept(response) {}
+                                addMessage(listOf(response))
+                            }
+                        }
+                        builder.setNeutralButton("Cancel") { dialog, which ->
+                        }
+                        builder.show()
                     }
-                    addMessage(listOf(response))
+                }
+            } else {
+                val selfSignedAttestation = account.makeSelfSignedAttestation(source = "user_specified", "surname", "Test User")
+                val attestations = account.attestations()
+                val att = attestations.firstOrNull { it.fact().name() == request.facts().first().name() }
+                if (att != null) {
+                    val response = request.makeAttestationResponse(ResponseStatus.accepted, attestations = listOf(att))
+                    lifecycleScope.launch {
+                        account.accept(response) {}
+                        addMessage(listOf(response))
+                    }
                 }
             }
         }
@@ -331,5 +370,14 @@ class ConversationFragment: Fragment() {
 
             }
         }
+    }
+
+    private fun checkLocationPermission(): Boolean {
+        return !(ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+    }
+
+    private fun requestLocationPermissions() {
+        requireActivity().requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE_LOCATION)
     }
 }
