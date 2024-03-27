@@ -29,6 +29,7 @@
 		714C438C2AA8872000F1BAEF /* EZSwiftFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C438B2AA8872000F1BAEF /* EZSwiftFunctions.swift */; };
 		714C43942AA88DDD00F1BAEF /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C43932AA88DDD00F1BAEF /* UIUtilities.swift */; };
 		714C43962AA897F400F1BAEF /* AppStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714C43952AA897F400F1BAEF /* AppStoryboard.swift */; };
+		716C5E3A2BB42E0A008D1544 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716C5E392BB42E0A008D1544 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -67,6 +68,7 @@
 		714C438B2AA8872000F1BAEF /* EZSwiftFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EZSwiftFunctions.swift; sourceTree = "<group>"; };
 		714C43932AA88DDD00F1BAEF /* UIUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
 		714C43952AA897F400F1BAEF /* AppStoryboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStoryboard.swift; sourceTree = "<group>"; };
+		716C5E392BB42E0A008D1544 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C3ABEF27CFFEB68A68C75C86 /* Pods-self-ios-sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-self-ios-sample.release.xcconfig"; path = "Target Support Files/Pods-self-ios-sample/Pods-self-ios-sample.release.xcconfig"; sourceTree = "<group>"; };
 		E1DE877619E242E129EEF4DC /* Pods-self-ios-sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-self-ios-sample.debug.xcconfig"; path = "Target Support Files/Pods-self-ios-sample/Pods-self-ios-sample.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -142,6 +144,7 @@
 				7144143F2AA97127002EF2CA /* PermissionHelper.swift */,
 				714414412AA971B0002EF2CA /* SelfError.swift */,
 				714414432AA971F7002EF2CA /* DialogHelper.swift */,
+				716C5E392BB42E0A008D1544 /* Constants.swift */,
 			);
 			path = "self-ios-sample";
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				637BB8332ACC1C1800A304A1 /* ChatView.swift in Sources */,
 				714C438A2AA8869300F1BAEF /* Extensions.swift in Sources */,
 				714414422AA971B0002EF2CA /* SelfError.swift in Sources */,
+				716C5E3A2BB42E0A008D1544 /* Constants.swift in Sources */,
 				637BB8382ACC293800A304A1 /* MessageModelSample.swift in Sources */,
 				714C435A2AA85D7300F1BAEF /* ViewController.swift in Sources */,
 				714C43562AA85D7300F1BAEF /* AppDelegate.swift in Sources */,
