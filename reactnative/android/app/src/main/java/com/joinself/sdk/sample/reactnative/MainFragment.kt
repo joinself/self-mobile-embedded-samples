@@ -1,13 +1,10 @@
 package com.joinself.sdk.sample.reactnative
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MainThread
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -71,7 +68,7 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        SelfSDKRNModule.openLivenessCheckCallback = {
+        SelfSDKRNModule.createAccountkCallback = {
             openLivenssCheck()
         }
     }
