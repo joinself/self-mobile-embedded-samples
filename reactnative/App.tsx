@@ -152,6 +152,16 @@ function App(): React.JSX.Element {
 
                   });                
               }}
+            />
+            <Button
+              title="Liveness Check"
+              style={styles.button}
+              disabled={false}
+              onPress={() => {
+                  SelfSDKRNModule.livenessCheck(result => {     
+
+                  });                
+              }}
             />  
             <Button
               title="Request Location"

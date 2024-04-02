@@ -55,6 +55,10 @@ class SelfSDKRNModule: RCTEventEmitter  {
     NotificationCenter.default.post(name: Notification.Name("CreateAccount"), object: nil)
   }
   
+  @objc func livenessCheck(_ callback: RCTResponseSenderBlock) -> Void {
+    NotificationCenter.default.post(name: Notification.Name("LivenessCheck"), object: nil)
+  }
+  
   // get selfId from sdk
   @objc func getSelfId(_ callback: RCTResponseSenderBlock) -> Void {
     let selfId = SelfSDKRNModule.account?.identifier() ?? ""

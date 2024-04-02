@@ -68,7 +68,10 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        SelfSDKRNModule.createAccountkCallback = {
+        SelfSDKRNModule.createAccountCallback = {
+            createAccount()
+        }
+        SelfSDKRNModule.livenessCheckCallback= {
             openLivenssCheck()
         }
     }
@@ -104,7 +107,7 @@ class MainFragment : Fragment() {
 
 
     @MainThread
-    private fun openLivenssCheck() {
+    private fun createAccount() {
         activity?.runOnUiThread {
             LivenessCheckFragment.account = account
             LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
@@ -117,6 +120,17 @@ class MainFragment : Fragment() {
                         SelfSDKRNModule.instance?.sendSelfId(selfId ?: "")
                     }
                 }
+            }
+            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+        }
+    }
+    @MainThread
+    private fun openLivenssCheck() {
+        activity?.runOnUiThread {
+            LivenessCheckFragment.account = account
+            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
+                Timber.d("onVerificationCallback")
+
             }
             findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
         }

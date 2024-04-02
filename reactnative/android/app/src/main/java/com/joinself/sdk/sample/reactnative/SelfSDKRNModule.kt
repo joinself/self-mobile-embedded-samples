@@ -43,7 +43,8 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
     companion object {
         var instance: SelfSDKRNModule? = null
         var account: Account? = null
-        var createAccountkCallback: (()->Unit)? = null
+        var createAccountCallback: (()->Unit)? = null
+        var livenessCheckCallback: (()->Unit)? = null
     }
 
     @ReactMethod
@@ -105,7 +106,13 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
     fun createAccount(callback: Callback) {
         Timber.d("createAccount")
         if (!account?.identifier().isNullOrEmpty()) return
-        createAccountkCallback?.invoke()
+        createAccountCallback?.invoke()
+    }
+
+    @ReactMethod
+    fun livenessCheck(callback: Callback) {
+        Timber.d("livenessCheck")
+        livenessCheckCallback?.invoke()
     }
 
     private fun checkLocationPermission(): Boolean {

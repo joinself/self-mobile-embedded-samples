@@ -35,6 +35,7 @@ class ViewController: UIViewController {
     btnCreate.isHidden = true
     
     NotificationCenter.default.addObserver(self, selector: #selector(createAccount), name: Notification.Name("CreateAccount"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(livenessCheck), name: Notification.Name("LivenessCheck"), object: nil)
 
     
     account = Account.Builder()
@@ -97,6 +98,18 @@ class ViewController: UIViewController {
               NotificationCenter.default.post(name: Notification.Name("SelfIdUpdated"), object: nil, userInfo: ["selfId": selfId])
             }
         }
+      }
+      self.present(vc, animated: true)
+    }
+  }
+  
+  @objc private func livenessCheck(notification: Notification) {
+    log.debug("livenessCheck start")
+    DispatchQueue.main.async {
+      let vc = LivenessCheckViewController()
+      vc.account = self.account
+      vc.onFinishCallback = {selfieImage, attestation in
+        
       }
       self.present(vc, animated: true)
     }
