@@ -151,6 +151,9 @@ class LivenessCheckFragment: Fragment() {
                 Challenge.TurnRight -> {
                     binding.descTextView.text = getString(R.string.msg_liveness_turn_right)
                 }
+                Challenge.LookUp-> {
+                    binding.descTextView.text = getString(R.string.msg_liveness_look_up)
+                }
                 Challenge.Done -> {
                     binding.descTextView.text = getString(R.string.thank_you_2)
                 }

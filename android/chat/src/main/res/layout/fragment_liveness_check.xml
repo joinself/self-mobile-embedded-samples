@@ -17,6 +17,7 @@
         android:gravity="bottom|center"
         android:longClickable="false"
         android:textColor="@color/colorTextWhite"
+        android:textStyle="bold"
         app:autoSizeTextType="uniform"
         app:autoSizeMaxTextSize="30sp"
         app:layout_constraintBottom_toTopOf="@id/statusTextView"
