@@ -67,10 +67,10 @@ class MainFragment : Fragment() {
 
         binding.buttonCreate.setOnClickListener {
             LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
+            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
                 lifecycleScope.launch(Dispatchers.Default) {
-                    if (attestation != null) {
-                        val selfId = account.register(selfieImage, attestation)
+                    if (attestations.isNotEmpty()) {
+                        val selfId = account.register(selfieImage, attestations.first())
                         Timber.d("SelfId: $selfId")
                         updateUI()
                     }
@@ -86,9 +86,9 @@ class MainFragment : Fragment() {
 
         binding.buttonCheckLiveness.setOnClickListener {
             LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
+            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
                 lifecycleScope.launch(Dispatchers.Default) {
-                    if (attestation != null) {
+                    if (attestations.isNotEmpty()) {
 
                     }
                 }
@@ -128,6 +128,31 @@ class MainFragment : Fragment() {
 
         binding.buttonLocation.setOnClickListener {
             getLocation()
+        }
+
+        binding.buttonGetKeyValue.setOnClickListener {
+            LivenessCheckFragment.account = account
+            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
+                lifecycleScope.launch(Dispatchers.Default) {
+                    if (attestations.isNotEmpty()) {
+                        try {
+                            val value = account.get("name", attestations)
+                            Timber.d("key-value: $value")
+
+                            withContext(Dispatchers.Main) {
+                                val builder = AlertDialog.Builder(requireContext())
+                                builder.setTitle("Key-Value")
+                                builder.setMessage("Key: name - Value: $value")
+                                builder.setPositiveButton("OK") { dialog, which -> }
+                                builder.show()
+                            }
+                        } catch (ex: Exception) {
+                            Timber.e(ex)
+                        }
+                    }
+                }
+            }
+            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
         }
 
         updateUI()
@@ -179,6 +204,7 @@ class MainFragment : Fragment() {
                 binding.buttonExportBackup.isEnabled = !selfId.isNullOrEmpty()
                 binding.buttonImportBackup.isEnabled = selfId.isNullOrEmpty()
                 binding.buttonLocation.isEnabled = !selfId.isNullOrEmpty()
+                binding.buttonGetKeyValue.isEnabled = !selfId.isNullOrEmpty()
             } catch (ex: Exception) {
                 Timber.e(ex)
             }
@@ -209,9 +235,9 @@ class MainFragment : Fragment() {
         if (zippedFile.exists() && zippedFile.length() > 0) {
             activity?.runOnUiThread {
                 LivenessCheckFragment.account = account
-                LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
+                LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
                     lifecycleScope.launch(Dispatchers.Default) {
-                        if (attestation != null) {
+                        if (attestations.isNotEmpty()) {
                             try {
                                 account.restore(zippedFile, selfieImage)
                                 Timber.d("Restore successfully")
@@ -243,9 +269,7 @@ class MainFragment : Fragment() {
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Location")
                 builder.setMessage(locAttestation.firstOrNull()?.fact()?.value())
-                builder.setPositiveButton("OK") { dialog, which ->
-
-                }
+                builder.setPositiveButton("OK") { dialog, which -> }
                 builder.show()
             }
         }
@@ -269,13 +293,13 @@ class MainFragment : Fragment() {
             .build()
         account.store(data1)
 
-        val result = account.get("name")
+        val result = account.get("name", listOf())
         assert(data1.value() == result?.value())
         assert(data1.isSensitive() == result?.isSensitive())
 
         val deleted = account.remove("name")
         assert(deleted == true)
-        val result2 = account.get("name")
+        val result2 = account.get("name", listOf())
         assert(result2 == null)
     }
 }

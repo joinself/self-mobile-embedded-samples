@@ -30,7 +30,7 @@ class LivenessCheckFragment: Fragment() {
     private var livenessCheck = LivenessCheck()
 
     companion object {
-         var onVerificationCallback: ((ByteArray, Attestation?) -> Unit)? = null
+         var onVerificationCallback: ((ByteArray, List<Attestation>) -> Unit)? = null
          lateinit var account: Account
     }
 
@@ -102,10 +102,10 @@ class LivenessCheckFragment: Fragment() {
             onError = {error ->
                 updateDescription(challenge = null, error = error)
             },
-            onResult = { selfieImage, attestation ->
+            onResult = { selfieImage, attestations ->
                 if (onVerificationCallback != null) {
                     findNavController().navigateUp()
-                    onVerificationCallback?.invoke(selfieImage, attestation)
+                    onVerificationCallback?.invoke(selfieImage, attestations)
                     onVerificationCallback = null
                 }
             }
@@ -150,6 +150,9 @@ class LivenessCheckFragment: Fragment() {
                 }
                 Challenge.TurnRight -> {
                     binding.descTextView.text = getString(R.string.msg_liveness_turn_right)
+                }
+                Challenge.LookUp-> {
+                    binding.descTextView.text = getString(R.string.msg_liveness_look_up)
                 }
                 Challenge.Done -> {
                     binding.descTextView.text = getString(R.string.thank_you_2)

@@ -14,6 +14,7 @@
     <string name="msg_liveness_blink">Please Blink</string>
     <string name="msg_liveness_turn_left">Please Turn Left</string>
     <string name="msg_liveness_turn_right">Please Turn Right</string>
+    <string name="msg_liveness_look_up">Look up, with your whole head and then return.</string>
     <string name="msg_liveness_share">You have been reverified. Would you like to share the result with</string>
     <string name="error_liveness_faceid_changed">Different face detected</string>
     <string name="error_liveness_out_of_preview">Please keep your face inside the oval and follow the instructions.</string>
@@ -68,4 +69,5 @@
     <string name="button_create_account">Create Account</string>
     <string name="button_verify_document">Verify Document</string>
     <string name="button_request_location">Request Location</string>
+    <string name="button_get_key_value">Get Key-Value</string>
 </resources>
