@@ -51,6 +51,8 @@ class MainFragment : Fragment() {
             .setStoragePath("account1")
             .build()
         account.setDevMode(true)
+
+        insertTestData()
     }
 
     override fun onCreateView(
@@ -70,7 +72,7 @@ class MainFragment : Fragment() {
             LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
                 lifecycleScope.launch(Dispatchers.Default) {
                     if (attestations.isNotEmpty()) {
-                        val selfId = account.register(selfieImage, attestations.first())
+                        val selfId = account.register(selfieImage, attestations)
                         Timber.d("SelfId: $selfId")
                         updateUI()
                     }
@@ -142,7 +144,7 @@ class MainFragment : Fragment() {
                             withContext(Dispatchers.Main) {
                                 val builder = AlertDialog.Builder(requireContext())
                                 builder.setTitle("Key-Value")
-                                builder.setMessage("Key: name - Value: $value")
+                                builder.setMessage("Key: name - Value: ${value?.value()}")
                                 builder.setPositiveButton("OK") { dialog, which -> }
                                 builder.show()
                             }
@@ -284,6 +286,16 @@ class MainFragment : Fragment() {
         requireActivity().requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE_LOCATION)
     }
 
+    private fun insertTestData() {
+        val data1 = KeyValue.Builder()
+            .setKey("name")
+            .setValue("Test User")
+            .setSensitive(true)
+            .setMime("text/plain")
+            .build()
+        account.store(data1)
+    }
+
     private fun testKeyValueData() {
         val data1 = KeyValue.Builder()
             .setKey("name")
@@ -296,10 +308,5 @@ class MainFragment : Fragment() {
         val result = account.get("name", listOf())
         assert(data1.value() == result?.value())
         assert(data1.isSensitive() == result?.isSensitive())
-
-        val deleted = account.remove("name")
-        assert(deleted == true)
-        val result2 = account.get("name", listOf())
-        assert(result2 == null)
     }
 }

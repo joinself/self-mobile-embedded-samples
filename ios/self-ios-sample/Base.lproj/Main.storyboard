@@ -40,7 +40,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="oSP-ce-Yga">
-                                <rect key="frame" x="118.66666666666669" y="193.33333333333337" width="156" height="330"/>
+                                <rect key="frame" x="118.66666666666669" y="193.33333333333334" width="156" height="388.33333333333326"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctY-qW-o5s">
                                         <rect key="frame" x="0.0" y="0.0" width="156" height="38.333333333333336"/>
@@ -72,6 +72,11 @@
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Request Location"/>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ed8-kT-qud">
+                                        <rect key="frame" x="0.0" y="350" width="156" height="38.333333333333314"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Get Key-Value"/>
+                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -88,6 +93,7 @@
                     <connections>
                         <outlet property="btnCreate" destination="d7T-4t-Hdu" id="9yj-Dx-zJw"/>
                         <outlet property="btnExportBackup" destination="W8x-ay-9yT" id="wde-D4-bvN"/>
+                        <outlet property="btnGetKeyValue" destination="ed8-kT-qud" id="qwv-yY-dOU"/>
                         <outlet property="btnImportBackup" destination="0gA-AM-Xy8" id="ujL-qE-CAx"/>
                         <outlet property="btnLiveness" destination="ctY-qW-o5s" id="niZ-S2-LvZ"/>
                         <outlet property="btnLocation" destination="ou3-tJ-axL" id="e2G-kH-CyF"/>
