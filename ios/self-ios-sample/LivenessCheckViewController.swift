@@ -21,7 +21,7 @@ class LivenessCheckViewController: UIViewController {
     
     var account: Account!
     
-    var onFinishCallback: ((Data, Attestation?) -> Void)? = nil
+    var onFinishCallback: ((Data, [Attestation]) -> Void)? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,11 +67,13 @@ class LivenessCheckViewController: UIViewController {
         livenessCheck.onChallengeChanged = { challege, error in
             self.updateUI(challenge: challege, error: error)
         }
-        livenessCheck.onResult = { selfieImage, attestation in
-            if self.onFinishCallback != nil {
-                self.onFinishCallback?(selfieImage, attestation)
-                self.onFinishCallback = nil
+        livenessCheck.onResult = { selfieImage, attestations in
+            DispatchQueue.main.async {
                 self.navigationController?.popViewController(animated: true)
+            }            
+            if self.onFinishCallback != nil {
+                self.onFinishCallback?(selfieImage, attestations)
+                self.onFinishCallback = nil
             }
             
         }

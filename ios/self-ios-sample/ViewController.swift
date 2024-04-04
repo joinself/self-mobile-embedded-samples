@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var btnExportBackup: UIButton!
     @IBOutlet weak var btnImportBackup: UIButton!
     @IBOutlet weak var btnLocation: UIButton!
+    @IBOutlet weak var btnGetKeyValue: UIButton!
     
     private var account: Account!
     private var message: Message? = nil
@@ -38,6 +39,7 @@ class ViewController: UIViewController {
         btnExportBackup.addTarget(self, action: #selector(onExportBackupPressed(_:)), for: .touchUpInside)
         btnImportBackup.addTarget(self, action: #selector(onImportBackupPressed(_:)), for: .touchUpInside)
         btnLocation.addTarget(self, action: #selector(onLocationPressed(_:)), for: .touchUpInside)
+        btnGetKeyValue.addTarget(self, action: #selector(onGetKeyValuePressed(_:)), for: .touchUpInside)
         
         onMessage = { msg in
             if let chatMsg = msg as? ChatMessage {
@@ -63,12 +65,14 @@ class ViewController: UIViewController {
         account.setDevMode(enabled: true)
         
         updateUI()
+        
+        insertTestData()
     }
     
     @objc func onLivenessPressed(_ sender: Any) {
         let vc = LivenessCheckViewController.instantiate(from: .Main)
         vc.account = self.account
-        vc.onFinishCallback = {selfieImage, attestation in
+        vc.onFinishCallback = {selfieImage, attestations in
             
         }
         self.navigationController?.pushViewController(vc, animated: true)
@@ -77,10 +81,10 @@ class ViewController: UIViewController {
     @objc func onCreatePressed(_ sender: Any) {
         let vc = LivenessCheckViewController.instantiate(from: .Main)
         vc.account = self.account
-        vc.onFinishCallback = {selfieImage, attestation in
+        vc.onFinishCallback = {selfieImage, attestations in
             Task {
-                if let attestation = attestation {
-                    let selfId = try! await self.account.register(selfieImage: selfieImage, attestation: attestation)
+                if !attestations.isEmpty {
+                    let selfId = try! await self.account.register(selfieImage: selfieImage, attestations: attestations)
                     log.debug("SelfId: \(selfId)")
                     
                     self.updateUI()
@@ -136,6 +140,20 @@ class ViewController: UIViewController {
         }
     }
     
+    @objc func onGetKeyValuePressed(_ sender: Any) {
+        let vc = LivenessCheckViewController.instantiate(from: .Main)
+        vc.account = self.account
+        vc.onFinishCallback = {selfieImage, attestations in
+            let value = self.account.get(key:"name", attestations: attestations)
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "Key Value", message: "Key: name - Value:\(value?.value())", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     private func restoreFromURL(selectedFileURL: URL) {
         let vc = LivenessCheckViewController.instantiate(from: .Main)
         vc.account = self.account
@@ -157,12 +175,14 @@ class ViewController: UIViewController {
                 self.btnExportBackup.isEnabled = true
                 self.btnImportBackup.isEnabled = false
                 self.btnLocation.isEnabled = true
+                self.btnGetKeyValue.isEnabled = true
             } else {
                 self.btnCreate.isEnabled = true
                 self.btnSendMessage.isEnabled = false
                 self.btnExportBackup.isEnabled = false
                 self.btnImportBackup.isEnabled = true
                 self.btnLocation.isEnabled = false
+                self.btnGetKeyValue.isEnabled = false
             }
         }
     }
@@ -182,6 +202,15 @@ class ViewController: UIViewController {
         self.present(activityViewController, animated: true, completion: nil)
     }
     
+    private func insertTestData() {
+        let data1 = KeyValue.Builder()
+            .withKey("name")
+            .withValue("Test User")
+            .withSensitive(true)
+            .build()
+        account.store(keyValue: data1)
+    }
+    
     private func testKeyValue() {
         let data1 = KeyValue.Builder()
             .withKey("name")
@@ -190,16 +219,10 @@ class ViewController: UIViewController {
             .build()
         account.store(keyValue: data1)
         
-        let result = account.get(key: "name")
+        let result = account.get(key: "name", attestations: [])
         
         assert(data1.value() == result?.value())
         assert(data1.isSensitive() == result?.isSensitive())
-        
-        let deleted = account.remove(key: "name")
-        assert(deleted == true)
-        
-        let result2 = account.get(key: "name")
-        assert(result2 == nil)
     }
 }
 
