@@ -19,7 +19,7 @@ class LivenessCheckViewController: UIViewController {
   private var livenessCheck = LivenessCheck()
   var account: Account!
   
-  var onFinishCallback: ((Data, Attestation?) -> Void)? = nil
+  var onFinishCallback: ((Data, [Attestation]) -> Void)? = nil
   
   override func loadView() {
     view = UIView()
@@ -104,13 +104,14 @@ class LivenessCheckViewController: UIViewController {
       livenessCheck.onChallengeChanged = { challege, error in
           self.updateUI(challenge: challege, error: error)
       }
-      livenessCheck.onResult = { selfieImage, attestation in
+      livenessCheck.onResult = { selfieImage, attestations in
+        DispatchQueue.main.async {
+          self.dismiss(animated: true)
+        }
           if self.onFinishCallback != nil {
-              self.onFinishCallback?(selfieImage, attestation)
+              self.onFinishCallback?(selfieImage, attestations)
               self.onFinishCallback = nil
-              self.dismiss(animated: true)
-          }
-          
+          }          
       }
   }
   private func checkCameraPermissionAndSetupCameraSession() {

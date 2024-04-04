@@ -53,7 +53,7 @@ class ViewController: UIViewController {
   @objc func onButtonPressed(_ sender: Any) {
     let vc = LivenessCheckViewController()
     vc.account = self.account
-    vc.onFinishCallback = {selfieImage, attestation in
+    vc.onFinishCallback = {selfieImage, attestations in
         Task {
 
         }
@@ -90,10 +90,10 @@ class ViewController: UIViewController {
     DispatchQueue.main.async {
       let vc = LivenessCheckViewController()
       vc.account = self.account
-      vc.onFinishCallback = {selfieImage, attestation in
+      vc.onFinishCallback = {selfieImage, attestations in
         Task {
-            if let attestation = attestation {
-              let selfId = try! await self.account.register(selfieImage: selfieImage, attestation: attestation)
+            if !attestations.isEmpty {
+              let selfId = try! await self.account.register(selfieImage: selfieImage, attestations: attestations)
               log.debug("SelfId: \(selfId)")
               NotificationCenter.default.post(name: Notification.Name("SelfIdUpdated"), object: nil, userInfo: ["selfId": selfId])
             }
@@ -108,7 +108,7 @@ class ViewController: UIViewController {
     DispatchQueue.main.async {
       let vc = LivenessCheckViewController()
       vc.account = self.account
-      vc.onFinishCallback = {selfieImage, attestation in
+      vc.onFinishCallback = {selfieImage, attestations in
         
       }
       self.present(vc, animated: true)
