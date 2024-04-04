@@ -110,11 +110,11 @@ class MainFragment : Fragment() {
     private fun createAccount() {
         activity?.runOnUiThread {
             LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
+            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
                 Timber.d("onVerificationCallback")
                 lifecycleScope.launch(Dispatchers.Default) {
-                    if (attestation != null) {
-                        val selfId = account.register(selfieImage, attestation)
+                    if (attestations.isNotEmpty()) {
+                        val selfId = account.register(selfieImage, attestations)
                         Timber.d("SelfId: $selfId")
 
                         SelfSDKRNModule.instance?.sendSelfId(selfId ?: "")
@@ -128,7 +128,7 @@ class MainFragment : Fragment() {
     private fun openLivenssCheck() {
         activity?.runOnUiThread {
             LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
+            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
                 Timber.d("onVerificationCallback")
 
             }

@@ -136,6 +136,12 @@ android {
         viewBinding = true
     }
 }
+configurations.all {
+    resolutionStrategy {
+        cacheDynamicVersionsFor(5, TimeUnit.MINUTES)
+        cacheChangingModulesFor(0, TimeUnit.SECONDS)
+    }
+}
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
