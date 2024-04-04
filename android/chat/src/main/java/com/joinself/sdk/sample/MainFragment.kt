@@ -70,7 +70,7 @@ class MainFragment : Fragment() {
             LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
                 lifecycleScope.launch(Dispatchers.Default) {
                     if (attestations.isNotEmpty()) {
-                        val selfId = account.register(selfieImage, attestations.first())
+                        val selfId = account.register(selfieImage, attestations)
                         Timber.d("SelfId: $selfId")
                         updateUI()
                     }

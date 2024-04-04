@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
         account.setDevMode(true)
 
         // callback for registration
-        var attestationCallBack: ((ByteArray, attesation: Attestation?) -> Unit)? = null
+        var attestationCallBack: ((ByteArray, attesation: List<Attestation>) -> Unit)? = null
 
         setContent {
             val coroutineScope = rememberCoroutineScope()
@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
                     }
                     Timber.d("Copy file to ${zippedFile.absolutePath}")
                     if (zippedFile.exists() && zippedFile.length() > 0) {
-                        attestationCallBack = { selfieImage, attestation ->
+                        attestationCallBack = { selfieImage, attestations ->
                             coroutineScope.launch(Dispatchers.Default) {
                                 try {
                                     account.restore(zippedFile, selfieImage)
@@ -150,11 +150,11 @@ class MainActivity : ComponentActivity() {
                             }
                             MainView(selfId = selfId,
                                 onCreateAccount = {
-                                    attestationCallBack = { selfieImage, attestation ->
+                                    attestationCallBack = { selfieImage, attestations ->
                                         coroutineScope.launch(Dispatchers.Default) {
-                                            if (account.identifier().isNullOrEmpty() && attestation != null) {
+                                            if (account.identifier().isNullOrEmpty() && attestations.isNotEmpty()) {
                                                 showDialog = true
-                                                selfId = account.register(selfieImage = selfieImage, selfieAttestation = attestation)
+                                                selfId = account.register(selfieImage = selfieImage, attestations = attestations)
                                                 Timber.d("SelfId: $selfId")
                                                 showDialog = false
                                             }
@@ -225,10 +225,10 @@ class MainActivity : ComponentActivity() {
                             color = MaterialTheme.colorScheme.background
                         ) {
                             LivenessCheckScreen(account = account, activity = this@MainActivity,
-                                onResult = { selfieImage,  attestation ->
+                                onResult = { selfieImage,  attestations ->
                                     if (attestationCallBack != null) {
                                         navController.popBackStack()
-                                        attestationCallBack?.invoke(selfieImage, attestation)
+                                        attestationCallBack?.invoke(selfieImage, attestations)
                                         attestationCallBack = null
                                     }
                                 },
@@ -356,7 +356,7 @@ fun LocationView(onPermissionGranted: () -> Unit) {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun LivenessCheckScreen(account: Account, activity: Activity, onResult: (ByteArray, attestation: Attestation?) -> Unit, onBack:()->Unit) {
+fun LivenessCheckScreen(account: Account, activity: Activity, onResult: (ByteArray, attestation: List<Attestation>) -> Unit, onBack:()->Unit) {
     val context = LocalContext.current
     val cameraPermissionState =
         rememberPermissionState(permission = android.Manifest.permission.CAMERA)
@@ -381,7 +381,7 @@ fun LivenessCheckScreen(account: Account, activity: Activity, onResult: (ByteArr
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LivenessCheckView(account: Account, activity: Activity, onResult: (ByteArray, attestation: Attestation?) -> Unit, onBack:()->Unit) {
+fun LivenessCheckView(account: Account, activity: Activity, onResult: (ByteArray, attestation: List<Attestation>) -> Unit, onBack:()->Unit) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val livenessCheck = LivenessCheck()
@@ -470,9 +470,9 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (ByteArray
                     Timber.d("error: $err")
                     error = err
                 },
-                onResult = { selfieImage, attestation ->
-                    Timber.d("attestation: $attestation")
-                    onResult.invoke(selfieImage, attestation)
+                onResult = { selfieImage, attestations ->
+                    Timber.d("attestation size: ${attestations.size}")
+                    onResult.invoke(selfieImage, attestations)
                 })
 
             livenessCheck.start()
