@@ -25,10 +25,10 @@
         tools:layout="@layout/fragment_conversation">
 
     </fragment>
-    <fragment
+    <dialog
         android:id="@+id/livenessCheckFragment"
         android:name="com.joinself.sdk.sample.LivenessCheckFragment"
         android:label="LivenessCheckFragment"
         tools:layout="@layout/fragment_liveness_check">
-    </fragment>
+    </dialog>
 </navigation>
