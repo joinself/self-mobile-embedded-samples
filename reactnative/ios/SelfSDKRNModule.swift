@@ -98,6 +98,11 @@ class SelfSDKRNModule: RCTEventEmitter  {
     }
   }
   
+  @objc func getKeyValue(_ key: String, callback: @escaping RCTResponseSenderBlock) {
+    print("getKeyValue \(key)")
+    NotificationCenter.default.post(name: Notification.Name("GetKeyValue"), object: nil, userInfo: ["key": key, "callback": callback])
+  }
+  
   
   //  override func constantsToExport() -> [AnyHashable : Any]! {
   //    return ["someKey": "someValue"]

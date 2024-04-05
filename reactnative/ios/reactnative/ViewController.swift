@@ -36,6 +36,7 @@ class ViewController: UIViewController {
     
     NotificationCenter.default.addObserver(self, selector: #selector(createAccount), name: Notification.Name("CreateAccount"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(livenessCheck), name: Notification.Name("LivenessCheck"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(getKeyValue), name: Notification.Name("GetKeyValue"), object: nil)
 
     
     account = Account.Builder()
@@ -43,6 +44,18 @@ class ViewController: UIViewController {
         .withStoragePath("account1")
         .build()
     SelfSDKRNModule.account = account
+    account.setDevMode(enabled: true)
+    
+    insertTestData()
+  }
+  
+  private func insertTestData() {
+      let data1 = KeyValue.Builder()
+          .withKey("name")
+          .withValue("Test User")
+          .withSensitive(true)
+          .build()
+      account.store(keyValue: data1)
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -112,6 +125,23 @@ class ViewController: UIViewController {
         
       }
       self.present(vc, animated: true)
+    }
+  }
+  
+  @objc private func getKeyValue(notification: Notification) {
+    log.debug("getKeyValue start")
+    let callback = notification.userInfo?["callback"] as? RCTResponseSenderBlock
+    if let key = notification.userInfo?["key"] as? String {
+      DispatchQueue.main.async {
+        let vc = LivenessCheckViewController()
+        vc.account = self.account
+        vc.onFinishCallback = {selfieImage, attestations in
+          let value = self.account.get(key: key, attestations: attestations)
+          log.debug("key-value \(value?.value())")
+          callback?([value?.value()])
+        }
+        self.present(vc, animated: true)
+      }
     }
   }
 }

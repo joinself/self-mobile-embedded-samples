@@ -45,6 +45,7 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         var account: Account? = null
         var createAccountCallback: (()->Unit)? = null
         var livenessCheckCallback: (()->Unit)? = null
+        var getKeyValueCallback: ((String, (String?)->Unit)->Unit)? = null
     }
 
     @ReactMethod
@@ -128,6 +129,14 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
                 Timber.d("exportBackup: ${backupFile.absolutePath}")
                 callback.invoke(backupFile.absolutePath)
             }
+        }
+    }
+
+    @ReactMethod
+    fun getKeyValue(key: String, callback: Callback) {
+        Timber.d("getKeyValue key: $key")
+        getKeyValueCallback?.invoke(key) { value ->
+            callback.invoke(value)
         }
     }
 }
