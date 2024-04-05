@@ -209,7 +209,7 @@ function App(): React.JSX.Element {
               disabled={selfId == ''}
               onPress={() => {
                 SelfSDKRNModule.getKeyValue("name", result => {                       
-                  Alert.alert('Key-Value', result);
+                  Alert.alert('Key-Value', `key: name - value:${result}`);
                 });                
               }}
             />           
