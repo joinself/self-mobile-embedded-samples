@@ -82,37 +82,41 @@ class LivenessCheckFragment: Fragment() {
         Timber.i("onDestroy")
     }
 
+    @UiThread
     private fun onPermissionGranted() {
-        livenessCheck.initialize(account, requireActivity(), binding.graphicOverlay, binding.cameraPreview,
-            onStatusUpdated = { status ->
-                val prefix = "status"
-                var msg = ""
-                when (status) {
-                    Status.Info -> msg = "$prefix:"
-                    Status.Passed -> msg = "$prefix: Passed"
-                    Status.Error -> msg = "$prefix: Error"
-                }
-                updateStatus(msg)
-            },
-            onChallengeChanged = { challenge ->
-                binding.descTextView.setTextColor(requireContext().getColor(R.color.colorTextWhite))
-                updateDescription(challenge = challenge, error = null)
-            },
-            onError = {error ->
-                updateDescription(challenge = null, error = error)
-            },
-            onResult = { selfieImage, attestations ->
-                if (onVerificationCallback != null) {
+        activity?.runOnUiThread {
+            livenessCheck.initialize(account, requireActivity(), binding.graphicOverlay, binding.cameraPreview,
+                onStatusUpdated = { status ->
+                    val prefix = "status"
+                    var msg = ""
+                    when (status) {
+                        Status.Info -> msg = "$prefix:"
+                        Status.Passed -> msg = "$prefix: Passed"
+                        Status.Error -> msg = "$prefix: Error"
+                        else -> msg = "$prefix: ${status.name}"
+                    }
+                    updateStatus(msg)
+                },
+                onChallengeChanged = { challenge ->
+                    binding.descTextView.setTextColor(requireContext().getColor(R.color.colorTextWhite))
+                    updateDescription(challenge = challenge, error = null)
+                },
+                onError = { error ->
+                    updateDescription(challenge = null, error = error)
+                },
+                onResult = { selfieImage, attestations ->
                     findNavController().navigateUp()
-                    onVerificationCallback?.invoke(selfieImage, attestations)
-                    onVerificationCallback = null
+                    if (onVerificationCallback != null) {
+                        onVerificationCallback?.invoke(selfieImage, attestations)
+                        onVerificationCallback = null
+                    }
                 }
-            }
-        )
-        livenessCheck.start()
+            )
+            livenessCheck.start()
+        }
     }
 
-    fun requestCameraPermission(completion: ((Boolean) -> Unit)?) {
+    private fun requestCameraPermission(completion: ((Boolean) -> Unit)?) {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             completion?.invoke(true)
             return

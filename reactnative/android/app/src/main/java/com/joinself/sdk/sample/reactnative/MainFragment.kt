@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.facebook.react.ReactFragment
 import com.joinself.sdk.Environment
 import com.joinself.sdk.models.Account
+import com.joinself.sdk.models.KeyValue
 import com.joinself.sdk.sample.reactnative.databinding.FragmentMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,6 +37,9 @@ class MainFragment : Fragment() {
             .setEnvironment(Environment.review)
             .setStoragePath("account1")
             .build()
+
+        account.setDevMode(true)
+        insertTestData()
     }
 
     override fun onCreateView(
@@ -53,15 +57,10 @@ class MainFragment : Fragment() {
         startReactNativeFragment()
     }
 
-    override fun onStop() {
-        super.onStop()
-
-        removeReactNativeFragment()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
 
+        removeReactNativeFragment()
         _binding = null
     }
 
@@ -74,10 +73,18 @@ class MainFragment : Fragment() {
         SelfSDKRNModule.livenessCheckCallback= {
             openLivenssCheck()
         }
+        SelfSDKRNModule.getKeyValueCallback = { key, callback ->
+            getKeyValue(key, callback)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
     }
 
     private lateinit var reactNativeFragment: ReactFragment
     private fun startReactNativeFragment() {
+        Timber.d("startReactNativeFragment")
         val params = Bundle().apply {
             putString("message", "test")
         }
@@ -92,16 +99,21 @@ class MainFragment : Fragment() {
 
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .add(R.id.reactNativeFragment, reactNativeFragment)
+            .replace(R.id.reactNativeFragment, reactNativeFragment)
             .commit()
     }
 
     private fun removeReactNativeFragment() {
-        if (this::reactNativeFragment.isInitialized) {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .remove(reactNativeFragment)
-                .commit()
-            binding.reactNativeFragment.visibility = View.GONE
+        Timber.d("removeReactNativeFragment isStateSaved:$isStateSaved")
+        try {
+            if (this::reactNativeFragment.isInitialized) {
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .remove(reactNativeFragment)
+                    .commit()
+                binding.reactNativeFragment.visibility = View.GONE
+            }
+        } catch (ex: Exception) {
+            Timber.e(ex)
         }
     }
 
@@ -134,5 +146,28 @@ class MainFragment : Fragment() {
             }
             findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
         }
+    }
+
+    @MainThread
+    private fun getKeyValue(key: String, callback: ((String?)->Unit)) {
+        activity?.runOnUiThread {
+            LivenessCheckFragment.account = account
+            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
+                Timber.d("onVerificationCallback")
+                val value = account.get(key, attestations)
+                callback.invoke(value?.value())
+            }
+            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+        }
+    }
+
+    private fun insertTestData() {
+        val data1 = KeyValue.Builder()
+            .setKey("name")
+            .setValue("Test User")
+            .setSensitive(true)
+            .setMime("text/plain")
+            .build()
+        account.store(data1)
     }
 }

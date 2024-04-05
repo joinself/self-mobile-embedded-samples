@@ -201,6 +201,17 @@ function App(): React.JSX.Element {
                   Share.open(options);
                 });                
               }}
+            />   
+
+            <Button
+              title="Get Key-Value"
+              style={styles.button}
+              disabled={selfId == ''}
+              onPress={() => {
+                SelfSDKRNModule.getKeyValue("name", result => {                       
+                  Alert.alert('Key-Value', result);
+                });                
+              }}
             />           
           </View>                  
         </View>
