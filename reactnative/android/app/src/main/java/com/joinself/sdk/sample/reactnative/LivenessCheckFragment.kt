@@ -184,6 +184,9 @@ class LivenessCheckFragment: BottomSheetDialogFragment() {
                 Challenge.LookUp-> {
                     binding.descTextView.text = getString(R.string.msg_liveness_look_up)
                 }
+                Challenge.LookDown-> {
+                    binding.descTextView.text = getString(R.string.msg_liveness_look_down)
+                }
                 Challenge.Done -> {
                     binding.descTextView.text = getString(R.string.thank_you_2)
                 }
