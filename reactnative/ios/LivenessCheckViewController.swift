@@ -187,6 +187,8 @@ class LivenessCheckViewController: UIViewController {
           lblInfo.text = "liveness_turn_right".localized
       case .LookUp:
           lblInfo.text = "liveness_look_up".localized
+      case .LookDown:
+          lblInfo.text = "liveness_look_down".localized
       }
       
   }
