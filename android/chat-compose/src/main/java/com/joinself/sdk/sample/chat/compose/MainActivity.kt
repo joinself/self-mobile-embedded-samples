@@ -404,6 +404,7 @@ fun LivenessCheckView(account: Account, activity: Activity, onResult: (ByteArray
             LivenessCheck.Challenge.TurnLeft -> stringResource(R.string.msg_liveness_turn_left)
             LivenessCheck.Challenge.TurnRight -> stringResource(R.string.msg_liveness_turn_right)
             LivenessCheck.Challenge.LookUp -> stringResource(R.string.msg_liveness_look_up)
+            LivenessCheck.Challenge.LookDown -> stringResource(R.string.msg_liveness_look_down)
             LivenessCheck.Challenge.Done -> stringResource(R.string.thank_you_2)
             else -> ""
         }
