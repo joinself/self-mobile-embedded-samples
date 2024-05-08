@@ -25,6 +25,14 @@ pod install
 
 ## Step 2: Start your Application
 
+Start Dev server first, then start android or ios app
+
+### Start Dev Server
+
+```bash
+yarn start
+```
+
 ### For Android
 
 ```bash
@@ -45,13 +53,16 @@ npm run ios
 yarn ios
 ```
 
-Open `reactnative/ios/reactnative.xcworkspace` to modify codes
+#### Open Xcode
 
-## Start Dev Server
-
-```bash
-yarn start
+- If packages are updated, run
 ```
+# cd self-mobile-embedded-samples/reactnative/ios
+pod update
+```
+
+- Open project in Xcode `reactnative/ios/reactnative.xcworkspace`
+
 
 ## Get project info
 

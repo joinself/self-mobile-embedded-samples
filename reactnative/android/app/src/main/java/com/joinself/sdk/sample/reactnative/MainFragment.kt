@@ -91,7 +91,7 @@ class MainFragment : Fragment() {
         reactNativeFragment = ReactFragment.Builder()
             .setComponentName("reactnative")
             .setLaunchOptions(params)
-            .setFabricEnabled(true)
+            .setFabricEnabled(false)
             .build()
 
         binding.reactNativeFragment.visibility = View.VISIBLE

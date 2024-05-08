@@ -72,7 +72,7 @@ val enableProguardInReleaseBuilds = false
 var jscFlavor = "org.webkit:android-jsc:+"
 
 android {
-    ndkVersion = "25.1.8937393"
+    ndkVersion = "26.1.10909125"
     buildToolsVersion = "34.0.0"
     compileSdk  = 34
 
@@ -146,7 +146,6 @@ configurations.all {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-    implementation("com.facebook.react:flipper-integration")
 
     if (rootProject.ext["hermesEnabled"].toString().toBoolean()) {
         implementation("com.facebook.react:hermes-android")
@@ -156,9 +155,9 @@ dependencies {
 
     implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
     implementation("com.jakewharton.timber:timber:5.0.1")
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
