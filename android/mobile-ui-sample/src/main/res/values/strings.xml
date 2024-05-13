@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">Mobile UI - SDK Sample</string>
+
+    <string name="button_create_account">Create Account</string>
+
+    <string name="thank_you">Thank You</string>
+    <string name="thank_you_2">Thank you!</string>
+    <string name="msg_liveness_desc">Place your face inside the oval and follow the instructions.</string>
+    <string name="msg_liveness_smile">Please Smile</string>
+    <string name="msg_liveness_blink">Please Blink</string>
+    <string name="msg_liveness_turn_left">Please Turn Left</string>
+    <string name="msg_liveness_turn_right">Please Turn Right</string>
+    <string name="msg_liveness_look_up">Look up, with your whole head and then return.</string>
+    <string name="msg_liveness_look_down">Look down, with your whole head and then return.</string>
+    <string name="msg_liveness_share">You have been reverified. Would you like to share the result with</string>
+    <string name="error_liveness_faceid_changed">Different face detected</string>
+    <string name="error_liveness_out_of_preview">Please keep your face inside the oval and follow the instructions.</string>
+    <string name="error_liveness_timeout">Exceed 5 seconds </string>
+    <string name="error_liveness_failed">Selfie verification failed</string>
+
+
+    <string name="lbl_request_fact">Request Fact</string>
+
+    <string name="title_add_facts">Add Facts</string>
+    <string name="title_facts">Facts</string>
+    <string name="title_fact_phones">Phone Number</string>
+    <string name="title_fact_emails">Email</string>
+    <string name="title_verified_on">Verified on</string>
+    <string name="title_verified_by">Verified by</string>
+    <string name="title_fact_photo">Photo</string>
+    <string name="title_fact_numbers">Number</string>
+    <string name="title_fact_firstnames">First Name</string>
+    <string name="title_fact_otherNames">Other Names</string>
+    <string name="title_fact_givenNames">Given Names</string>
+    <string name="title_fact_lastnames">Last Name</string>
+    <string name="title_fact_surname">Surname</string>
+    <string name="title_fact_dob">Date of Birth</string>
+    <string name="title_fact_doi">Issue Date</string>
+    <string name="title_fact_doe">Expiry Date</string>
+    <string name="title_fact_sex">Gender</string>
+    <string name="title_fact_pob">Place of Birth</string>
+    <string name="title_fact_address">Address</string>
+    <string name="title_fact_nationality">Nationality</string>
+    <string name="title_fact_issue_authority">Issuing Authority</string>
+    <string name="title_fact_country_of_issuance">Issuing Country</string>
+    <string name="title_fact_categories">Categories</string>
+    <string name="title_fact_sort_node">Sort Code</string>
+    <string name="title_fact_valid_from">Valid From</string>
+    <string name="title_fact_valid_to">Valid To</string>
+    <string name="title_fact_mrz">MRZ</string>
+    <string name="title_fact_account_id">Account</string>
+    <string name="title_fact_nickname">Nickname</string>
+    <string name="title_fact_selfie">Selfie Verification</string>
+
+    <string name="name_title">Name</string>
+    <string name="document_number">Number</string>
+    <string name="last_verified_on">Last Verified on</string>
+    <string name="verified_on">Verified on</string>
+    <string name="added_on">Added on</string>
+    <string name="last_verified_by">Last Verified by</string>
+    <string name="verified_by">Verified by</string>
+</resources>
