@@ -13,7 +13,7 @@ object Config {
         const val androidxAppcompatVersion = "1.6.1"
         const val androidxTestVersion = "1.4.0"
         const val navigationVersion = "2.7.7"
-        const val lifecycleVersion = "2.7.0"
+        const val lifecycleVersion = "2.8.0"
         const val timberVersion = "5.0.1"
         const val cameraxVersion = "1.3.3"
         const val protobufVersion = "3.24.1"
@@ -24,7 +24,6 @@ object Config {
     }
 
     object Android {
-        val buildToolsVersion = "33.0.2"
         val minSdkVersion = 26
         val targetSdkVersion = 33
         val compileSdkVersion = 34

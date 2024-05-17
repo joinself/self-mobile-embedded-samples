@@ -28,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -36,10 +35,10 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.joinself.mobile.ui.OnboardingView
 import com.joinself.sdk.Environment
 import com.joinself.sdk.models.Account
 import com.joinself.sdk.sample.mobile.ui.theme.SelfSDKSamplesTheme
+import com.joinself.sdk.ui.LivenessCheckView
 
 class MainActivity : ComponentActivity() {
 
@@ -67,8 +66,7 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-                            MainView(selfId = selfId
-                            )
+                            MainView()
                         }
                     }
                 }
@@ -91,19 +89,16 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainView(selfId: String?) {
+fun MainView() {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+        modifier = Modifier.padding(0.dp)
     ) {
         TopAppBar(title = { Text(text = "Mobile UI - SDK Sample" ) },
             modifier = Modifier.padding(bottom = 16.dp))
-        OnboardingView()
-        Text(
-            text = "SelfId: $selfId",
-            textAlign = TextAlign.Center,
-        )
+
+        LivenessCheckView()
     }
 }
 
