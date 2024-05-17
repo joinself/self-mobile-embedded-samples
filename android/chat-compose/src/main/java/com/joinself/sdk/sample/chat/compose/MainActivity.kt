@@ -74,7 +74,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
-import java.net.URLDecoder
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
@@ -168,6 +167,9 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToMessaging = {
                                     navController.navigate("messaging")
                                 },
+                                onNavigateToMobileUI = {
+                                    navController.navigate("mobile_ui")
+                                },
                                 onExportBackup = {
                                     lifecycleScope.launch(Dispatchers.Default) {
                                         val backupFile = account.backup()
@@ -251,6 +253,18 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
+                composable("mobile_ui") {
+                    SelfSDKSamplesTheme {
+                        Surface(modifier = Modifier
+                            .fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
+                        ) {
+                            com.joinself.sdk.ui.LivenessCheckView(backClick = {
+                                navController.popBackStack()
+                            })
+                        }
+                    }
+                }
             }
         }
     }
@@ -274,6 +288,7 @@ fun MainView(selfId: String?,
              onCreateAccount: () -> Unit,
              onNavigateToLivenessCheck: () -> Unit,
              onNavigateToMessaging: () -> Unit,
+             onNavigateToMobileUI: () -> Unit,
              onExportBackup: () -> Unit,
              onImportBackup: () -> Unit,
              onGetLocation: () -> Unit) {
@@ -322,6 +337,11 @@ fun MainView(selfId: String?,
             onGetLocation.invoke()
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Location")
+        }
+        Button(onClick = {
+            onNavigateToMobileUI.invoke()
+        }, enabled = true) {
+            Text(text = "Mobile UI")
         }
     }
 }
@@ -374,14 +394,14 @@ fun LivenessCheckScreen(account: Account, activity: Activity, onResult: (ByteArr
             }
         },
         content = {
-            LivenessCheckView(account = account, activity = activity, onResult, onBack)
+            LivenessCheckViewSample(account = account, activity = activity, onResult, onBack)
         }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LivenessCheckView(account: Account, activity: Activity, onResult: (ByteArray, attestation: List<Attestation>) -> Unit, onBack:()->Unit) {
+fun LivenessCheckViewSample(account: Account, activity: Activity, onResult: (ByteArray, attestation: List<Attestation>) -> Unit, onBack:()->Unit) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val livenessCheck = LivenessCheck()

@@ -61,9 +61,9 @@ android {
 }
 
 dependencies {
-    implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
+//    implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
     implementation(project(":common"))
-//    implementation(project(":self-android-sdk"))
+    implementation(project(":self-android-sdk"))
 
     implementation("com.jakewharton.timber:timber:${Config.Version.timberVersion}")
     implementation("com.google.android.material:material:${Config.Version.materialVersion}")
