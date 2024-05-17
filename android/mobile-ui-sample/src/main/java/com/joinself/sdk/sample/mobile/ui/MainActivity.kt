@@ -98,7 +98,9 @@ fun MainView() {
         TopAppBar(title = { Text(text = "Mobile UI - SDK Sample" ) },
             modifier = Modifier.padding(bottom = 16.dp))
 
+
         LivenessCheckView()
+
     }
 }
 
