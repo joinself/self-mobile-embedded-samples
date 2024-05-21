@@ -57,8 +57,8 @@ import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import com.joinself.sdk.sample.common.FileUtils
-import com.joinself.sdk.ui.LivenessCheckScreen
-import com.joinself.sdk.ui.LivenessIntroScreen
+import com.joinself.sdk.ui.LivenessFailedScreen
+import com.joinself.sdk.ui.addLivenessNestedGraph
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
-                        navController.navigate("livenessCheck")
+                        navController.navigate("livenessFlow")
                     }
                 }
             }
@@ -149,10 +149,10 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     }
-                                    navController.navigate("livenessCheck")
+                                    navController.navigate("livenessFlow")
                                 },
                                 onNavigateToLivenessCheck = {
-                                    navController.navigate("livenessCheck")
+                                    navController.navigate("livenessFlow")
                                 },
                                 onNavigateToMessaging = {
                                     navController.navigate("messaging")
@@ -210,27 +210,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-                composable("livenessCheck") {
-                    SelfSDKSamplesTheme {
-                        Surface(modifier = Modifier
-                            .fillMaxSize(),
-                            color = MaterialTheme.colorScheme.background
-                        ) {
-                            LivenessCheckScreen(account = account, activity = this@MainActivity,
-                                onResult = { selfieImage,  attestations ->
-                                    if (attestationCallBack != null) {
-                                        navController.popBackStack()
-                                        attestationCallBack?.invoke(selfieImage, attestations)
-                                        attestationCallBack = null
-                                    }
-                                },
-                                onBack = {
-                                    navController.popBackStack()
-                                }
-                            )
-                        }
-                    }
-                }
                 composable("messaging") {
                     SelfSDKSamplesTheme {
                         Surface(modifier = Modifier
@@ -249,24 +228,14 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-//                            LivenessCheckScreen(account = account, activity = this@MainActivity,
-//                                onResult = { selfieImage,  attestations ->
-//                                    if (attestationCallBack != null) {
-//                                        navController.popBackStack()
-//                                        attestationCallBack?.invoke(selfieImage, attestations)
-//                                        attestationCallBack = null
-//                                    }
-//                                },
-//                                onBack = {
-//                                    navController.popBackStack()
-//                                }
-//                            )
-
-                            LivenessIntroScreen(
-                                onBack = { navController.popBackStack() },
-                                onStart = {})
+                            LivenessFailedScreen(onStart = {})
                         }
                     }
+                }
+
+                addLivenessNestedGraph(navController, account, this@MainActivity) { image, attesation ->
+                    attestationCallBack?.invoke(image, attesation)
+                    attestationCallBack = null
                 }
             }
         }
