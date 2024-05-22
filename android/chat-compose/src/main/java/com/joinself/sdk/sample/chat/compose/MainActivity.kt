@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -60,7 +59,6 @@ import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import com.joinself.sdk.sample.common.FileUtils
-import com.joinself.sdk.ui.LivenessFailedScreen
 import com.joinself.sdk.ui.addLivenessRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -238,7 +236,7 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-                            LivenessFailedScreen(onStart = {})
+//                            LivenessFailedScreen(onStart = {})
                         }
                     }
                 }
@@ -324,11 +322,11 @@ fun MainView(
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Location")
         }
-        Button(onClick = {
-            onNavigateToMobileUI.invoke()
-        }, enabled = true) {
-            Text(text = "Mobile UI")
-        }
+//        Button(onClick = {
+//            onNavigateToMobileUI.invoke()
+//        }, enabled = true) {
+//            Text(text = "Mobile UI")
+//        }
     }
 }
 
