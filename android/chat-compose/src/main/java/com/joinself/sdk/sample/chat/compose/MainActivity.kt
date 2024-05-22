@@ -7,7 +7,10 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -120,11 +123,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            NavHost(navController = navController, startDestination = "main") {
+            NavHost(navController = navController,
+                startDestination = "main",
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
+            ) {
                 composable("main") {
                     SelfSDKSamplesTheme {
-                        Surface(modifier = Modifier
-                            .fillMaxSize(),
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
                             fun getLocation() {
@@ -175,7 +183,7 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onGetLocation = {
                                     val checkResult = checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
-                                    if (checkResult != PackageManager.PERMISSION_GRANTED ) {
+                                    if (checkResult != PackageManager.PERMISSION_GRANTED) {
                                         showLocationPermission = true
                                         return@MainView
                                     }
@@ -212,8 +220,9 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("messaging") {
                     SelfSDKSamplesTheme {
-                        Surface(modifier = Modifier
-                            .fillMaxSize(),
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
                             MessagingView(account = account, onBack = {
@@ -224,8 +233,9 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("mobile_ui") {
                     SelfSDKSamplesTheme {
-                        Surface(modifier = Modifier
-                            .fillMaxSize(),
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
                             LivenessFailedScreen(onStart = {})
@@ -256,21 +266,25 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainView(selfId: String?,
-             onCreateAccount: () -> Unit,
-             onNavigateToLivenessCheck: () -> Unit,
-             onNavigateToMessaging: () -> Unit,
-             onNavigateToMobileUI: () -> Unit,
-             onExportBackup: () -> Unit,
-             onImportBackup: () -> Unit,
-             onGetLocation: () -> Unit) {
+fun MainView(
+    selfId: String?,
+    onCreateAccount: () -> Unit,
+    onNavigateToLivenessCheck: () -> Unit,
+    onNavigateToMessaging: () -> Unit,
+    onNavigateToMobileUI: () -> Unit,
+    onExportBackup: () -> Unit,
+    onImportBackup: () -> Unit,
+    onGetLocation: () -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(start = 8.dp, end = 8.dp)
     ) {
-        TopAppBar(title = { Text(text = "Chat Compose Sample" ) },
-            modifier = Modifier.padding(bottom = 16.dp))
+        TopAppBar(
+            title = { Text(text = "Chat Compose Sample") },
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
         Text(
             text = "SelfId: $selfId",
             textAlign = TextAlign.Center,
@@ -310,11 +324,11 @@ fun MainView(selfId: String?,
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Location")
         }
-//        Button( onClick = {
-//            onNavigateToMobileUI.invoke()
-//        }, enabled = true) {
-//            Text(text = "Mobile UI")
-//        }
+        Button(onClick = {
+            onNavigateToMobileUI.invoke()
+        }, enabled = true) {
+            Text(text = "Mobile UI")
+        }
     }
 }
 
@@ -354,7 +368,7 @@ fun ProgressDialog(showDialog: Boolean) {
             DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         ) {
             Box(
-                contentAlignment= Alignment.Center,
+                contentAlignment = Alignment.Center,
 
                 modifier = Modifier
                     .size(120.dp)
