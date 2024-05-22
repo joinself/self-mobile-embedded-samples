@@ -3,7 +3,7 @@ object Config {
         const val kotlinVersion = "1.9.23"
         const val androidGradlePluginVersion = "8.4.0"
         const val realmVersion = "1.16.0"
-
+        const val composeCompilerVersion = "1.5.13"
 
         const val firebaseAuthVersion = "23.0.0"
         const val firebaseInstallations = "18.0.0"
