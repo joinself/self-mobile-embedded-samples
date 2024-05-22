@@ -58,7 +58,7 @@ import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import com.joinself.sdk.sample.common.FileUtils
 import com.joinself.sdk.ui.LivenessFailedScreen
-import com.joinself.sdk.ui.addLivenessNestedGraph
+import com.joinself.sdk.ui.addLivenessRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
-                        navController.navigate("livenessFlow")
+                        navController.navigate("livenessRoute")
                     }
                 }
             }
@@ -149,10 +149,10 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     }
-                                    navController.navigate("livenessFlow")
+                                    navController.navigate("livenessRoute")
                                 },
                                 onNavigateToLivenessCheck = {
-                                    navController.navigate("livenessFlow")
+                                    navController.navigate("livenessRoute")
                                 },
                                 onNavigateToMessaging = {
                                     navController.navigate("messaging")
@@ -233,7 +233,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                addLivenessNestedGraph(navController, account, this@MainActivity) { image, attesation ->
+                addLivenessRoute(navController, "livenessRoute", account, this@MainActivity) { image, attesation ->
                     attestationCallBack?.invoke(image, attesation)
                     attestationCallBack = null
                 }
@@ -310,11 +310,11 @@ fun MainView(selfId: String?,
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Location")
         }
-        Button(onClick = {
-            onNavigateToMobileUI.invoke()
-        }, enabled = true) {
-            Text(text = "Mobile UI")
-        }
+//        Button( onClick = {
+//            onNavigateToMobileUI.invoke()
+//        }, enabled = true) {
+//            Text(text = "Mobile UI")
+//        }
     }
 }
 

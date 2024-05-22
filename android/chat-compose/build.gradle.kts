@@ -61,9 +61,8 @@ android {
 }
 
 dependencies {
-//    implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
     implementation(project(":common"))
-    implementation(project(":self-android-sdk"))
+    implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
 
     implementation("com.jakewharton.timber:timber:${Config.Version.timberVersion}")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.23.0")
