@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.joinself.sdk.sample.chat.compose"
+    namespace = "com.joinself.sdk.sample.mobile.ui"
     compileSdk = Config.Android.compileSdkVersion
 
     defaultConfig {
-        applicationId = "com.joinself.sdk.sample.chat.compose"
+        applicationId = "com.joinself.sdk.sample.mobile.ui"
         minSdk = Config.Android.minSdkVersion
         targetSdk = Config.Android.targetSdkVersion
         versionCode = 1
@@ -61,10 +61,14 @@ android {
 }
 
 dependencies {
+//    implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
     implementation(project(":common"))
-    implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
+    implementation(project(":self-android-sdk"))
 
     implementation("com.jakewharton.timber:timber:${Config.Version.timberVersion}")
+    implementation("com.google.android.material:material:${Config.Version.materialVersion}")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
+
     implementation("com.google.accompanist:accompanist-navigation-animation:0.23.0")
     implementation("com.google.accompanist:accompanist-permissions:0.19.0")
 
@@ -73,6 +77,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
     implementation(platform("androidx.compose:compose-bom:2024.05.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")

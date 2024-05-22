@@ -24,6 +24,10 @@ plugins {
     id("com.android.library") version Config.Version.androidGradlePluginVersion apply false
     id("org.jetbrains.kotlin.android") version Config.Version.kotlinVersion apply false
     id("org.jetbrains.kotlin.kapt") version Config.Version.kotlinVersion apply false
+    kotlin("multiplatform").version(Config.Version.kotlinVersion).apply(false)
+    kotlin("native.cocoapods").version(Config.Version.kotlinVersion).apply(false)
+    id("io.realm.kotlin") version Config.Version.realmVersion apply false
+
 }
 
 allprojects {

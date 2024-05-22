@@ -1,6 +1,5 @@
 package com.joinself.sdk.sample.chat.compose
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -19,21 +18,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,13 +38,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.FileProvider
@@ -59,22 +50,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.PermissionsRequired
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.accompanist.permissions.rememberPermissionState
 import com.joinself.sdk.Environment
-import com.joinself.sdk.liveness.LivenessCheck
 import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import com.joinself.sdk.sample.common.FileUtils
+import com.joinself.sdk.ui.LivenessFailedScreen
+import com.joinself.sdk.ui.addLivenessRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
-import java.net.URLDecoder
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
@@ -126,7 +115,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
-                        navController.navigate("livenessCheck")
+                        navController.navigate("livenessRoute")
                     }
                 }
             }
@@ -160,13 +149,16 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     }
-                                    navController.navigate("livenessCheck")
+                                    navController.navigate("livenessRoute")
                                 },
                                 onNavigateToLivenessCheck = {
-                                    navController.navigate("livenessCheck")
+                                    navController.navigate("livenessRoute")
                                 },
                                 onNavigateToMessaging = {
                                     navController.navigate("messaging")
+                                },
+                                onNavigateToMobileUI = {
+                                    navController.navigate("mobile_ui")
                                 },
                                 onExportBackup = {
                                     lifecycleScope.launch(Dispatchers.Default) {
@@ -218,27 +210,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-                composable("livenessCheck") {
-                    SelfSDKSamplesTheme {
-                        Surface(modifier = Modifier
-                            .fillMaxSize(),
-                            color = MaterialTheme.colorScheme.background
-                        ) {
-                            LivenessCheckScreen(account = account, activity = this@MainActivity,
-                                onResult = { selfieImage,  attestations ->
-                                    if (attestationCallBack != null) {
-                                        navController.popBackStack()
-                                        attestationCallBack?.invoke(selfieImage, attestations)
-                                        attestationCallBack = null
-                                    }
-                                },
-                                onBack = {
-                                    navController.popBackStack()
-                                }
-                            )
-                        }
-                    }
-                }
                 composable("messaging") {
                     SelfSDKSamplesTheme {
                         Surface(modifier = Modifier
@@ -250,6 +221,21 @@ class MainActivity : ComponentActivity() {
                             })
                         }
                     }
+                }
+                composable("mobile_ui") {
+                    SelfSDKSamplesTheme {
+                        Surface(modifier = Modifier
+                            .fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
+                        ) {
+                            LivenessFailedScreen(onStart = {})
+                        }
+                    }
+                }
+
+                addLivenessRoute(navController, "livenessRoute", account, this@MainActivity) { image, attesation ->
+                    attestationCallBack?.invoke(image, attesation)
+                    attestationCallBack = null
                 }
             }
         }
@@ -274,6 +260,7 @@ fun MainView(selfId: String?,
              onCreateAccount: () -> Unit,
              onNavigateToLivenessCheck: () -> Unit,
              onNavigateToMessaging: () -> Unit,
+             onNavigateToMobileUI: () -> Unit,
              onExportBackup: () -> Unit,
              onImportBackup: () -> Unit,
              onGetLocation: () -> Unit) {
@@ -323,6 +310,11 @@ fun MainView(selfId: String?,
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Location")
         }
+//        Button( onClick = {
+//            onNavigateToMobileUI.invoke()
+//        }, enabled = true) {
+//            Text(text = "Mobile UI")
+//        }
     }
 }
 
@@ -352,138 +344,6 @@ fun LocationView(onPermissionGranted: () -> Unit) {
             }
         }
     )
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun LivenessCheckScreen(account: Account, activity: Activity, onResult: (ByteArray, attestation: List<Attestation>) -> Unit, onBack:()->Unit) {
-    val context = LocalContext.current
-    val cameraPermissionState =
-        rememberPermissionState(permission = android.Manifest.permission.CAMERA)
-
-    PermissionRequired(
-        permissionState = cameraPermissionState,
-        permissionNotGrantedContent = {
-            LaunchedEffect(Unit) {
-                cameraPermissionState.launchPermissionRequest()
-            }
-        },
-        permissionNotAvailableContent = {
-            Column {
-                Toast.makeText(context, "Permission denied.", Toast.LENGTH_LONG).show()
-            }
-        },
-        content = {
-            LivenessCheckView(account = account, activity = activity, onResult, onBack)
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun LivenessCheckView(account: Account, activity: Activity, onResult: (ByteArray, attestation: List<Attestation>) -> Unit, onBack:()->Unit) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    val livenessCheck = LivenessCheck()
-
-    var cameraPreview: com.joinself.sdk.liveness.CameraSourcePreview? = null
-    var graphicOverlay: com.joinself.sdk.liveness.GraphicOverlay? = null
-
-    var challenge: LivenessCheck.Challenge? by remember { mutableStateOf(LivenessCheck.Challenge.None) }
-    var status: LivenessCheck.Status by remember { mutableStateOf(LivenessCheck.Status.Info) }
-    var error: LivenessCheck.Error? by remember { mutableStateOf(null) }
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(0.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(0.dp)
-    ) {
-        var txt = when (challenge) {
-            LivenessCheck.Challenge.Smile -> stringResource(id = R.string.msg_liveness_smile)
-            LivenessCheck.Challenge.Blink -> stringResource(R.string.msg_liveness_blink)
-            LivenessCheck.Challenge.TurnLeft -> stringResource(R.string.msg_liveness_turn_left)
-            LivenessCheck.Challenge.TurnRight -> stringResource(R.string.msg_liveness_turn_right)
-            LivenessCheck.Challenge.LookUp -> stringResource(R.string.msg_liveness_look_up)
-            LivenessCheck.Challenge.LookDown -> stringResource(R.string.msg_liveness_look_down)
-            LivenessCheck.Challenge.Done -> stringResource(R.string.thank_you_2)
-            else -> ""
-        }
-
-        if (error != null) {
-            txt = when (error) {
-                LivenessCheck.Error.FaceChanged -> stringResource(R.string.error_liveness_out_of_preview)
-                LivenessCheck.Error.OutOfPreview -> stringResource(R.string.msg_liveness_desc)
-                else -> ""
-            }
-        }
-
-        TopAppBar(
-            title = { Text(text = "" ) },
-            navigationIcon = {
-                IconButton(onClick = { onBack.invoke() }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.Black)
-                }
-            }
-        )
-        Text(
-            modifier = Modifier.padding(top = 8.dp),
-            text = txt,
-            textAlign = TextAlign.Center,
-            maxLines = 3, minLines = 2,
-            fontWeight = FontWeight.Bold
-        )
-        Text(modifier = Modifier.padding(top = 4.dp),
-            text = "Status: ${error?.name ?: status.name}"
-        )
-        Surface(
-            modifier = Modifier
-                .width(300.dp)
-                .height(300.dp)
-        ) {
-            AndroidView(modifier = Modifier.fillMaxSize(),
-                factory = { ctx ->
-                    cameraPreview = com.joinself.sdk.liveness.CameraSourcePreview(ctx, null)
-
-                    cameraPreview!!
-                })
-            AndroidView(modifier = Modifier.fillMaxSize(),
-                factory = { ctx ->
-                    graphicOverlay = com.joinself.sdk.liveness.GraphicOverlay(ctx, null)
-
-                    graphicOverlay!!
-                })
-        }
-    }
-
-    LaunchedEffect(lifecycleOwner) {
-        if (graphicOverlay != null && cameraPreview != null) {
-            livenessCheck.initialize(account, activity, graphicOverlay!!, cameraPreview!!,
-                onStatusUpdated = { sts ->
-                    Timber.d("status: $sts")
-                    status = sts
-                },
-                onChallengeChanged = { chgn ->
-                    Timber.d("challenge: $chgn")
-                    challenge = chgn
-                    error = null
-                },
-                onError = { err ->
-                    Timber.d("error: $err")
-                    error = err
-                },
-                onResult = { selfieImage, attestations ->
-                    Timber.d("attestation size: ${attestations.size}")
-                    onResult.invoke(selfieImage, attestations)
-                })
-
-            livenessCheck.start()
-        }
-    }
-    DisposableEffect(lifecycleOwner) {
-        onDispose {
-            livenessCheck.stop()
-        }
-    }
 }
 
 @Composable
