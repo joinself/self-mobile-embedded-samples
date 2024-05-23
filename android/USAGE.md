@@ -167,3 +167,96 @@ Get current location
 val locAttestation = account.location()
 Timber.d("loc attestation: ${locAttestation}")
 ```
+
+- Key value data
+```kotlin
+val data1 = KeyValue.Builder()
+    .setKey("name")
+    .setValue("Test User")
+    .setSensitive(true)
+    .build()
+account.store(data1)
+
+val result = account.get("name")
+val deleted = account.remove("name")
+```
+
+
+### UI Component
+
+__Liveness Check Jetpack Compose__  
+
+- You just need to add `liveness check route` to the main navigation host, with a route name.  
+After checking successfully, sdk will return a selfie image and an attestation from `self-verification`.
+
+```kotlin
+addLivenessCheckRoute(navController, route = "livenessRoute", account, this@MainActivity) { image, attestation ->
+}
+```
+
+- Then navigate to it `navController.navigate("livenessRoute")`
+
+This is an example how to integrate liveness check flow into main navigation.
+```kotlin
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // setup account
+        val account = Account.Builder()
+            .setContext(this)
+            .setEnvironment(Environment.review)
+            .setStoragePath("account1")
+            .build()
+        account.setDevMode(true)
+
+        // callback for registration
+        var attestationCallBack: ((ByteArray, attesation: List<Attestation>) -> Unit)? = null
+
+        setContent {
+            val coroutineScope = rememberCoroutineScope()
+            val navController = rememberNavController()
+
+            NavHost(navController = navController,
+                startDestination = "main",
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None }
+            ) {
+                composable("main") {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .padding(start = 8.dp, end = 8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Button(onClick = {
+                            navController.navigate("livenessRoute")
+                        }, enabled = true) {
+                            Text(text = "Liveness Check")
+                        }
+                        Button(onClick = {
+                            attestationCallBack = { selfieImage, attestations ->
+                                coroutineScope.launch(Dispatchers.Default) {
+                                    if (account.identifier().isNullOrEmpty() && attestations.isNotEmpty()) {
+                                        val selfId = account.register(selfieImage = selfieImage, attestations = attestations)
+                                    }
+                                }
+                            }
+                            navController.navigate("livenessRoute")
+                        }, enabled = true) {
+                            Text(text = "Create Account")
+                        }
+                    }
+                }
+
+                // integrate liveness check from Self SDK
+                addLivenessCheckRoute(navController, "livenessRoute", account, this@MainActivity) { image, attestation ->
+                    attestationCallBack?.invoke(image, attestation)
+                    attestationCallBack = null
+                }
+            }
+        }
+    }
+}
+```
