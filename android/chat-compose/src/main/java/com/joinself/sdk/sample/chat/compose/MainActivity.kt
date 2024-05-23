@@ -59,7 +59,7 @@ import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import com.joinself.sdk.sample.common.FileUtils
-import com.joinself.sdk.ui.addLivenessRoute
+import com.joinself.sdk.ui.addLivenessCheckRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -236,13 +236,15 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-//                            LivenessFailedScreen(onStart = {})
+//                            TestScreen(onBack = {
+//                                navController.popBackStack()
+//                            })
                         }
                     }
                 }
 
-                addLivenessRoute(navController, "livenessRoute", account, this@MainActivity) { image, attesation ->
-                    attestationCallBack?.invoke(image, attesation)
+                addLivenessCheckRoute(navController, route = "livenessRoute", account, this@MainActivity) { image, attestation ->
+                    attestationCallBack?.invoke(image, attestation)
                     attestationCallBack = null
                 }
             }
