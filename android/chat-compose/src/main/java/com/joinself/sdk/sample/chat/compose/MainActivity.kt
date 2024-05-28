@@ -47,7 +47,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.FileProvider
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -59,7 +61,9 @@ import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import com.joinself.sdk.sample.common.FileUtils
+import com.joinself.sdk.ui.TestScreen
 import com.joinself.sdk.ui.addLivenessCheckRoute
+import com.joinself.sdk.ui.addPassportVerificationRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -163,6 +167,9 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToMessaging = {
                                     navController.navigate("messaging")
                                 },
+                                onNavigateToPassport = {
+                                    navController.navigate("passportRoute")
+                                },
                                 onNavigateToMobileUI = {
                                     navController.navigate("mobile_ui")
                                 },
@@ -216,6 +223,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
+
                 composable("messaging") {
                     SelfSDKSamplesTheme {
                         Surface(
@@ -229,6 +237,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
+
                 composable("mobile_ui") {
                     SelfSDKSamplesTheme {
                         Surface(
@@ -236,17 +245,18 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-//                            TestScreen(onBack = {
-//                                navController.popBackStack()
-//                            })
+                            TestScreen(this@MainActivity, onBack = {
+                                navController.popBackStack()
+                            })
                         }
                     }
                 }
 
-                addLivenessCheckRoute(navController, route = "livenessRoute", account, this@MainActivity) { image, attestation ->
+                addLivenessCheckRoute(navController, route = "livenessRoute", account, this@MainActivity, withAttestation = true) { image, attestation ->
                     attestationCallBack?.invoke(image, attestation)
                     attestationCallBack = null
                 }
+                addPassportVerificationRoute(navController, route = "passportRoute", account, this@MainActivity)
             }
         }
     }
@@ -271,6 +281,7 @@ fun MainView(
     onCreateAccount: () -> Unit,
     onNavigateToLivenessCheck: () -> Unit,
     onNavigateToMessaging: () -> Unit,
+    onNavigateToPassport: () -> Unit,
     onNavigateToMobileUI: () -> Unit,
     onExportBackup: () -> Unit,
     onImportBackup: () -> Unit,
@@ -324,11 +335,16 @@ fun MainView(
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Location")
         }
-//        Button(onClick = {
-//            onNavigateToMobileUI.invoke()
-//        }, enabled = true) {
-//            Text(text = "Mobile UI")
-//        }
+        Button(onClick = {
+            onNavigateToPassport.invoke()
+        }, enabled = true) {
+            Text(text = "Passport Verification")
+        }
+        Button(onClick = {
+            onNavigateToMobileUI.invoke()
+        }, enabled = true) {
+            Text(text = "Mobile UI")
+        }
     }
 }
 

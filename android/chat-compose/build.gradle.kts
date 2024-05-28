@@ -52,7 +52,7 @@ android {
             excludes.addAll(listOf("META-INF/DEPENDENCIES.txt", "META-INF/LICENSE.txt", "META-INF/NOTICE.txt",
                 "META-INF/NOTICE", "META-INF/LICENSE", "META-INF/DEPENDENCIES",
                 "META-INF/notice.txt", "META-INF/license.txt", "META-INF/dependencies.txt",
-                "META-INF/LGPL2.1", "META-INF/*.kotlin_module", "META-INF/versions/9/previous-compilation-data.bin"))
+                "META-INF/LGPL2.1", "META-INF/*.kotlin_module", "META-INF/versions/9/previous-compilation-data.bin", "META-INF/versions/9/OSGI-INF/MANIFEST.MF"))
         }
         dex {
             useLegacyPackaging = true
