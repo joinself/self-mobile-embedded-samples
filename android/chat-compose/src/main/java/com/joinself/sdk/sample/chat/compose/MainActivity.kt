@@ -360,14 +360,14 @@ fun MainView(
         }
         Button(onClick = {
             onNavigateToPassport.invoke()
-        }, enabled = true) {
+        }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Passport Verification")
         }
-        Button(onClick = {
-            onNavigateToMobileUI.invoke()
-        }, enabled = true) {
-            Text(text = "Mobile UI")
-        }
+//        Button(onClick = {
+//            onNavigateToMobileUI.invoke()
+//        }, enabled = !selfId.isNullOrEmpty()) {
+//            Text(text = "Mobile UI")
+//        }
     }
 }
 
