@@ -93,7 +93,8 @@ class MainActivity : ComponentActivity() {
             var selfId: String? by remember { mutableStateOf(account.identifier()) }
             var showDialog by remember { mutableStateOf(false) }
             var showLocationPermission by remember { mutableStateOf(false) }
-            var showLocationDialog = remember { mutableStateOf(false) }
+            val showLocationDialog = remember { mutableStateOf(false) }
+            var showPassportDialog: String? by remember { mutableStateOf(null) }
             var locationValue = ""
 
             val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { fileUri ->
@@ -217,6 +218,22 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 }
+                                showPassportDialog != null -> {
+                                    AlertDialog(
+                                        title = { Text(text = "Passport Verification") },
+                                        text = { Text(text = showPassportDialog ?: "") },
+                                        onDismissRequest = {},
+                                        confirmButton = {
+                                            TextButton(
+                                                onClick = {
+                                                    showPassportDialog = null
+                                                }
+                                            ) {
+                                                Text("OK")
+                                            }
+                                        }
+                                    )
+                                }
                             }
 
                             ProgressDialog(showDialog)
@@ -256,7 +273,13 @@ class MainActivity : ComponentActivity() {
                     attestationCallBack?.invoke(image, attestation)
                     attestationCallBack = null
                 }
-                addPassportVerificationRoute(navController, route = "passportRoute", account, this@MainActivity)
+                addPassportVerificationRoute(navController, route = "passportRoute", account, this@MainActivity) { exception ->
+                    if (exception == null) {
+                        showPassportDialog = "Success"
+                    } else {
+                        showPassportDialog = "Failed"
+                    }
+                }
             }
         }
     }
