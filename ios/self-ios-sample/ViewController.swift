@@ -22,6 +22,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var btnLocation: UIButton!
     @IBOutlet weak var btnGetKeyValue: UIButton!
     
+    @IBOutlet weak var btnLivenessVerification: UIButton!
+    @IBOutlet weak var btnDocumentVerification: UIButton!
+    
     private var account: Account!
     private var message: Message? = nil
     
@@ -40,6 +43,8 @@ class ViewController: UIViewController {
         btnImportBackup.addTarget(self, action: #selector(onImportBackupPressed(_:)), for: .touchUpInside)
         btnLocation.addTarget(self, action: #selector(onLocationPressed(_:)), for: .touchUpInside)
         btnGetKeyValue.addTarget(self, action: #selector(onGetKeyValuePressed(_:)), for: .touchUpInside)
+        btnLivenessVerification.addTarget(self, action: #selector(onNewLivenessVerificationClicked(_:)), for: .touchUpInside)
+        btnDocumentVerification.addTarget(self, action: #selector(onDocumentVerificationClicked(_:)), for: .touchUpInside)
         
         onMessage = { msg in
             if let chatMsg = msg as? ChatMessage {
@@ -152,6 +157,18 @@ class ViewController: UIViewController {
             }
         }
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func onNewLivenessVerificationClicked(_ sender: Any) {
+        SelfSDK.startLiveness(account: self.account, currentVC: self, isVerificationRequired: true) { selfieData, attestations, error in
+            print("Liveness check finished with error: \(error)")
+        }
+    }
+    
+    @objc func onDocumentVerificationClicked(_ sender: Any) {
+        SelfSDK.startPassportVerification(account: self.account, currentVC: self, isDevMode: true) { success in
+            print("Passport verification finished with status = \(success)")
+        }
     }
     
     private func restoreFromURL(selectedFileURL: URL) {
