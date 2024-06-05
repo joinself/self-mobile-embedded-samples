@@ -67,7 +67,7 @@ class LivenessCheckViewController: UIViewController {
         livenessCheck.onChallengeChanged = { challege, error in
             self.updateUI(challenge: challege, error: error)
         }
-        livenessCheck.onResult = { selfieImage, attestations in
+        livenessCheck.onResult = { selfieImage, attestations, error in
             DispatchQueue.main.async {
                 self.navigationController?.popViewController(animated: true)
             }            
