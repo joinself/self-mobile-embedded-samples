@@ -10,8 +10,6 @@ target 'self-ios-sample' do
   pod 'MBProgressHUD'
   
   pod 'SwiftyBeaver'
-  
-  pod 'FLAnimatedImage'
 
   post_install do |installer|
   installer.pods_project.build_configurations.each do |config|
