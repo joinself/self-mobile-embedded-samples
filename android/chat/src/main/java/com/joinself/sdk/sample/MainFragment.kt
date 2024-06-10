@@ -12,15 +12,14 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.joinself.sdk.Environment
-import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.KeyValue
 import com.joinself.sdk.sample.chat.R
-import com.joinself.sdk.sample.chat.databinding.FragmentFirstBinding
+import com.joinself.sdk.sample.chat.databinding.FragmentMainBinding
 import com.joinself.sdk.sample.common.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,21 +35,15 @@ import java.net.URLDecoder
 class MainFragment : Fragment() {
     private val REQUEST_CODE_PICK_DOCUMENT = 1002
     private val REQUEST_CODE_LOCATION = 1003
-    private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentMainBinding? = null
 
     private val binding get() = _binding!!
-
-    private lateinit var account: Account
+    private lateinit var app: App
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        account = Account.Builder()
-            .setContext(requireContext())
-            .setEnvironment(Environment.review)
-            .setStoragePath("account1")
-            .build()
-        account.setDevMode(true)
+        app = (activity?.application as App)
 
         insertTestData()
     }
@@ -59,7 +52,8 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
+
         return binding.root
 
     }
@@ -68,49 +62,62 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonCreate.setOnClickListener {
-            LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
+            SelfSDKComponentFragment.onVerificationCallback = { selfieImage, attestations ->
                 lifecycleScope.launch(Dispatchers.Default) {
                     if (attestations.isNotEmpty()) {
-                        val selfId = account.register(selfieImage, attestations)
+                        val selfId = app.account.register(selfieImage, attestations)
                         Timber.d("SelfId: $selfId")
                         updateUI()
                     }
                 }
             }
-            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+            try {
+                val bundle = bundleOf("route" to "livenessRoute")
+                findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
         }
 
         binding.buttonSignIn.visibility = View.GONE
         binding.buttonSignIn.setOnClickListener {
-            account.signIn()
+            app.account.signIn()
         }
 
         binding.buttonCheckLiveness.setOnClickListener {
-            LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
+            SelfSDKComponentFragment.onVerificationCallback = { selfieImage, attestations ->
                 lifecycleScope.launch(Dispatchers.Default) {
                     if (attestations.isNotEmpty()) {
 
                     }
                 }
             }
-            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+
+            try {
+                val bundle = bundleOf("route" to "livenessRoute")
+                findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
         }
 
         binding.buttonSendMessage.setOnClickListener {
-            if (!account.identifier().isNullOrEmpty()) {
-                ConversationFragment.account = account
+            if (!app.account.identifier().isNullOrEmpty()) {
                 findNavController().navigate(R.id.action_mainFragment_to_conversationFragment)
             }
         }
         binding.buttonVerify.setOnClickListener {
-
+            try {
+                val bundle = bundleOf("route" to "passportRoute")
+                findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
         }
 
         binding.buttonExportBackup.setOnClickListener {
             lifecycleScope.launch(Dispatchers.Default) {
-                val backupFile = account.backup()
+                val backupFile = app.account.backup()
                 if (backupFile != null) {
                     withContext(Dispatchers.Main) {
                         val uri = FileProvider.getUriForFile(requireContext(), requireContext().packageName + ".file_provider", backupFile)
@@ -133,12 +140,11 @@ class MainFragment : Fragment() {
         }
 
         binding.buttonGetKeyValue.setOnClickListener {
-            LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
+            SelfSDKComponentFragment.onVerificationCallback = { selfieImage, attestations ->
                 lifecycleScope.launch(Dispatchers.Default) {
                     if (attestations.isNotEmpty()) {
                         try {
-                            val value = account.get("name", attestations)
+                            val value = app.account.get("name", attestations)
                             Timber.d("key-value: $value")
 
                             withContext(Dispatchers.Main) {
@@ -154,7 +160,12 @@ class MainFragment : Fragment() {
                     }
                 }
             }
-            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+            try {
+                val bundle = bundleOf("route" to "livenessRoute")
+                findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
         }
 
         updateUI()
@@ -197,7 +208,7 @@ class MainFragment : Fragment() {
     private fun updateUI() {
         activity?.runOnUiThread {
             try {
-                val selfId = account.identifier()
+                val selfId = app.account.identifier()
                 binding.selfIdTextView.text = "SelfId: ${selfId}"
                 binding.buttonCreate.isEnabled = selfId.isNullOrEmpty()
                 binding.buttonSignIn.isEnabled = selfId.isNullOrEmpty()
@@ -236,12 +247,11 @@ class MainFragment : Fragment() {
         Timber.d("Copy file to ${zippedFile.absolutePath}")
         if (zippedFile.exists() && zippedFile.length() > 0) {
             activity?.runOnUiThread {
-                LivenessCheckFragment.account = account
-                LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
+                SelfSDKComponentFragment.onVerificationCallback = { selfieImage, attestations ->
                     lifecycleScope.launch(Dispatchers.Default) {
                         if (attestations.isNotEmpty()) {
                             try {
-                                account.restore(zippedFile, selfieImage)
+                                app.account.restore(zippedFile, selfieImage)
                                 Timber.d("Restore successfully")
                                 updateUI()
                             } catch (ex: Exception) {
@@ -253,7 +263,12 @@ class MainFragment : Fragment() {
                         }
                     }
                 }
-                findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+                try {
+                    val bundle = bundleOf("route" to "livenessRoute")
+                    findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+                } catch (ex: Exception) {
+                    Timber.e(ex)
+                }
             }
         }
     }
@@ -265,7 +280,7 @@ class MainFragment : Fragment() {
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val locAttestation = account.location()
+            val locAttestation = app.account.location()
             Timber.d("loc attestation: ${locAttestation.firstOrNull()?.fact()?.value()}")
             withContext(Dispatchers.Main) {
                 val builder = AlertDialog.Builder(requireContext())
@@ -293,7 +308,7 @@ class MainFragment : Fragment() {
             .setSensitive(true)
             .setMime("text/plain")
             .build()
-        account.store(data1)
+        app.account.store(data1)
     }
 
     private fun testKeyValueData() {
@@ -303,9 +318,9 @@ class MainFragment : Fragment() {
             .setSensitive(true)
             .setMime("text/plain")
             .build()
-        account.store(data1)
+        app.account.store(data1)
 
-        val result = account.get("name", listOf())
+        val result = app.account.get("name", listOf())
         assert(data1.value() == result?.value())
         assert(data1.isSensitive() == result?.isSensitive())
     }

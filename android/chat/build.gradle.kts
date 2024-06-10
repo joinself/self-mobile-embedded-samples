@@ -43,7 +43,7 @@ android {
             excludes.addAll(listOf("META-INF/DEPENDENCIES.txt", "META-INF/LICENSE.txt", "META-INF/NOTICE.txt",
                 "META-INF/NOTICE", "META-INF/LICENSE", "META-INF/DEPENDENCIES",
                 "META-INF/notice.txt", "META-INF/license.txt", "META-INF/dependencies.txt",
-                "META-INF/LGPL2.1", "META-INF/*.kotlin_module", "META-INF/versions/9/previous-compilation-data.bin"))
+                "META-INF/LGPL2.1", "META-INF/*.kotlin_module", "META-INF/versions/9/previous-compilation-data.bin", "META-INF/versions/9/OSGI-INF/MANIFEST.MF"))
             excludes.addAll(listOf("DebugProbesKt.bin"))
         }
         dex {
@@ -62,6 +62,10 @@ android {
         dataBinding = false
         viewBinding = true
         buildConfig = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = Config.Version.composeCompilerVersion
     }
 }
 
@@ -71,11 +75,24 @@ dependencies {
 
     implementation("com.jakewharton.timber:timber:${Config.Version.timberVersion}")
     implementation("androidx.core:core-ktx:${Config.Version.androidxCore}")
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:${Config.Version.materialVersion}")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment-ktx:${Config.Version.navigationVersion}")
     implementation("androidx.navigation:navigation-ui-ktx:${Config.Version.navigationVersion}")
+    implementation("androidx.navigation:navigation-compose:${Config.Version.navigationVersion}")
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:${Config.Version.navigationVersion}")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
+    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.1")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

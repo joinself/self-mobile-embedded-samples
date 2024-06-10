@@ -8,20 +8,23 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.joinself.sdk.sample.MainFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:label="@string/main_fragment_label"
+        tools:layout="@layout/fragment_main">
 
         <action
             android:id="@+id/action_mainFragment_to_conversationFragment"
             app:destination="@id/conversationFragment" />
+
         <action
-            android:id="@+id/action_mainFragment_to_livenessCheckFragment"
-            app:destination="@id/livenessCheckFragment" />
+            android:id="@+id/action_mainFragment_to_selfSDKComponentFragment"
+            app:destination="@id/selfSDKComponentFragment"
+            app:popUpTo="@id/selfSDKComponentFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/conversationFragment"
         android:name="com.joinself.sdk.sample.ConversationFragment"
-        android:label="@string/second_fragment_label"
+        android:label="@string/conversation_fragment_label"
         tools:layout="@layout/fragment_conversation">
 
     </fragment>
@@ -31,4 +34,11 @@
         android:label="LivenessCheckFragment"
         tools:layout="@layout/fragment_liveness_check">
     </dialog>
+
+    <fragment
+        android:id="@+id/selfSDKComponentFragment"
+        android:name="com.joinself.sdk.sample.SelfSDKComponentFragment"
+        android:label="Self SDK Fragment">
+
+    </fragment>
 </navigation>

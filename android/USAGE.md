@@ -145,8 +145,7 @@ Timber.d("backup file ${backupFile.absolutePath}")
 
 restore PDS data from `self_backup` file. Restore requires selfie image.
 ```kotlin
-LivenessCheckFragment.account = account
-LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
+SelfSDKComponentFragment.onVerificationCallback = { selfieImage, attestation ->
     lifecycleScope.launch(Dispatchers.Default) {
         try {
             account.restore(backupFile, selfieImage)
@@ -156,7 +155,8 @@ LivenessCheckFragment.onVerificationCallback = { selfieImage, attestation ->
         }
     }
 }
-findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+val bundle = bundleOf("route" to "livenessRoute")
+findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
 ```
 
 - Location

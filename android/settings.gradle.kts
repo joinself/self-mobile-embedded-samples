@@ -51,5 +51,4 @@ dependencyResolutionManagement {
 include(":common")
 include(":chat")
 include(":chat-compose")
-include(":mobile-ui-sample")
 //include(":sign-in")

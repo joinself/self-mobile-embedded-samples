@@ -1,9 +1,10 @@
 package com.joinself.sdk.sample
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.compose.ComposeNavigator
+import androidx.navigation.fragment.NavHostFragment
 import com.joinself.sdk.sample.chat.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
