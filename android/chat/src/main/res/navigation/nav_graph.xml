@@ -14,9 +14,6 @@
         <action
             android:id="@+id/action_mainFragment_to_conversationFragment"
             app:destination="@id/conversationFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_livenessCheckFragment"
-            app:destination="@id/livenessCheckFragment" />
 
         <action
             android:id="@+id/action_mainFragment_to_selfSDKComponentFragment"

@@ -5,15 +5,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.fragment.findNavController
 import com.joinself.sdk.models.Attestation
-import com.joinself.sdk.sample.chat.R
 import com.joinself.sdk.ui.addLivenessCheckRoute
 import com.joinself.sdk.ui.addPassportVerificationRoute
 
@@ -22,6 +28,7 @@ class SelfSDKComponentFragment: Fragment() {
 
     companion object {
         var onVerificationCallback: ((ByteArray, List<Attestation>) -> Unit)? = null
+        private var navBack: (()->Unit)? =  null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +36,9 @@ class SelfSDKComponentFragment: Fragment() {
 
         app = (activity?.application as App)
 
+        navBack = {
+            findNavController().navigateUp()
+        }
     }
 
 
@@ -42,26 +52,45 @@ class SelfSDKComponentFragment: Fragment() {
             setContent {
                 val coroutineScope = rememberCoroutineScope()
                 val navController = rememberNavController()
+                var showPassportDialog: String? by remember { mutableStateOf(null) }
+
                 NavHost(navController = navController,
                     startDestination = route,
                     enterTransition = { EnterTransition.None },
                     exitTransition = { ExitTransition.None }
                 ) {
                     composable("main") {
-                        Text(text = "Hello SDK")
+                        when {
+                            showPassportDialog != null -> {
+                                AlertDialog(
+                                    title = { Text(text = "Passport Verification") },
+                                    text = { Text(text = showPassportDialog ?: "") },
+                                    onDismissRequest = {},
+                                    confirmButton = {
+                                        TextButton(
+                                            onClick = {
+                                                showPassportDialog = null
+                                                navBack?.invoke()
+                                            }
+                                        ) {
+                                            Text("OK")
+                                        }
+                                    }
+                                )
+                            }
+                        }
                     }
 
                     addLivenessCheckRoute(navController, route = "livenessRoute", app.account, activity = requireActivity(), withAttestation = true) { image, attestation ->
                         onVerificationCallback?.invoke(image, attestation)
-                        navController.popBackStack()
-                        navController.popBackStack(R.id.selfSDKComponentFragment, inclusive = true)
+                        navBack?.invoke()
                     }
 
                     addPassportVerificationRoute(navController, route = "passportRoute", app.account, requireActivity()) { exception ->
                         if (exception == null) {
-//                            showPassportDialog = "Success"
+                            showPassportDialog = "Success"
                         } else {
-//                            showPassportDialog = "Failed"
+                            showPassportDialog = "Failed"
                         }
                     }
                 }

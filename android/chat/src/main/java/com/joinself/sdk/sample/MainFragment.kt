@@ -71,7 +71,12 @@ class MainFragment : Fragment() {
                     }
                 }
             }
-            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+            try {
+                val bundle = bundleOf("route" to "livenessRoute")
+                findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
         }
 
         binding.buttonSignIn.visibility = View.GONE
@@ -87,7 +92,6 @@ class MainFragment : Fragment() {
                     }
                 }
             }
-//            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
 
             try {
                 val bundle = bundleOf("route" to "livenessRoute")
@@ -156,7 +160,12 @@ class MainFragment : Fragment() {
                     }
                 }
             }
-            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+            try {
+                val bundle = bundleOf("route" to "livenessRoute")
+                findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
         }
 
         updateUI()
@@ -254,7 +263,12 @@ class MainFragment : Fragment() {
                         }
                     }
                 }
-                findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+                try {
+                    val bundle = bundleOf("route" to "livenessRoute")
+                    findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+                } catch (ex: Exception) {
+                    Timber.e(ex)
+                }
             }
         }
     }
