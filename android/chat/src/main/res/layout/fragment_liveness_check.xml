@@ -50,7 +50,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
-        <com.joinself.sdk.liveness.CameraSourcePreview
+        <com.joinself.sdk.mlkit.CameraSourcePreview
             android:id="@+id/cameraPreview"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -59,8 +59,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintDimensionRatio="H,1:1.3">
-        </com.joinself.sdk.liveness.CameraSourcePreview>
-        <com.joinself.sdk.liveness.GraphicOverlay
+        </com.joinself.sdk.mlkit.CameraSourcePreview>
+        <com.joinself.sdk.mlkit.GraphicOverlay
             android:id="@+id/graphicOverlay"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -68,7 +68,7 @@
             app:layout_constraintBottom_toBottomOf="@id/cameraPreview"
             app:layout_constraintLeft_toLeftOf="@id/cameraPreview"
             app:layout_constraintRight_toRightOf="@id/cameraPreview">
-        </com.joinself.sdk.liveness.GraphicOverlay>
+        </com.joinself.sdk.mlkit.GraphicOverlay>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonBottom"

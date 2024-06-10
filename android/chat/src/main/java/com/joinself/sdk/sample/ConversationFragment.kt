@@ -23,7 +23,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.joinself.sdk.DocumentDataType
 import com.joinself.sdk.DocumentType
-import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attachment
 import com.joinself.sdk.models.AttestationRequest
 import com.joinself.sdk.models.AttestationResponse
@@ -48,30 +47,29 @@ class ConversationFragment: Fragment() {
     private var _binding: FragmentConversationBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var app: App
 
     var messageList: MutableList<Any> = mutableListOf()
     private lateinit var conversationAdapter: ConversationAdapter
 
-    companion object {
-        lateinit var account: Account
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        account.setOnMessageListener { message ->
+        app = (activity?.application as App)
+
+        app.account.setOnMessageListener { message ->
             addMessage(listOf(message))
             if (message is ChatMessage) {
                 Timber.d("chatMessage sender:${message.fromIdentifier()} - content: ${message.message()} - attachments: ${message.attachments().size}")
             }
         }
-        account.setOnRequestListener { message ->
+        app.account.setOnRequestListener { message ->
             addMessage(listOf(message))
             if (message is AttestationRequest) {
                 Timber.d("AttestationRequest from:${message.fromIdentifier()} - facts: ${message.facts().map { it.name() }}")
             }
         }
-        account.setOnResponseListener { message ->
+        app.account.setOnResponseListener { message ->
             addMessage(listOf(message))
             if (message is AttestationResponse) {
                 Timber.d("AttestationRequest from:${message.fromIdentifier()} - attestation: ${message.attestations().size}")
@@ -102,7 +100,7 @@ class ConversationFragment: Fragment() {
 
         val layoutManager = LinearLayoutManager(context)
         layoutManager.stackFromEnd = true
-        conversationAdapter = ConversationAdapter(mySelfId = account.identifier() ?: "")
+        conversationAdapter = ConversationAdapter(mySelfId = app.account.identifier() ?: "")
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = conversationAdapter
 
@@ -125,7 +123,7 @@ class ConversationFragment: Fragment() {
                     .build()
 
                 addMessage(listOf(chatMsg))
-                account.send(message = chatMsg) { }
+                app.account.send(message = chatMsg) { }
             }
         }
 
@@ -198,7 +196,7 @@ class ConversationFragment: Fragment() {
                     if (menuItem.itemId == R.id.item_verify_doc) {
                         verifyDrivingLicense()
                     } else if (menuItem.itemId == R.id.item_all_attestations) {
-                        addMessage(account.attestations())
+                        addMessage(app.account.attestations())
                     } else if (menuItem.itemId == R.id.item_fact_response) {
                         responseAttestationReqest()
                     } else {
@@ -213,7 +211,7 @@ class ConversationFragment: Fragment() {
                                     .setToIdentifier(receiver)
                                     .setFacts(listOf(fact))
                                     .build()
-                                account.send(factRequest) {}
+                                app.account.send(factRequest) {}
                                 addMessage(listOf(factRequest))
                             }
                         }
@@ -235,7 +233,7 @@ class ConversationFragment: Fragment() {
                     return
                 }
                 lifecycleScope.launch(Dispatchers.IO) {
-                    val locAttestation = account.location()
+                    val locAttestation = app.account.location()
                     withContext(Dispatchers.Main) {
                         val builder = AlertDialog.Builder(requireContext())
                         builder.setTitle("Share your location")
@@ -243,7 +241,7 @@ class ConversationFragment: Fragment() {
                         builder.setPositiveButton("OK") { dialog, which ->
                             lifecycleScope.launch {
                                 val response = request.makeAttestationResponse(ResponseStatus.accepted, attestations = locAttestation)
-                                account.accept(response) {}
+                                app.account.accept(response) {}
                                 addMessage(listOf(response))
                             }
                         }
@@ -253,13 +251,13 @@ class ConversationFragment: Fragment() {
                     }
                 }
             } else {
-                val selfSignedAttestation = account.makeSelfSignedAttestation(source = "user_specified", "surname", "Test User")
-                val attestations = account.attestations()
+                val selfSignedAttestation = app.account.makeSelfSignedAttestation(source = "user_specified", "surname", "Test User")
+                val attestations = app.account.attestations()
                 val att = attestations.firstOrNull { it.fact().name() == request.facts().first().name() }
                 if (att != null) {
                     val response = request.makeAttestationResponse(ResponseStatus.accepted, attestations = listOf(att))
                     lifecycleScope.launch {
-                        account.accept(response) {}
+                        app.account.accept(response) {}
                         addMessage(listOf(response))
                     }
                 }
@@ -269,16 +267,16 @@ class ConversationFragment: Fragment() {
 
     private fun signData() {
         val payload = "hello"
-        val result = account.sign(payload)
+        val result = app.account.sign(payload)
         if (result != null) {
-            val verified = account.verify(result)
+            val verified = app.account.verify(result)
             Timber.d("verified $verified")
         }
 
         val response = messageList.lastOrNull() as? AttestationResponse
         val attestation = response?.attestations()?.firstOrNull()
         if (attestation != null) {
-            val verified =  account.verify(attestation)
+            val verified =  app.account.verify(attestation)
             Timber.d("verified $verified")
         }
     }
@@ -289,9 +287,9 @@ class ConversationFragment: Fragment() {
             .setContentType("text/plain")
             .build()
         lifecycleScope.launch {
-            val dataLink = account.upload(dataObject)
+            val dataLink = app.account.upload(dataObject)
             if (dataLink != null) {
-                val data = account.download(dataLink)
+                val data = app.account.download(dataLink)
             }
         }
     }
@@ -312,7 +310,7 @@ class ConversationFragment: Fragment() {
                 .setType(DocumentType.DRIVING_LICENSE)
                 .setProofs(proofs)
                 .build()
-            account.send(verificationRequest) {
+            app.account.send(verificationRequest) {
 
             }
         }
@@ -339,7 +337,7 @@ class ConversationFragment: Fragment() {
                 .setType(DocumentType.IDCARD)
                 .setProofs(proofs)
                 .build()
-            account.send(verificationRequest) {
+            app.account.send(verificationRequest) {
 
             }
         }
@@ -366,7 +364,7 @@ class ConversationFragment: Fragment() {
                 .setType(DocumentType.PASSPORT)
                 .setProofs(proofs)
                 .build()
-            account.send(verificationRequest) {
+            app.account.send(verificationRequest) {
 
             }
         }
