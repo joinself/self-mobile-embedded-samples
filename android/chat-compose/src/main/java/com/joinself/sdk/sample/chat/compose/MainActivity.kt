@@ -61,7 +61,6 @@ import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import com.joinself.sdk.sample.common.FileUtils
-import com.joinself.sdk.ui.TestScreen
 import com.joinself.sdk.ui.addLivenessCheckRoute
 import com.joinself.sdk.ui.addPassportVerificationRoute
 import kotlinx.coroutines.Dispatchers
@@ -262,9 +261,9 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-                            TestScreen(this@MainActivity, onBack = {
-                                navController.popBackStack()
-                            })
+//                            TestScreen(this@MainActivity, onBack = {
+//                                navController.popBackStack()
+//                            })
                         }
                     }
                 }
