@@ -23,11 +23,7 @@ plugins {
     id("com.android.application") version Config.Version.androidGradlePluginVersion apply false
     id("com.android.library") version Config.Version.androidGradlePluginVersion apply false
     id("org.jetbrains.kotlin.android") version Config.Version.kotlinVersion apply false
-    id("org.jetbrains.kotlin.kapt") version Config.Version.kotlinVersion apply false
-    kotlin("multiplatform").version(Config.Version.kotlinVersion).apply(false)
-    kotlin("native.cocoapods").version(Config.Version.kotlinVersion).apply(false)
-    id("io.realm.kotlin") version Config.Version.realmVersion apply false
-
+    id("org.jetbrains.kotlin.plugin.compose") version Config.Version.kotlinVersion apply false
 }
 
 allprojects {
@@ -39,18 +35,6 @@ allprojects {
     }
 }
 
-subprojects {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-        kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_17.toString()
-        }
-    }
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KaptGenerateStubs>().configureEach {
-        kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_17.toString()
-        }
-    }
-}
 tasks.register("clean", Delete::class.java) {
     delete(rootProject.buildDir)
 }
