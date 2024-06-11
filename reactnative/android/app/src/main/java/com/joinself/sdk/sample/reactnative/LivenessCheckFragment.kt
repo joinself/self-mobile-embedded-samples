@@ -112,7 +112,7 @@ class LivenessCheckFragment: BottomSheetDialogFragment() {
     @UiThread
     private fun onPermissionGranted() {
         activity?.runOnUiThread {
-            livenessCheck.initialize(account, requireActivity(), binding.graphicOverlay, binding.cameraPreview,
+            livenessCheck.initialize(account, requireActivity(), binding.graphicOverlay, binding.cameraPreview, withAttestation = true,
                 onStatusUpdated = { status ->
                     val prefix = "status"
                     var msg = ""
