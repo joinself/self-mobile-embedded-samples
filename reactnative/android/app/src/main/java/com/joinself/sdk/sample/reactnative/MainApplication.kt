@@ -11,13 +11,17 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.flipper.ReactNativeFlipper
 import com.facebook.soloader.SoLoader
+import com.joinself.sdk.Environment
 import com.joinself.sdk.SelfSDK
+import com.joinself.sdk.models.Account
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class MainApplication : Application(), ReactApplication {
+
+    lateinit var account: Account
 
     override val reactNativeHost: ReactNativeHost =
         object : DefaultReactNativeHost(this) {
@@ -53,6 +57,14 @@ class MainApplication : Application(), ReactApplication {
         setupTimberLog()
 
         SelfSDK.initialize(applicationContext)
+
+        account = Account.Builder()
+            .setContext(applicationContext)
+            .setEnvironment(Environment.review)
+            .setStoragePath("account1")
+            .build()
+
+        account.setDevMode(true)
     }
 
     override fun onTerminate() {

@@ -28,17 +28,10 @@
         tools:layout="@layout/fragment_conversation">
 
     </fragment>
-    <dialog
-        android:id="@+id/livenessCheckFragment"
-        android:name="com.joinself.sdk.sample.LivenessCheckFragment"
-        android:label="LivenessCheckFragment"
-        tools:layout="@layout/fragment_liveness_check">
-    </dialog>
 
     <fragment
         android:id="@+id/selfSDKComponentFragment"
         android:name="com.joinself.sdk.sample.SelfSDKComponentFragment"
         android:label="Self SDK Fragment">
-
     </fragment>
 </navigation>

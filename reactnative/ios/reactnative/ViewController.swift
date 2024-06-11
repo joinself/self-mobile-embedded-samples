@@ -37,6 +37,7 @@ class ViewController: UIViewController {
     NotificationCenter.default.addObserver(self, selector: #selector(createAccount), name: Notification.Name("CreateAccount"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(livenessCheck), name: Notification.Name("LivenessCheck"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(getKeyValue), name: Notification.Name("GetKeyValue"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(passportVerification), name: Notification.Name("PassportVerification"), object: nil)
 
     
     account = Account.Builder()
@@ -125,6 +126,15 @@ class ViewController: UIViewController {
         
       }
       self.present(vc, animated: true)
+    }
+  }
+  
+  @objc private func passportVerification(notification: Notification) {
+    log.debug("passportVerification start")
+    DispatchQueue.main.async {
+      SelfSDK.startPassportVerification(account: self.account, currentVC: self, isDevMode: true) { success in
+          print("Passport verification finished with status = \(success)")
+      }
     }
   }
   

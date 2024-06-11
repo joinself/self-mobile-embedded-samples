@@ -45,6 +45,7 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
         var account: Account? = null
         var createAccountCallback: (()->Unit)? = null
         var livenessCheckCallback: (()->Unit)? = null
+        var passportVerificationCallback: (()->Unit)? = null
         var getKeyValueCallback: ((String, (String?)->Unit)->Unit)? = null
     }
 
@@ -114,6 +115,12 @@ class SelfSDKRNModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
     fun livenessCheck(callback: Callback) {
         Timber.d("livenessCheck")
         livenessCheckCallback?.invoke()
+    }
+
+    @ReactMethod
+    fun passportVerification(callback: Callback) {
+        Timber.d("passportVerification")
+        passportVerificationCallback?.invoke()
     }
 
     private fun checkLocationPermission(): Boolean {

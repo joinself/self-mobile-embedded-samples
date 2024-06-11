@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MainThread
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.facebook.react.ReactFragment
-import com.joinself.sdk.Environment
-import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.KeyValue
 import com.joinself.sdk.sample.reactnative.databinding.FragmentMainBinding
 import kotlinx.coroutines.Dispatchers
@@ -27,18 +26,13 @@ class MainFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private lateinit var account: Account
+    private lateinit var app: MainApplication
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        account = Account.Builder()
-            .setContext(requireContext())
-            .setEnvironment(Environment.review)
-            .setStoragePath("account1")
-            .build()
+        app = (activity?.application as MainApplication)
 
-        account.setDevMode(true)
         insertTestData()
     }
 
@@ -76,6 +70,9 @@ class MainFragment : Fragment() {
         SelfSDKRNModule.getKeyValueCallback = { key, callback ->
             getKeyValue(key, callback)
         }
+        SelfSDKRNModule.passportVerificationCallback = {
+            openPassportFlow()
+        }
     }
 
     override fun onStop() {
@@ -95,7 +92,7 @@ class MainFragment : Fragment() {
             .build()
 
         binding.reactNativeFragment.visibility = View.VISIBLE
-        SelfSDKRNModule.account = account
+        SelfSDKRNModule.account = app.account
 
         requireActivity().supportFragmentManager
             .beginTransaction()
@@ -121,43 +118,67 @@ class MainFragment : Fragment() {
     @MainThread
     private fun createAccount() {
         activity?.runOnUiThread {
-            LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
+            SelfSDKComponentFragment.onVerificationCallback = { selfieImage, attestations ->
                 Timber.d("onVerificationCallback")
                 lifecycleScope.launch(Dispatchers.Default) {
                     if (attestations.isNotEmpty()) {
-                        val selfId = account.register(selfieImage, attestations)
+                        val selfId = app.account.register(selfieImage, attestations)
                         Timber.d("SelfId: $selfId")
 
                         SelfSDKRNModule.instance?.sendSelfId(selfId ?: "")
                     }
                 }
             }
-            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+            try {
+                val bundle = bundleOf("route" to "livenessRoute")
+                findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
         }
     }
     @MainThread
     private fun openLivenssCheck() {
         activity?.runOnUiThread {
-            LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
+            SelfSDKComponentFragment.onVerificationCallback = { selfieImage, attestations ->
                 Timber.d("onVerificationCallback")
 
             }
-            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+            try {
+                val bundle = bundleOf("route" to "livenessRoute")
+                findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
+        }
+    }
+
+    @MainThread
+    private fun openPassportFlow() {
+        activity?.runOnUiThread {
+            try {
+                val bundle = bundleOf("route" to "passportRoute")
+                findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
         }
     }
 
     @MainThread
     private fun getKeyValue(key: String, callback: ((String?)->Unit)) {
         activity?.runOnUiThread {
-            LivenessCheckFragment.account = account
-            LivenessCheckFragment.onVerificationCallback = { selfieImage, attestations ->
+            SelfSDKComponentFragment.onVerificationCallback = { selfieImage, attestations ->
                 Timber.d("onVerificationCallback")
-                val value = account.get(key, attestations)
+                val value = app.account.get(key, attestations)
                 callback.invoke(value?.value())
             }
-            findNavController().navigate(R.id.action_mainFragment_to_livenessCheckFragment)
+            try {
+                val bundle = bundleOf("route" to "livenessRoute")
+                findNavController().navigate(R.id.action_mainFragment_to_selfSDKComponentFragment, bundle)
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
         }
     }
 
@@ -168,6 +189,6 @@ class MainFragment : Fragment() {
             .setSensitive(true)
             .setMime("text/plain")
             .build()
-        account.store(data1)
+        app.account.store(data1)
     }
 }
