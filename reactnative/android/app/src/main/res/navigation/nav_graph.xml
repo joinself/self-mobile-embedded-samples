@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_mainFragment_to_livenessCheckFragment"
             app:destination="@id/livenessCheckFragment" />
+
+        <action
+            android:id="@+id/action_mainFragment_to_selfSDKComponentFragment"
+            app:destination="@id/selfSDKComponentFragment"
+            app:popUpTo="@id/selfSDKComponentFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <dialog
@@ -21,4 +27,10 @@
         android:label="LivenessCheckFragment"
         tools:layout="@layout/fragment_liveness_check">
     </dialog>
+
+    <fragment
+        android:id="@+id/selfSDKComponentFragment"
+        android:name="com.joinself.sdk.sample.reactnative.SelfSDKComponentFragment"
+        android:label="Self SDK Fragment">
+    </fragment>
 </navigation>

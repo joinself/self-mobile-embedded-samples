@@ -212,7 +212,18 @@ function App(): React.JSX.Element {
                   Alert.alert('Key-Value', `key: name - value:${result}`);
                 });                
               }}
-            />           
+            />   
+
+            <Button
+              title="Passport Verification"
+              style={styles.button}
+              disabled={selfId == ''}
+              onPress={() => {
+                  SelfSDKRNModule.passportVerification(result => {     
+
+                  });                
+              }}
+            />          
           </View>                  
         </View>
       </ScrollView>
