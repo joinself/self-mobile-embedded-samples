@@ -59,6 +59,10 @@ class SelfSDKRNModule: RCTEventEmitter  {
     NotificationCenter.default.post(name: Notification.Name("LivenessCheck"), object: nil)
   }
   
+  @objc func passportVerification(_ callback: RCTResponseSenderBlock) -> Void {
+    NotificationCenter.default.post(name: Notification.Name("PassportVerification"), object: nil)
+  }
+  
   // get selfId from sdk
   @objc func getSelfId(_ callback: RCTResponseSenderBlock) -> Void {
     let selfId = SelfSDKRNModule.account?.identifier() ?? ""
