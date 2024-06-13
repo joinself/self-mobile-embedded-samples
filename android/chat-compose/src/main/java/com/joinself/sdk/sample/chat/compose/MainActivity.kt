@@ -47,9 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.FileProvider
-import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -59,6 +57,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.joinself.sdk.Environment
 import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
+import com.joinself.sdk.models.KeyValue
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import com.joinself.sdk.sample.common.FileUtils
 import com.joinself.sdk.ui.addLivenessCheckRoute
@@ -83,6 +82,8 @@ class MainActivity : ComponentActivity() {
             .build()
         account.setDevMode(true)
 
+        insertTestData(account)
+
         // callback for registration
         var attestationCallBack: ((ByteArray, attesation: List<Attestation>) -> Unit)? = null
 
@@ -90,10 +91,11 @@ class MainActivity : ComponentActivity() {
             val coroutineScope = rememberCoroutineScope()
             val navController = rememberNavController()
             var selfId: String? by remember { mutableStateOf(account.identifier()) }
-            var showDialog by remember { mutableStateOf(false) }
+            var showProgressDialog by remember { mutableStateOf(false) }
             var showLocationPermission by remember { mutableStateOf(false) }
             val showLocationDialog = remember { mutableStateOf(false) }
             var showPassportDialog: String? by remember { mutableStateOf(null) }
+            var showTextDialog: String? by remember { mutableStateOf(null) }
             var locationValue = ""
 
             val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { fileUri ->
@@ -152,10 +154,10 @@ class MainActivity : ComponentActivity() {
                                     attestationCallBack = { selfieImage, attestations ->
                                         coroutineScope.launch(Dispatchers.Default) {
                                             if (account.identifier().isNullOrEmpty() && attestations.isNotEmpty()) {
-                                                showDialog = true
+                                                showProgressDialog = true
                                                 selfId = account.register(selfieImage = selfieImage, attestations = attestations)
                                                 Timber.d("SelfId: $selfId")
-                                                showDialog = false
+                                                showProgressDialog = false
                                             }
                                         }
                                     }
@@ -193,6 +195,23 @@ class MainActivity : ComponentActivity() {
                                         return@MainView
                                     }
                                     getLocation()
+                                },
+                                onGetKeyValue = {
+                                    attestationCallBack = { selfieImage, attestations ->
+                                        coroutineScope.launch(Dispatchers.Default) {
+                                            if (attestations.isNotEmpty()) {
+                                                try {
+                                                    val value = account.get("name", attestations)
+                                                    Timber.d("key-value: ${value?.value()}")
+
+                                                    showTextDialog = value?.value()
+                                                } catch (ex: Exception) {
+                                                    Timber.e(ex)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    navController.navigate("livenessRoute")
                                 }
                             )
                             if (showLocationPermission) {
@@ -233,9 +252,25 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 }
+                                !showTextDialog.isNullOrEmpty() -> {
+                                    AlertDialog(
+                                        title = { },
+                                        text = { Text(text = showTextDialog ?: "") },
+                                        onDismissRequest = {},
+                                        confirmButton = {
+                                            TextButton(
+                                                onClick = {
+                                                    showTextDialog = null
+                                                }
+                                            ) {
+                                                Text("OK")
+                                            }
+                                        }
+                                    )
+                                }
                             }
 
-                            ProgressDialog(showDialog)
+                            ProgressDialog(showProgressDialog)
                         }
                     }
                 }
@@ -294,6 +329,16 @@ class MainActivity : ComponentActivity() {
         chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         applicationContext.startActivity(chooserIntent)
     }
+
+    private fun insertTestData(account: Account) {
+        val data1 = KeyValue.Builder()
+            .setKey("name")
+            .setValue("Test User")
+            .setSensitive(true)
+            .setMime("text/plain")
+            .build()
+        account.store(data1)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -307,7 +352,8 @@ fun MainView(
     onNavigateToMobileUI: () -> Unit,
     onExportBackup: () -> Unit,
     onImportBackup: () -> Unit,
-    onGetLocation: () -> Unit
+    onGetLocation: () -> Unit,
+    onGetKeyValue: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -356,6 +402,11 @@ fun MainView(
             onGetLocation.invoke()
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Location")
+        }
+        Button(onClick = {
+            onGetKeyValue.invoke()
+        }, enabled = !selfId.isNullOrEmpty()) {
+            Text(text = "Get Key-Value")
         }
         Button(onClick = {
             onNavigateToPassport.invoke()
