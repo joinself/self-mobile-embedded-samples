@@ -145,7 +145,7 @@ class MainFragment : Fragment() {
                     if (attestations.isNotEmpty()) {
                         try {
                             val value = app.account.get("name", attestations)
-                            Timber.d("key-value: $value")
+                            Timber.d("key-value: ${value?.value()}")
 
                             withContext(Dispatchers.Main) {
                                 val builder = AlertDialog.Builder(requireContext())
