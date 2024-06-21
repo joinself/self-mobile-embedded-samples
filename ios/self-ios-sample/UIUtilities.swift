@@ -8,7 +8,6 @@
 import Foundation
 import AVFoundation
 import CoreVideo
-import MLKit
 import UIKit
 
 public class UIUtilities {
