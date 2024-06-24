@@ -251,8 +251,13 @@ fun MessagingView(account: Account, onBack: ()->Unit) {
                                 }
                             }
                         } else if (item is Attestation) {
+                            val sb = StringBuilder()
+                            sb.appendLine("${item.fact().name()}:${item.fact().value()}")
+                            if (item.attachment() != null) {
+                                sb.appendLine("attachment: ${item.attachment()!!.name()}")
+                            }
                             Text(
-                                text = "${item.fact().name()}:${item.fact().value()}"
+                                text = sb.toString()
                             )
                         }
                     }
