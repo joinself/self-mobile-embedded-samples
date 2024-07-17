@@ -60,7 +60,9 @@ import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.models.KeyValue
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import com.joinself.sdk.sample.common.FileUtils
+import com.joinself.sdk.ui.addEmailRoute
 import com.joinself.sdk.ui.addLivenessCheckRoute
+import com.joinself.sdk.ui.addOnboardingRoute
 import com.joinself.sdk.ui.addPassportVerificationRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -77,7 +79,7 @@ class MainActivity : ComponentActivity() {
         // setup account
         val account = Account.Builder()
             .setContext(this)
-            .setEnvironment(Environment.review)
+            .setEnvironment(Environment.sandbox)
             .setStoragePath("account1")
             .build()
         account.setDevMode(true)
@@ -172,8 +174,11 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToPassport = {
                                     navController.navigate("passportRoute")
                                 },
-                                onNavigateToMobileUI = {
-                                    navController.navigate("mobile_ui")
+                                onNavigateToOnboarding = {
+                                    navController.navigate("onboardingRoute")
+                                },
+                                onNavigateToEmail = {
+                                    navController.navigate("emailRoute")
                                 },
                                 onExportBackup = {
                                     lifecycleScope.launch(Dispatchers.Default) {
@@ -314,6 +319,8 @@ class MainActivity : ComponentActivity() {
                         showPassportDialog = "Failed"
                     }
                 }
+                addOnboardingRoute(navController, route = "onboardingRoute")
+                addEmailRoute(navController, route = "emailRoute")
             }
         }
     }
@@ -349,7 +356,8 @@ fun MainView(
     onNavigateToLivenessCheck: () -> Unit,
     onNavigateToMessaging: () -> Unit,
     onNavigateToPassport: () -> Unit,
-    onNavigateToMobileUI: () -> Unit,
+    onNavigateToOnboarding: () -> Unit,
+    onNavigateToEmail: () -> Unit,
     onExportBackup: () -> Unit,
     onImportBackup: () -> Unit,
     onGetLocation: () -> Unit,
@@ -413,11 +421,16 @@ fun MainView(
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Passport Verification")
         }
-//        Button(onClick = {
-//            onNavigateToMobileUI.invoke()
-//        }, enabled = !selfId.isNullOrEmpty()) {
-//            Text(text = "Mobile UI")
-//        }
+        Button(onClick = {
+            onNavigateToOnboarding.invoke()
+        }, enabled = !selfId.isNullOrEmpty()) {
+            Text(text = "Onboarding")
+        }
+        Button(onClick = {
+            onNavigateToEmail.invoke()
+        }, enabled = !selfId.isNullOrEmpty()) {
+            Text(text = "Email")
+        }
     }
 }
 
