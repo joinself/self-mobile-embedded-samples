@@ -1,7 +1,7 @@
 object Config {
     object Version {
         const val kotlinVersion = "2.0.0"
-        const val androidGradlePluginVersion = "8.4.2"
+        const val androidGradlePluginVersion = "8.5.1"
         const val realmVersion = "2.0.0"
 
         const val firebaseAuthVersion = "23.0.0"
@@ -15,13 +15,13 @@ object Config {
         const val cameraxVersion = "1.3.3"
         const val ktorVersion = "2.3.11"
         const val kotlinxDatetime = "0.6.0"
-        const val kotlinxSerialization = "1.6.3"
+        const val kotlinxSerialization = "1.7.0"
         const val kotlinxCoroutines = "1.8.1"
     }
 
     object Android {
         val minSdkVersion = 26
-        val targetSdkVersion = 33
+        val targetSdkVersion = 34
         val compileSdkVersion = 34
     }
 }

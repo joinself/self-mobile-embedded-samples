@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
@@ -82,7 +85,6 @@ class MainActivity : ComponentActivity() {
             .setEnvironment(Environment.sandbox)
             .setStoragePath("account1")
             .build()
-        account.setDevMode(true)
 
         insertTestData(account)
 
@@ -174,6 +176,9 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToPassport = {
                                     navController.navigate("passportRoute")
                                 },
+                                onNavigateToReadPassport = {
+                                    navController.navigate("passportRoute")
+                                },
                                 onNavigateToOnboarding = {
                                     navController.navigate("onboardingRoute")
                                 },
@@ -217,6 +222,9 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
                                     navController.navigate("livenessRoute")
+                                },
+                                onShareLog = {
+                                    shareLogfile()
                                 }
                             )
                             if (showLocationPermission) {
@@ -337,6 +345,19 @@ class MainActivity : ComponentActivity() {
         applicationContext.startActivity(chooserIntent)
     }
 
+    fun shareLogfile() {
+        val logPath = this.cacheDir.absolutePath + "/file0.log"
+        val logFile = File(logPath)
+        if (!logFile.exists()) return
+
+        val uri = FileProvider.getUriForFile(this, this.packageName + ".file_provider", logFile)
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/*"
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        this.startActivity(Intent.createChooser(intent, "Share log with"))
+    }
+
     private fun insertTestData(account: Account) {
         val data1 = KeyValue.Builder()
             .setKey("name")
@@ -356,17 +377,21 @@ fun MainView(
     onNavigateToLivenessCheck: () -> Unit,
     onNavigateToMessaging: () -> Unit,
     onNavigateToPassport: () -> Unit,
+    onNavigateToReadPassport: () -> Unit,
     onNavigateToOnboarding: () -> Unit,
     onNavigateToEmail: () -> Unit,
     onExportBackup: () -> Unit,
     onImportBackup: () -> Unit,
     onGetLocation: () -> Unit,
-    onGetKeyValue: () -> Unit
+    onGetKeyValue: () -> Unit,
+    onShareLog: () -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+        modifier = Modifier
+            .padding(start = 8.dp, end = 8.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         TopAppBar(
             title = { Text(text = "Chat Compose Sample") },
@@ -422,6 +447,11 @@ fun MainView(
             Text(text = "Passport Verification")
         }
         Button(onClick = {
+            onNavigateToReadPassport.invoke()
+        }, enabled = !selfId.isNullOrEmpty()) {
+            Text(text = "Read Passport")
+        }
+        Button(onClick = {
             onNavigateToOnboarding.invoke()
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Onboarding")
@@ -430,6 +460,11 @@ fun MainView(
             onNavigateToEmail.invoke()
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Email")
+        }
+        Button(onClick = {
+            onShareLog.invoke()
+        }, enabled = !selfId.isNullOrEmpty()) {
+            Text(text = "Share log file")
         }
     }
 }

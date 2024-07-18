@@ -59,9 +59,11 @@ android {
 }
 
 dependencies {
+    implementation(files("libs/Treessence-1.0.5.aar"))
     implementation(project(":common"))
     implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
 
+    implementation("androidx.appcompat:appcompat:${Config.Version.androidxAppcompatVersion}")
     implementation("com.jakewharton.timber:timber:${Config.Version.timberVersion}")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.23.0")
     implementation("com.google.accompanist:accompanist-permissions:0.19.0")
