@@ -67,6 +67,7 @@ import com.joinself.sdk.ui.addEmailRoute
 import com.joinself.sdk.ui.addLivenessCheckRoute
 import com.joinself.sdk.ui.addOnboardingRoute
 import com.joinself.sdk.ui.addPassportVerificationRoute
+import com.joinself.sdk.ui.addReadPassportRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -177,7 +178,7 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate("passportRoute")
                                 },
                                 onNavigateToReadPassport = {
-                                    navController.navigate("passportRoute")
+                                    navController.navigate("readPassportRoute")
                                 },
                                 onNavigateToOnboarding = {
                                     navController.navigate("onboardingRoute")
@@ -327,6 +328,13 @@ class MainActivity : ComponentActivity() {
                         showPassportDialog = "Failed"
                     }
                 }
+                addReadPassportRoute(navController, route = "readPassportRoute", account, this@MainActivity) { exception ->
+                    if (exception == null) {
+                        showPassportDialog = "Success"
+                    } else {
+                        showPassportDialog = "Failed"
+                    }
+                }
                 addOnboardingRoute(navController, route = "onboardingRoute")
                 addEmailRoute(navController, route = "emailRoute")
             }
@@ -451,16 +459,16 @@ fun MainView(
         }, enabled = !selfId.isNullOrEmpty()) {
             Text(text = "Read Passport")
         }
-        Button(onClick = {
-            onNavigateToOnboarding.invoke()
-        }, enabled = !selfId.isNullOrEmpty()) {
-            Text(text = "Onboarding")
-        }
-        Button(onClick = {
-            onNavigateToEmail.invoke()
-        }, enabled = !selfId.isNullOrEmpty()) {
-            Text(text = "Email")
-        }
+//        Button(onClick = {
+//            onNavigateToOnboarding.invoke()
+//        }, enabled = !selfId.isNullOrEmpty()) {
+//            Text(text = "Onboarding")
+//        }
+//        Button(onClick = {
+//            onNavigateToEmail.invoke()
+//        }, enabled = !selfId.isNullOrEmpty()) {
+//            Text(text = "Email")
+//        }
         Button(onClick = {
             onShareLog.invoke()
         }, enabled = !selfId.isNullOrEmpty()) {
