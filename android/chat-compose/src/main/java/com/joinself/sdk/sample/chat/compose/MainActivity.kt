@@ -48,7 +48,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
@@ -68,7 +67,6 @@ import com.joinself.sdk.ui.addLivenessCheckRoute
 import com.joinself.sdk.ui.addOnboardingRoute
 import com.joinself.sdk.ui.addPassportVerificationRoute
 import com.joinself.sdk.ui.addPhoneRoute
-import com.joinself.sdk.ui.addReadPassportRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -84,7 +82,7 @@ class MainActivity : ComponentActivity() {
         // setup account
         val account = Account.Builder()
             .setContext(this)
-            .setEnvironment(Environment.sandbox)
+            .setEnvironment(Environment.review)
             .setStoragePath("account1")
             .build()
 
@@ -100,7 +98,7 @@ class MainActivity : ComponentActivity() {
             var showProgressDialog by remember { mutableStateOf(false) }
             var showLocationPermission by remember { mutableStateOf(false) }
             val showLocationDialog = remember { mutableStateOf(false) }
-            var showPassportDialog: String? by remember { mutableStateOf(null) }
+            var titleDialog: String? by remember { mutableStateOf(null) }
             var showTextDialog: String? by remember { mutableStateOf(null) }
             var locationValue = ""
 
@@ -136,7 +134,9 @@ class MainActivity : ComponentActivity() {
             NavHost(navController = navController,
                 startDestination = "main",
                 enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None }
+                exitTransition = { ExitTransition.None },
+                popEnterTransition = { EnterTransition.None },
+                popExitTransition = { ExitTransition.None },
             ) {
                 composable("main") {
                     SelfSDKSamplesTheme {
@@ -248,15 +248,14 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 }
-                                showPassportDialog != null -> {
+                                titleDialog != null -> {
                                     AlertDialog(
-                                        title = { Text(text = "Passport Verification") },
-                                        text = { Text(text = showPassportDialog ?: "") },
+                                        title = { Text(text = titleDialog ?: "") },
                                         onDismissRequest = {},
                                         confirmButton = {
                                             TextButton(
                                                 onClick = {
-                                                    showPassportDialog = null
+                                                    titleDialog = null
                                                 }
                                             ) {
                                                 Text("OK")
@@ -321,13 +320,19 @@ class MainActivity : ComponentActivity() {
                 }
                 addPassportVerificationRoute(navController, route = "passportRoute", account, this@MainActivity) { exception ->
                     if (exception == null) {
-                        showPassportDialog = "Success"
+                        titleDialog = "Passport verification is successful"
                     } else {
-                        showPassportDialog = "Failed"
+                        titleDialog = "Passport verification Failed"
                     }
                 }
                 addOnboardingRoute(navController, route = "onboardingRoute")
-                addEmailRoute(navController, route = "emailRoute")
+                addEmailRoute(navController, route = "emailRoute", account = account, callback = {exception ->
+                    if (exception == null) {
+                        titleDialog = "Email verification is successful"
+                    } else {
+                        titleDialog = "Email verification failed"
+                    }
+                })
                 addPhoneRoute(navController, route = "phoneRoute")
             }
         }
