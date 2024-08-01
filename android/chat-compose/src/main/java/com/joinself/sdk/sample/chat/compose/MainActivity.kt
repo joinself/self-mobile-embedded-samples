@@ -184,6 +184,9 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToEmail = {
                                     navController.navigate("emailRoute")
                                 },
+                                onNavigateToPhone = {
+                                    navController.navigate("phoneRoute")
+                                },
                                 onExportBackup = {
                                     lifecycleScope.launch(Dispatchers.Default) {
                                         val backupFile = account.backup()
@@ -333,7 +336,13 @@ class MainActivity : ComponentActivity() {
                         titleDialog = "Email verification failed"
                     }
                 })
-                addPhoneRoute(navController, route = "phoneRoute")
+                addPhoneRoute(navController, route = "phoneRoute", account = account, callback = {exception ->
+                    if (exception == null) {
+                        titleDialog = "Phone verification is successful"
+                    } else {
+                        titleDialog = "Phone verification failed"
+                    }
+                })
             }
         }
     }
@@ -384,6 +393,7 @@ fun MainView(
     onNavigateToPassport: () -> Unit,
     onNavigateToOnboarding: () -> Unit,
     onNavigateToEmail: () -> Unit,
+    onNavigateToPhone: () -> Unit,
     onExportBackup: () -> Unit,
     onImportBackup: () -> Unit,
     onGetLocation: () -> Unit,
@@ -458,7 +468,12 @@ fun MainView(
         Button(onClick = {
             onNavigateToEmail.invoke()
         }, enabled = !selfId.isNullOrEmpty()) {
-            Text(text = "Email")
+            Text(text = "Email Verification")
+        }
+        Button(onClick = {
+            onNavigateToPhone.invoke()
+        }, enabled = !selfId.isNullOrEmpty()) {
+            Text(text = "Phone Verification")
         }
         Button(onClick = {
             onShareLog.invoke()
