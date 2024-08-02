@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.compose")
 }
 
 android {
@@ -75,26 +76,24 @@ dependencies {
     implementation("androidx.core:core-ktx:${Config.Version.androidxCore}")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:${Config.Version.materialVersion}")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment-ktx:${Config.Version.navigationVersion}")
     implementation("androidx.navigation:navigation-ui-ktx:${Config.Version.navigationVersion}")
-    implementation("androidx.navigation:navigation-compose:${Config.Version.navigationVersion}")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:${Config.Version.navigationVersion}")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
-    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.1")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(compose.runtime)
+    implementation(compose.foundation)
+    implementation(compose.material3)
+    implementation(compose.materialIconsExtended)
+    implementation(compose.ui)
+    implementation(compose.uiUtil)
+    implementation(compose.components.resources)
+    implementation(compose.components.uiToolingPreview)
+    implementation(compose.preview)
+    implementation("androidx.activity:activity-compose:${Config.Version.activityCompose}")
+    implementation("org.jetbrains.androidx.navigation:navigation-compose:${Config.Version.navigationCompose}")
+    implementation("tech.annexflow.compose:constraintlayout-compose-multiplatform:0.4.0")
 
-
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    debugImplementation(compose.uiTooling)
 
     modules {
         module("com.google.guava:listenablefuture") {

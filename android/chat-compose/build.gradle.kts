@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.compose")
 }
 
 android {
@@ -59,26 +60,32 @@ android {
 }
 
 dependencies {
+    implementation(files("libs/Treessence-1.0.5.aar"))
     implementation(project(":common"))
     implementation("com.joinself:mobile-sdk:1.0.0-SNAPSHOT")
 
+    implementation("androidx.appcompat:appcompat:${Config.Version.androidxAppcompatVersion}")
     implementation("com.jakewharton.timber:timber:${Config.Version.timberVersion}")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.23.0")
     implementation("com.google.accompanist:accompanist-permissions:0.19.0")
 
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
-    implementation("androidx.activity:activity-compose:1.9.0")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.core:core-ktx:${Config.Version.androidxCore}")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+
+    implementation(compose.runtime)
+    implementation(compose.foundation)
+    implementation(compose.material3)
+    implementation(compose.materialIconsExtended)
+    implementation(compose.ui)
+    implementation(compose.uiUtil)
+    implementation(compose.components.resources)
+    implementation(compose.components.uiToolingPreview)
+    implementation(compose.preview)
+    implementation("androidx.activity:activity-compose:${Config.Version.activityCompose}")
+    implementation("org.jetbrains.androidx.navigation:navigation-compose:${Config.Version.navigationCompose}")
     implementation("tech.annexflow.compose:constraintlayout-compose-multiplatform:0.4.0")
-    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    debugImplementation(compose.uiTooling)
 
     modules {
         module("com.google.guava:listenablefuture") {

@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -64,6 +66,7 @@ import com.joinself.sdk.ui.addEmailRoute
 import com.joinself.sdk.ui.addLivenessCheckRoute
 import com.joinself.sdk.ui.addOnboardingRoute
 import com.joinself.sdk.ui.addPassportVerificationRoute
+import com.joinself.sdk.ui.addPhoneRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -79,10 +82,9 @@ class MainActivity : ComponentActivity() {
         // setup account
         val account = Account.Builder()
             .setContext(this)
-            .setEnvironment(Environment.sandbox)
+            .setEnvironment(Environment.review)
             .setStoragePath("account1")
             .build()
-        account.setDevMode(true)
 
         insertTestData(account)
 
@@ -96,7 +98,7 @@ class MainActivity : ComponentActivity() {
             var showProgressDialog by remember { mutableStateOf(false) }
             var showLocationPermission by remember { mutableStateOf(false) }
             val showLocationDialog = remember { mutableStateOf(false) }
-            var showPassportDialog: String? by remember { mutableStateOf(null) }
+            var titleDialog: String? by remember { mutableStateOf(null) }
             var showTextDialog: String? by remember { mutableStateOf(null) }
             var locationValue = ""
 
@@ -132,7 +134,9 @@ class MainActivity : ComponentActivity() {
             NavHost(navController = navController,
                 startDestination = "main",
                 enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None }
+                exitTransition = { ExitTransition.None },
+                popEnterTransition = { EnterTransition.None },
+                popExitTransition = { ExitTransition.None },
             ) {
                 composable("main") {
                     SelfSDKSamplesTheme {
@@ -180,6 +184,9 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToEmail = {
                                     navController.navigate("emailRoute")
                                 },
+                                onNavigateToPhone = {
+                                    navController.navigate("phoneRoute")
+                                },
                                 onExportBackup = {
                                     lifecycleScope.launch(Dispatchers.Default) {
                                         val backupFile = account.backup()
@@ -217,6 +224,9 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
                                     navController.navigate("livenessRoute")
+                                },
+                                onShareLog = {
+                                    shareLogfile()
                                 }
                             )
                             if (showLocationPermission) {
@@ -241,15 +251,14 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 }
-                                showPassportDialog != null -> {
+                                titleDialog != null -> {
                                     AlertDialog(
-                                        title = { Text(text = "Passport Verification") },
-                                        text = { Text(text = showPassportDialog ?: "") },
+                                        title = { Text(text = titleDialog ?: "") },
                                         onDismissRequest = {},
                                         confirmButton = {
                                             TextButton(
                                                 onClick = {
-                                                    showPassportDialog = null
+                                                    titleDialog = null
                                                 }
                                             ) {
                                                 Text("OK")
@@ -312,15 +321,28 @@ class MainActivity : ComponentActivity() {
                     attestationCallBack?.invoke(image, attestation)
                     attestationCallBack = null
                 }
-                addPassportVerificationRoute(navController, route = "passportRoute", account, this@MainActivity) { exception ->
+                addPassportVerificationRoute(navController, route = "passportRoute", account = account, activity = this@MainActivity, isDevMode = false) { exception ->
                     if (exception == null) {
-                        showPassportDialog = "Success"
+                        titleDialog = "Passport verification is successful"
                     } else {
-                        showPassportDialog = "Failed"
+                        titleDialog = "Passport verification Failed"
                     }
                 }
                 addOnboardingRoute(navController, route = "onboardingRoute")
-                addEmailRoute(navController, route = "emailRoute")
+                addEmailRoute(navController, route = "emailRoute", account = account, callback = {exception ->
+                    if (exception == null) {
+                        titleDialog = "Email verification is successful"
+                    } else {
+                        titleDialog = "Email verification failed"
+                    }
+                })
+                addPhoneRoute(navController, route = "phoneRoute", account = account, callback = {exception ->
+                    if (exception == null) {
+                        titleDialog = "Phone verification is successful"
+                    } else {
+                        titleDialog = "Phone verification failed"
+                    }
+                })
             }
         }
     }
@@ -335,6 +357,19 @@ class MainActivity : ComponentActivity() {
         val chooserIntent = Intent.createChooser(intent, "Share file with")
         chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         applicationContext.startActivity(chooserIntent)
+    }
+
+    fun shareLogfile() {
+        val logPath = this.cacheDir.absolutePath + "/file0.log"
+        val logFile = File(logPath)
+        if (!logFile.exists()) return
+
+        val uri = FileProvider.getUriForFile(this, this.packageName + ".file_provider", logFile)
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/*"
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        this.startActivity(Intent.createChooser(intent, "Share log with"))
     }
 
     private fun insertTestData(account: Account) {
@@ -358,15 +393,19 @@ fun MainView(
     onNavigateToPassport: () -> Unit,
     onNavigateToOnboarding: () -> Unit,
     onNavigateToEmail: () -> Unit,
+    onNavigateToPhone: () -> Unit,
     onExportBackup: () -> Unit,
     onImportBackup: () -> Unit,
     onGetLocation: () -> Unit,
-    onGetKeyValue: () -> Unit
+    onGetKeyValue: () -> Unit,
+    onShareLog: () -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+        modifier = Modifier
+            .padding(start = 8.dp, end = 8.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         TopAppBar(
             title = { Text(text = "Chat Compose Sample") },
@@ -429,7 +468,17 @@ fun MainView(
         Button(onClick = {
             onNavigateToEmail.invoke()
         }, enabled = !selfId.isNullOrEmpty()) {
-            Text(text = "Email")
+            Text(text = "Email Verification")
+        }
+        Button(onClick = {
+            onNavigateToPhone.invoke()
+        }, enabled = !selfId.isNullOrEmpty()) {
+            Text(text = "Phone Verification")
+        }
+        Button(onClick = {
+            onShareLog.invoke()
+        }, enabled = !selfId.isNullOrEmpty()) {
+            Text(text = "Share log file")
         }
     }
 }
