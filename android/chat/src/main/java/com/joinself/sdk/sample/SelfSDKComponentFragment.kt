@@ -86,7 +86,7 @@ class SelfSDKComponentFragment: Fragment() {
                         navBack?.invoke()
                     }
 
-                    addPassportVerificationRoute(navController, route = "passportRoute", app.account, requireActivity()) { exception ->
+                    addPassportVerificationRoute(navController, route = "passportRoute", account = app.account, activity = requireActivity(), isDevMode = false,) { exception ->
                         if (exception == null) {
                             showPassportDialog = "Success"
                         } else {

@@ -68,7 +68,7 @@
     <string name="button_messaging">Messaging</string>
     <string name="button_selfie_check">Liveness Check</string>
     <string name="button_create_account">Create Account</string>
-    <string name="button_verify_document">Verify Document</string>
+    <string name="button_verify_document">Verify Passport</string>
     <string name="button_request_location">Request Location</string>
     <string name="button_get_key_value">Get Key-Value</string>
 </resources>

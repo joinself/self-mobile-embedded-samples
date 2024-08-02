@@ -321,7 +321,7 @@ class MainActivity : ComponentActivity() {
                     attestationCallBack?.invoke(image, attestation)
                     attestationCallBack = null
                 }
-                addPassportVerificationRoute(navController, route = "passportRoute", account, this@MainActivity) { exception ->
+                addPassportVerificationRoute(navController, route = "passportRoute", account = account, activity = this@MainActivity, isDevMode = false) { exception ->
                     if (exception == null) {
                         titleDialog = "Passport verification is successful"
                     } else {

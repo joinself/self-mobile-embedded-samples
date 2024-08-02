@@ -15,7 +15,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-allopen:${Config.Version.kotlinVersion}")
         classpath("com.google.gms:google-services:4.3.15")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.7")
-        classpath("com.squareup.wire:wire-gradle-plugin:4.9.7")
+        classpath("com.squareup.wire:wire-gradle-plugin:4.9.9")
     }
 }
 
@@ -24,6 +24,8 @@ plugins {
     id("com.android.library") version Config.Version.androidGradlePluginVersion apply false
     id("org.jetbrains.kotlin.android") version Config.Version.kotlinVersion apply false
     id("org.jetbrains.kotlin.plugin.compose") version Config.Version.kotlinVersion apply false
+    id("org.jetbrains.kotlin.multiplatform").version(Config.Version.kotlinVersion).apply(false)
+    id("org.jetbrains.compose").version("1.7.0-alpha02").apply(false)
 }
 
 allprojects {
