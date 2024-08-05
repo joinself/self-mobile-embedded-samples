@@ -54,7 +54,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionsRequired
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.joinself.sdk.Environment
 import com.joinself.sdk.models.Account
@@ -62,6 +61,7 @@ import com.joinself.sdk.models.Attestation
 import com.joinself.sdk.models.KeyValue
 import com.joinself.sdk.sample.chat.compose.ui.theme.SelfSDKSamplesTheme
 import com.joinself.sdk.sample.common.FileUtils
+import com.joinself.sdk.ui.addCreateAccountRoute
 import com.joinself.sdk.ui.addEmailRoute
 import com.joinself.sdk.ui.addLivenessCheckRoute
 import com.joinself.sdk.ui.addOnboardingRoute
@@ -153,6 +153,7 @@ class MainActivity : ComponentActivity() {
                                         showLocationDialog.value = true
                                     }
                                     Timber.d("location: ${locationValue}")
+                                    showLocationPermission = false
                                 }
                             }
                             MainView(selfId = selfId,
@@ -232,6 +233,7 @@ class MainActivity : ComponentActivity() {
                             if (showLocationPermission) {
                                 LocationView(onPermissionGranted = {
                                     getLocation()
+                                    showLocationPermission = false
                                 })
                             }
                             when {
@@ -341,6 +343,11 @@ class MainActivity : ComponentActivity() {
                         titleDialog = "Phone verification is successful"
                     } else {
                         titleDialog = "Phone verification failed"
+                    }
+                })
+                addCreateAccountRoute(navController, route = "createAccountRoute", account = account, callback = {exception ->
+                    if (exception == null) {
+
                     }
                 })
             }
@@ -490,25 +497,16 @@ fun LocationView(onPermissionGranted: () -> Unit) {
     val cameraPermissionState =
         rememberMultiplePermissionsState(permissions = listOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION))
 
-    PermissionsRequired(
-        multiplePermissionsState = cameraPermissionState,
-        permissionsNotGrantedContent = {
-            LaunchedEffect(Unit) {
-                cameraPermissionState.launchMultiplePermissionRequest()
-            }
-        },
-        permissionsNotAvailableContent = {
-            Column {
-                Toast.makeText(context, "Permission denied.", Toast.LENGTH_LONG).show()
-            }
-        },
-        content = {
-            LaunchedEffect(Unit) {
-                Timber.d("location permission granted")
-                onPermissionGranted.invoke()
-            }
+    if (cameraPermissionState.allPermissionsGranted) {
+        LaunchedEffect(Unit) {
+            Timber.d("location permission granted")
+            onPermissionGranted.invoke()
         }
-    )
+    } else {
+        LaunchedEffect(Unit) {
+            cameraPermissionState.launchMultiplePermissionRequest()
+        }
+    }
 }
 
 @Composable
