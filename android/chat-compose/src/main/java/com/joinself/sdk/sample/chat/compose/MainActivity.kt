@@ -3,7 +3,6 @@ package com.joinself.sdk.sample.chat.compose
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -55,6 +54,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.joinself.mobile.ui.theme.SelfColorScheme
+import com.joinself.mobile.ui.theme.SelfModifier
 import com.joinself.sdk.Environment
 import com.joinself.sdk.models.Account
 import com.joinself.sdk.models.Attestation
@@ -130,6 +131,8 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+
+            val selfModifier = SelfModifier.sdk()
 
             NavHost(navController = navController,
                 startDestination = "main",
@@ -319,33 +322,33 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                addLivenessCheckRoute(navController, route = "livenessRoute", account, this@MainActivity, withAttestation = true) { image, attestation ->
+                addLivenessCheckRoute(navController, route = "livenessRoute", selfModifier = selfModifier, account, this@MainActivity, withAttestation = true) { image, attestation ->
                     attestationCallBack?.invoke(image, attestation)
                     attestationCallBack = null
                 }
-                addPassportVerificationRoute(navController, route = "passportRoute", account = account, activity = this@MainActivity, isDevMode = false) { exception ->
+                addPassportVerificationRoute(navController, route = "passportRoute", selfModifier = selfModifier, account = account, activity = this@MainActivity, isDevMode = false) { exception ->
                     if (exception == null) {
                         titleDialog = "Passport verification is successful"
                     } else {
                         titleDialog = "Passport verification Failed"
                     }
                 }
-                addOnboardingRoute(navController, route = "onboardingRoute")
-                addEmailRoute(navController, route = "emailRoute", account = account, callback = {exception ->
+                addOnboardingRoute(navController, route = "onboardingRoute", selfModifier = selfModifier)
+                addEmailRoute(navController, route = "emailRoute", selfModifier = selfModifier, account = account, callback = {exception ->
                     if (exception == null) {
                         titleDialog = "Email verification is successful"
                     } else {
                         titleDialog = "Email verification failed"
                     }
                 })
-                addPhoneRoute(navController, route = "phoneRoute", account = account, callback = {exception ->
+                addPhoneRoute(navController, route = "phoneRoute", selfModifier = selfModifier, account = account, callback = {exception ->
                     if (exception == null) {
                         titleDialog = "Phone verification is successful"
                     } else {
                         titleDialog = "Phone verification failed"
                     }
                 })
-                addCreateAccountRoute(navController, route = "createAccountRoute", account = account, callback = {exception ->
+                addCreateAccountRoute(navController, route = "createAccountRoute", selfModifier = selfModifier, account = account, callback = {exception ->
                     if (exception == null) {
 
                     }
